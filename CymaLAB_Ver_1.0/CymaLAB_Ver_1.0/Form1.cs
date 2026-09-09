@@ -29,6 +29,8 @@ namespace CymaLAB_Ver_1._0
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+
             farand_Tablet_Chart_Control1.signal_Generator1.Mode_Is_Changed += Signal_Generator1_Mode_Is_Changed;
 
             farand_Tablet_Chart_Control1.signal_Generator1.Data_Is_Ready += Signal_Generator1_Data_Is_Ready;

@@ -39,7 +39,7 @@
             this.advanced_Settings_Control1 = new Advanced_Settings_Control.Advanced_Settings_Control();
             this.signal_Strength_Control1 = new Signal_Strength_Control.Signal_Strength_Control();
             this.command_Box1 = new Command_Box.Command_Box();
-            this.toF_Control1 = new TOF_Contorol.TOF_Control();
+            this.tof_Control = new TOF_Contorol.TOF_Control();
             this.farand_Tablet_Chart_Control1 = new Farand_Tablet_Chart.Farand_Tablet_Chart_Control();
             this.timer_Auto_Start_Simulation = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel1.SuspendLayout();
@@ -65,11 +65,11 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.command_Box1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.toF_Control1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tof_Control, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.farand_Tablet_Chart_Control1, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 72F));
@@ -89,7 +89,7 @@
             this.panel1.Controls.Add(this.signal_Strength_Control1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(2, 74);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(334, 698);
             this.panel1.TabIndex = 0;
@@ -175,21 +175,21 @@
             this.command_Box1.Size = new System.Drawing.Size(334, 68);
             this.command_Box1.TabIndex = 1;
             // 
-            // toF_Control1
+            // tof_Control
             // 
-            this.toF_Control1.Auto_TOF = false;
-            this.toF_Control1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.toF_Control1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toF_Control1.Location = new System.Drawing.Point(340, 2);
-            this.toF_Control1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.toF_Control1.MinimumSize = new System.Drawing.Size(525, 72);
-            this.toF_Control1.Name = "toF_Control1";
-            this.toF_Control1.Sample_Length_cm = 30D;
-            this.toF_Control1.Sample_Velocity_m_Sec = 3000D;
-            this.toF_Control1.Size = new System.Drawing.Size(1084, 72);
-            this.toF_Control1.TabIndex = 0;
-            this.toF_Control1.TOF_mSec = 0.1D;
-            this.toF_Control1.TOF_Stable = false;
+            this.tof_Control.Auto_TOF = false;
+            this.tof_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tof_Control.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tof_Control.Location = new System.Drawing.Point(340, 2);
+            this.tof_Control.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tof_Control.MinimumSize = new System.Drawing.Size(525, 72);
+            this.tof_Control.Name = "tof_Control";
+            this.tof_Control.Sample_Length_cm = 30D;
+            this.tof_Control.Sample_Velocity_m_Sec = 3000D;
+            this.tof_Control.Size = new System.Drawing.Size(1084, 72);
+            this.tof_Control.TabIndex = 0;
+            this.tof_Control.TOF_mSec = 0.1D;
+            this.tof_Control.TOF_Stable = false;
             // 
             // farand_Tablet_Chart_Control1
             // 
@@ -213,7 +213,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1426, 774);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(979, 381);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -228,7 +228,7 @@
 
         #endregion
 
-        private TOF_Contorol.TOF_Control toF_Control1;
+        private TOF_Contorol.TOF_Control tof_Control;
         private Command_Box.Command_Box command_Box1;
         private Farand_Tablet_Chart.Farand_Tablet_Chart_Control farand_Tablet_Chart_Control1;
         private Filter_Control.Filter_Control filter_Control1;

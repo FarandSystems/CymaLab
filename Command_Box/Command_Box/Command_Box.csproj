@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Data_Generate">
-      <HintPath>..\..\Data_Generate\Data_Generate\bin\Debug\Data_Generate.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Messaging" />
@@ -113,6 +110,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Load_File_Active.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data_Generate\Data_Generate\Data_Generate.csproj">
+      <Project>{21bda920-3eeb-4dd9-8f0b-1b215f43f36f}</Project>
+      <Name>Data_Generate</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

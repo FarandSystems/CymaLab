@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Fancy_Lable">
-      <HintPath>..\..\Fancy_Lable\Fancy_Lable\bin\Debug\Fancy_Lable.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,6 +55,12 @@
     <EmbeddedResource Include="Transduser_Type.resx">
       <DependentUpon>Transduser_Type.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Fancy_Lable\Fancy_Lable\Fancy_Lable.csproj">
+      <Project>{df6ab054-a33c-4166-aef3-abd13ba2141d}</Project>
+      <Name>Fancy_Lable</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

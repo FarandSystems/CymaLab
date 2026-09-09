@@ -33,33 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Advanced_Settings_Control">
-      <HintPath>..\..\Advanced_Settings_Control\Advanced_Settings_Control\bin\Debug\Advanced_Settings_Control.dll</HintPath>
-    </Reference>
-    <Reference Include="Averaging_Control">
-      <HintPath>..\..\Averaging_Control\Averaging_Control\bin\Debug\Averaging_Control.dll</HintPath>
-    </Reference>
-    <Reference Include="Command_Box">
-      <HintPath>..\..\Command_Box\Command_Box\bin\Debug\Command_Box.dll</HintPath>
-    </Reference>
-    <Reference Include="Data_Generate">
-      <HintPath>..\..\Data_Generate\Data_Generate\bin\Debug\Data_Generate.dll</HintPath>
-    </Reference>
-    <Reference Include="Fancy_Lable">
-      <HintPath>..\..\Fancy_Lable\Fancy_Lable\bin\Debug\Fancy_Lable.dll</HintPath>
-    </Reference>
-    <Reference Include="Farand_Tablet_Chart">
-      <HintPath>..\..\Farand_Tablet_Chart\Farand_Tablet_Chart\bin\Debug\Farand_Tablet_Chart.dll</HintPath>
-    </Reference>
-    <Reference Include="Filter_Control">
-      <HintPath>..\..\Filter_Control\Filter_Control\bin\Debug\Filter_Control.dll</HintPath>
-    </Reference>
-    <Reference Include="Measurement_Mode_Control">
-      <HintPath>..\..\Measurement_Mode_Control\Measurement_Mode_Control\bin\Debug\Measurement_Mode_Control.dll</HintPath>
-    </Reference>
-    <Reference Include="Signal_Strength_Control">
-      <HintPath>..\..\Signal_Strength_Control\Signal_Strength_Control\bin\Debug\Signal_Strength_Control.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
@@ -72,12 +45,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TOF_Contorol">
-      <HintPath>..\..\TOF_Contorol\TOF_Contorol\bin\Debug\TOF_Contorol.dll</HintPath>
-    </Reference>
-    <Reference Include="Transducer_Type">
-      <HintPath>..\..\Transducer_Type\Transducer_Type\bin\Debug\Transducer_Type.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">
@@ -112,6 +79,52 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Advanced_Settings_Control\Advanced_Settings_Control\Advanced_Settings_Control.csproj">
+      <Project>{f049f677-cad6-43c7-bbad-f87b66552741}</Project>
+      <Name>Advanced_Settings_Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Averaging_Control\Averaging_Control\Averaging_Control.csproj">
+      <Project>{6bc1d8ce-c3b5-4e09-bb53-44bbe8520b48}</Project>
+      <Name>Averaging_Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Command_Box\Command_Box\Command_Box.csproj">
+      <Project>{2aae9bc3-4e55-4f49-878c-36f5e8aaadf3}</Project>
+      <Name>Command_Box</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Data_Generate\Data_Generate\Data_Generate.csproj">
+      <Project>{21bda920-3eeb-4dd9-8f0b-1b215f43f36f}</Project>
+      <Name>Data_Generate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Fancy_Lable\Fancy_Lable\Fancy_Lable.csproj">
+      <Project>{df6ab054-a33c-4166-aef3-abd13ba2141d}</Project>
+      <Name>Fancy_Lable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Farand_Tablet_Chart\Farand_Tablet_Chart\Farand_Tablet_Chart.csproj">
+      <Project>{5f89c97c-8c49-46ea-885a-c4dc8b224e2e}</Project>
+      <Name>Farand_Tablet_Chart</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Filter_Control\Filter_Control\Filter_Control.csproj">
+      <Project>{8502bbef-d62e-4f3f-bf23-2fa2a784a3a1}</Project>
+      <Name>Filter_Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Measurement_Mode_Control\Measurement_Mode_Control\Measurement_Mode_Control.csproj">
+      <Project>{a12e9bf1-d4bc-4ffd-b635-eae1ce27d160}</Project>
+      <Name>Measurement_Mode_Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Signal_Strength_Control\Signal_Strength_Control\Signal_Strength_Control.csproj">
+      <Project>{75fddd8a-370b-4908-90e6-7d58523f8b71}</Project>
+      <Name>Signal_Strength_Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TOF_Contorol\TOF_Contorol\TOF_Control.csproj">
+      <Project>{0accaa6c-5f05-48cf-9050-9f1e57a3c6f7}</Project>
+      <Name>TOF_Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Transducer_Type\Transducer_Type\Transducer_Type.csproj">
+      <Project>{7f441e81-3cc1-498c-be72-d33046f6608e}</Project>
+      <Name>Transducer_Type</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
