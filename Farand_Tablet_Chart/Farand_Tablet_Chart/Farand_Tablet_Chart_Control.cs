@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -175,7 +176,7 @@ namespace Farand_Tablet_Chart
                 interactionHz: 8,
                 visiblePointCount: 720,
                 maxStoredPointCount: 50000,
-                autoStart: true
+                autoStart: false
             );
         }
 
@@ -232,6 +233,9 @@ namespace Farand_Tablet_Chart
 
         public void StartChart()
         {
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime || DesignMode)
+                return;
+
             renderTimer.Start();
             interactionTimer.Start();
         }
@@ -545,6 +549,9 @@ namespace Farand_Tablet_Chart
         private void RenderTimer_Tick(object sender, EventArgs e)
         {
             bool receivedNewSamples = DrainSampleQueue();
+
+            if (!receivedNewSamples)
+                return;
 
             if (receivedNewSamples && autoFollowX)
             {

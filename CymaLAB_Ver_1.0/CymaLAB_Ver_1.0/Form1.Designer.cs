@@ -107,7 +107,7 @@
             // 
             // averaging_Control1
             // 
-            this.averaging_Control1.Averaging_Captures_Count = 0;
+            this.averaging_Control1.Averaging_Captures_Count = 1;
             this.averaging_Control1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.averaging_Control1.Location = new System.Drawing.Point(2, 501);
             this.averaging_Control1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
@@ -202,7 +202,6 @@
             // 
             // timer_Auto_Start_Simulation
             // 
-            this.timer_Auto_Start_Simulation.Enabled = true;
             this.timer_Auto_Start_Simulation.Interval = 500;
             this.timer_Auto_Start_Simulation.Tick += new System.EventHandler(this.timer_Auto_Start_Simulation_Tick);
             // 
@@ -243,4 +242,3 @@
         private System.Windows.Forms.Timer timer_Auto_Start_Simulation;
     }
 }
-

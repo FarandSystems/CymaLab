@@ -12,6 +12,18 @@ namespace Data_Generate
 {
     public partial class Signal_Generator : UserControl
     {
+        private const int MaxTofHistoryPoints = 720;
+
+        private bool IsInDesignMode
+        {
+            get
+            {
+                return LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
+                       DesignMode ||
+                       (Site != null && Site.DesignMode);
+            }
+        }
+
         public enum Filter_Mode_Enum
         {
             No_Filter,
@@ -156,6 +168,9 @@ namespace Data_Generate
         }
 
         private double[] data_Filtered = new double[720];
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public double[] Data_Filter
         {
             get { return data_Filtered; }
@@ -269,7 +284,6 @@ namespace Data_Generate
 
             Calculate_IIR_Filter_Parameters();
             Update_Display_Period();
-            Start_Generating_Data();
             Update_Info_Icon_Pic();
         }
 
@@ -353,6 +367,12 @@ namespace Data_Generate
 
             chart1.Series[0].Points.AddXY(total_Time,time_Of_Flight_Sec * 1E6);
             chart1.Series[1].Points.AddXY(total_Time, tOF_Filtered_Sec * 1E6);
+
+            while (chart1.Series[0].Points.Count > MaxTofHistoryPoints)
+                chart1.Series[0].Points.RemoveAt(0);
+
+            while (chart1.Series[1].Points.Count > MaxTofHistoryPoints)
+                chart1.Series[1].Points.RemoveAt(0);
 
             total_Time += 0.125;
 
@@ -501,31 +521,40 @@ namespace Data_Generate
 
         private double Find_Signal_Phase_And_Frequency(double[] x)
         {
-            double sum_Max = 0;
+            double bestCorrelation = double.MinValue;
             double best_Phase = 0;
+
             for (int k = 0; k <= 20; k++)
             {
                 double f = 19 + 0.1 * k;
+                double sineCorrelation = 0;
+                double cosineCorrelation = 0;
 
-                for (int j = 0; j < 100; j++)
+                for (int i = 0; i < x.Length; i += 5)
                 {
-                    double p = (2 * Math.PI / 100) * j;
-                    double sum = 0;
+                    double angle = 2 * Math.PI * f * 1E3 * i * Ts_Sec;
+                    sineCorrelation += Math.Sin(angle) * x[i];
+                    cosineCorrelation += Math.Cos(angle) * x[i];
+                }
 
-                    for (int i = 0; i < x.Length; i += 5)
-                    {
-                        double t = i * Ts_Sec;
-                        sum += Math.Sin(2 * Math.PI * f * 1E3 * t - p) * x[i];
-                    }
+                // Maximizing sum(x * sin(angle - phase)) over every possible
+                // phase is equivalent to taking the magnitude of these two
+                // orthogonal correlations. This replaces the 100-phase scan.
+                double correlation = sineCorrelation * sineCorrelation +
+                                     cosineCorrelation * cosineCorrelation;
 
-                    if (sum > sum_Max)
-                    {
-                        sum_Max = sum;
-                        best_Phase = p;
-                        best_Frequency_kHz = f;
-                    }
+                if (correlation > bestCorrelation)
+                {
+                    bestCorrelation = correlation;
+                    best_Phase = Math.Atan2(-cosineCorrelation, sineCorrelation);
+
+                    if (best_Phase < 0)
+                        best_Phase += 2 * Math.PI;
+
+                    best_Frequency_kHz = f;
                 }
             }
+
             return best_Phase;
         }
 
@@ -654,7 +683,13 @@ namespace Data_Generate
         }
         public void Start_Generating_Data()
         {
-            timer1.Enabled = true;
+            if (!IsInDesignMode)
+                timer1.Start();
+        }
+
+        public void Stop_Generating_Data()
+        {
+            timer1.Stop();
         }
         private void numericUpDown_Amplitude_ValueChanged(object sender, EventArgs e)
         {
@@ -694,6 +729,12 @@ namespace Data_Generate
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (!_isSimulated_Data_Choosen)
+            {
+                Stop_Generating_Data();
+                return;
+            }
+
             double[] x0 = Generate_Data();
             double[] x1 = Apply_HPF(x0);
             double[] x2 = Apply_LPF(x1);
@@ -712,13 +753,16 @@ namespace Data_Generate
             data_Filtered = Down_Sample_Data(x3);
             data_Sine_Product = Down_Sample_Data(x4);
            
-            Show_Signal(data_Filtered);
-
-            Show_Processing_Result();
-
             Update_Filter_State_Machine();
 
-            Show_TOF_Signal();
+            // These diagnostic charts are hidden while the generator is collapsed.
+            // Avoid rebuilding thousands of DataPoints when only the main chart is visible.
+            if (_isMaximized)
+            {
+                Show_Signal(data_Filtered);
+                Show_Processing_Result();
+                Show_TOF_Signal();
+            }
 
             if (Data_Is_Ready != null)
             {
@@ -833,6 +877,12 @@ namespace Data_Generate
         public void checkBox_use_Simulated_Click(object sender, EventArgs e)
         {
             _isSimulated_Data_Choosen = !_isSimulated_Data_Choosen;
+
+            if (_isSimulated_Data_Choosen)
+                Start_Generating_Data();
+            else
+                Stop_Generating_Data();
+
             Update_Info_Icon_Pic();
             if (Mode_Is_Changed != null)
             {

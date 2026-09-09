@@ -14,6 +14,11 @@ namespace CymaLAB_Ver_1._0
     {
         double[] Capture_Data = null;
 
+        private static bool IsInDesignMode
+        {
+            get { return LicenseManager.UsageMode == LicenseUsageMode.Designtime; }
+        }
+
         enum System_Mode_Enum
         {
             Test_Mode,
@@ -30,6 +35,8 @@ namespace CymaLAB_Ver_1._0
         private void Form1_Load(object sender, EventArgs e)
         {
 
+            if (IsInDesignMode)
+                return;
 
             farand_Tablet_Chart_Control1.signal_Generator1.Mode_Is_Changed += Signal_Generator1_Mode_Is_Changed;
 
@@ -47,6 +54,8 @@ namespace CymaLAB_Ver_1._0
                         fixedYMax: 1,
                         enableAutoScaleY: false
                     );
+
+            timer_Auto_Start_Simulation.Start();
 
         }
 
