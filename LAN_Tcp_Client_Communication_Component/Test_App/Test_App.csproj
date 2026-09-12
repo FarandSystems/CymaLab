@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D5A75557-16C2-4739-8CC7-D5F34D80A221}</ProjectGuid>
+    <ProjectGuid>{D021D370-D130-4EC9-9342-0A30DC5B6A32}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>CymaLAB_Ver_1._0</RootNamespace>
-    <AssemblyName>CymaLAB_Ver_1.0</AssemblyName>
+    <RootNamespace>Test_App</RootNamespace>
+    <AssemblyName>Test_App</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,7 +35,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,10 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands.cs" />
-    <Compile Include="Communication.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Enums.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -59,7 +54,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -86,61 +80,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Advanced_Settings_Control\Advanced_Settings_Control\Advanced_Settings_Control.csproj">
-      <Project>{f049f677-cad6-43c7-bbad-f87b66552741}</Project>
-      <Name>Advanced_Settings_Control</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Auto_Detect_VCP_Control_Command_Bytes_Property\Auto_Detect_VCP_Control\Auto_Detect_VCP_Control.csproj">
-      <Project>{59ab372e-e868-4e46-bc47-fc54a424d111}</Project>
-      <Name>Auto_Detect_VCP_Control</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Averaging_Control\Averaging_Control\Averaging_Control.csproj">
-      <Project>{6bc1d8ce-c3b5-4e09-bb53-44bbe8520b48}</Project>
-      <Name>Averaging_Control</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Command_Box\Command_Box\Command_Box.csproj">
-      <Project>{2aae9bc3-4e55-4f49-878c-36f5e8aaadf3}</Project>
-      <Name>Command_Box</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Data_Generate\Data_Generate\Data_Generate.csproj">
-      <Project>{21bda920-3eeb-4dd9-8f0b-1b215f43f36f}</Project>
-      <Name>Data_Generate</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Fancy_Lable\Fancy_Lable\Fancy_Lable.csproj">
-      <Project>{df6ab054-a33c-4166-aef3-abd13ba2141d}</Project>
-      <Name>Fancy_Lable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Farand_Tablet_Chart\Farand_Tablet_Chart\Farand_Tablet_Chart.csproj">
-      <Project>{5f89c97c-8c49-46ea-885a-c4dc8b224e2e}</Project>
-      <Name>Farand_Tablet_Chart</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Filter_Control\Filter_Control\Filter_Control.csproj">
-      <Project>{8502bbef-d62e-4f3f-bf23-2fa2a784a3a1}</Project>
-      <Name>Filter_Control</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\LAN_Tcp_Client_Communication_Component\Hlk_Wifi_Wrapper_Component\Hlk_Wifi_Wrapper_Component.csproj">
+    <ProjectReference Include="..\Hlk_Wifi_Wrapper_Component\Hlk_Wifi_Wrapper_Component.csproj">
       <Project>{3f6f7b5f-9d9b-4b60-bb64-710b4bfc4867}</Project>
       <Name>Hlk_Wifi_Wrapper_Component</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\LAN_Tcp_Client_Communication_Component\LAN_Tcp_Client_Communication_Component\LAN_Tcp_Client_Communication_Component.csproj">
-      <Project>{2fe82aa7-4ba3-43b1-9425-29bc08ab7205}</Project>
+    <ProjectReference Include="..\LAN_Tcp_Client_Communication_Component\LAN_Tcp_Client_Communication_Component.csproj">
+      <Project>{2FE82AA7-4BA3-43B1-9425-29BC08AB7205}</Project>
       <Name>LAN_Tcp_Client_Communication_Component</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Measurement_Mode_Control\Measurement_Mode_Control\Measurement_Mode_Control.csproj">
-      <Project>{a12e9bf1-d4bc-4ffd-b635-eae1ce27d160}</Project>
-      <Name>Measurement_Mode_Control</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Signal_Strength_Control\Signal_Strength_Control\Signal_Strength_Control.csproj">
-      <Project>{75fddd8a-370b-4908-90e6-7d58523f8b71}</Project>
-      <Name>Signal_Strength_Control</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\TOF_Contorol\TOF_Contorol\TOF_Control.csproj">
-      <Project>{0accaa6c-5f05-48cf-9050-9f1e57a3c6f7}</Project>
-      <Name>TOF_Control</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Transducer_Type\Transducer_Type\Transducer_Type.csproj">
-      <Project>{7f441e81-3cc1-498c-be72-d33046f6608e}</Project>
-      <Name>Transducer_Type</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

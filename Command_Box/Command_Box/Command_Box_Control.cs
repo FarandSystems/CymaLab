@@ -30,6 +30,8 @@ namespace Command_Box
 
         public event EventHandler Load_Clicked;
 
+        public event EventHandler Firmware_Update_Clicked;
+
         private bool _isConnected = false;
         public bool _IsConnected
         {
@@ -359,6 +361,24 @@ namespace Command_Box
         private void Command_Box_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void pictureBox_Firmware_Update_MouseLeave(object sender, EventArgs e)
+        {
+            pictureBox_Firmware_Update.Image = Properties.Resources.Firmware_Update;
+        }
+
+        private void pictureBox_Firmware_Update_Click(object sender, EventArgs e)
+        {
+            if (Firmware_Update_Clicked != null)
+            {
+                Firmware_Update_Clicked(this, new EventArgs());
+            }
+        }
+
+        private void pictureBox_Firmware_Update_MouseDown(object sender, MouseEventArgs e)
+        {
+            pictureBox_Firmware_Update.Image = Properties.Resources.Firmware_Update_Highlighted;
         }
     }
 }

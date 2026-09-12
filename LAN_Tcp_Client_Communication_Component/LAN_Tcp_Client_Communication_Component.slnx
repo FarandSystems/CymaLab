@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Hlk_Wifi_Test_App/Hlk_Wifi_Test_App.csproj" Id="17adf00a-b548-4e6b-afdb-0550634136ec" />
+  <Project Path="LAN_Tcp_Client_Communication_Component/LAN_Tcp_Client_Communication_Component.csproj" Id="2fe82aa7-4ba3-43b1-9425-29bc08ab7205" />
+</Solution>

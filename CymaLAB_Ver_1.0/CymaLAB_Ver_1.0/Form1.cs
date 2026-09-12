@@ -85,7 +85,7 @@ namespace CymaLAB_Ver_1._0
 
         private void Update_chart()
         {
-
+            Commands.
             farand_Tablet_Chart_Control1.PushSamples(Capture_Data, copyInputBuffer: false);
         }
 
