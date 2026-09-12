@@ -15,6 +15,8 @@ namespace Measurement_Mode_Control
         string length_Text_Prev = "";
         string velocity_Text_Prev = "";
 
+        private bool updatingControls;
+
         public event EventHandler Measurement_Mode_isChanged;
 
         public enum Measurement_Mode_Enum
@@ -28,21 +30,57 @@ namespace Measurement_Mode_Control
         public Measurement_Mode_Enum Measurement_Mode
         {
             get { return measurement_Mode; }
-            set { measurement_Mode = value; }
+
+            set
+            {
+                measurement_Mode = value;
+                UpdateModeSelection();
+            }
         }
 
         private double velocity;
-        public double Velocity
-        {
-            get { return velocity; }
-            set { velocity = value; }
-        }
-
         private double length;
+
         public double Length
         {
             get { return length; }
-            set { length = value; }
+
+            set
+            {
+                updatingControls = true;
+
+                try
+                {
+                    length = value;
+                    length_Text_Prev = value.ToString("0.00");
+                    textBox_Sample_Length.Text = length_Text_Prev;
+                }
+                finally
+                {
+                    updatingControls = false;
+                }
+            }
+        }
+
+        public double Velocity
+        {
+            get { return velocity; }
+
+            set
+            {
+                updatingControls = true;
+
+                try
+                {
+                    velocity = value;
+                    velocity_Text_Prev = value.ToString("0.00");
+                    textBox_Sample_Velocity.Text = velocity_Text_Prev;
+                }
+                finally
+                {
+                    updatingControls = false;
+                }
+            }
         }
 
 
@@ -51,7 +89,19 @@ namespace Measurement_Mode_Control
             InitializeComponent();
         }
 
-       
+        private void UpdateModeSelection()
+        {
+            bool calculateVelocity = measurement_Mode == Measurement_Mode_Enum.Velocity_Calculation;
+
+            fancy_Lable_Control_Velocity._IsActive = calculateVelocity;
+            fancy_Lable_Control_Length._IsActive = !calculateVelocity;
+
+            // Calculating velocity requires a known sample length.
+            groupBox_Sample_Length.Enabled = calculateVelocity;
+
+            // Calculating length requires a known sample velocity.
+            groupBox_Sample_Velocity.Enabled = !calculateVelocity;
+        }
 
         private void label_Velocity_Click(object sender, EventArgs e)
         {
@@ -60,50 +110,22 @@ namespace Measurement_Mode_Control
 
         private void fancy_Lable_Control_Velocity_Fancy_Label_Clicked(object sender, EventArgs e)
         {
- 
-            if(fancy_Lable_Control_Velocity._IsActive == true)
-            {
-                fancy_Lable_Control_Length._IsActive = false;
-                groupBox_Sample_Velocity.Enabled = false;
-                groupBox_Sample_Length.Enabled = true;
-            }
-            else
-            {
-                fancy_Lable_Control_Length._IsActive = true;
-                groupBox_Sample_Velocity.Enabled = true;
-                groupBox_Sample_Length.Enabled = false;
-            }
-            
-            if(Measurement_Mode_isChanged != null)
-            {
-                Measurement_Mode_isChanged(this, EventArgs.Empty);
-            }
+            Measurement_Mode = Measurement_Mode_Enum.Velocity_Calculation;
+
+            Measurement_Mode_isChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void fancy_Lable_Control_Length_Fancy_Label_Clicked(object sender, EventArgs e)
         {
-            if(fancy_Lable_Control_Length._IsActive == true)
-            {
-                fancy_Lable_Control_Velocity._IsActive = false;
-                groupBox_Sample_Length.Enabled = false;
-                groupBox_Sample_Velocity.Enabled = true;
-            }
-            else
-            {
-                fancy_Lable_Control_Velocity._IsActive= true;
-                groupBox_Sample_Length.Enabled = true;
-                groupBox_Sample_Velocity.Enabled = false;
-            }
+            Measurement_Mode = Measurement_Mode_Enum.Length_Calculation;
 
-            if (Measurement_Mode_isChanged != null)
-            {
-                Measurement_Mode_isChanged(this, EventArgs.Empty);
-            }
+            Measurement_Mode_isChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void textBox_Sampel_Length_TextChanged(object sender, EventArgs e)
         {
-            
+            if (updatingControls)
+                return;
 
             try
             {
@@ -138,6 +160,9 @@ namespace Measurement_Mode_Control
 
         private void textBox_Sample_Velocity_TextChanged(object sender, EventArgs e)
         {
+            if (updatingControls)
+                return;
+
             try
             {
                 if (textBox_Sample_Velocity.Text == "")

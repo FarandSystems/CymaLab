@@ -23,6 +23,8 @@ namespace CymaLAB_Ver_1._0
             set { connection_Mode = value; }
         }
 
+        
+
         private Communication(HLK_Wifi_Wrapper wifi, Auto_Detect_VCP_Control.Auto_Detect_VCP_Control vcp)
         {
             WiFi = wifi;

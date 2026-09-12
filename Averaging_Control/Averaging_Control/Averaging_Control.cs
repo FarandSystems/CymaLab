@@ -17,13 +17,37 @@ namespace Averaging_Control
         private int averaging_Captures_Count = 1;
         public int Averaging_Captures_Count
         {
-            get { return averaging_Captures_Count;}
-            set { averaging_Captures_Count = value;}
+            get { return averaging_Captures_Count; }
+
+            set
+            {
+                if (value != 1 && value != 4 && value != 8 && value != 16 && value != 32)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+
+                averaging_Captures_Count = value;
+
+                UpdateSelection();
+            }
         }
-        
+
         public Averaging_Control()
         {
             InitializeComponent();
+        }
+
+        private void UpdateSelection()
+        {
+            fancy_Lable_Control_None._IsActive = averaging_Captures_Count == 1;
+
+            fancy_Lable_Control4._IsActive = averaging_Captures_Count == 4;
+
+            fancy_Lable_Control8._IsActive = averaging_Captures_Count == 8;
+
+            fancy_Lable_Control16._IsActive = averaging_Captures_Count == 16;
+
+            fancy_Lable_Control32._IsActive = averaging_Captures_Count == 32;
         }
 
 

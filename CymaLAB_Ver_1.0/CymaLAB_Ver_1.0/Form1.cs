@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Measurement_Mode_Control;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,10 @@ namespace CymaLAB_Ver_1._0
     public partial class Form1 : Form
     {
         double[] Capture_Data = null;
+
+        private AppSettings settings = new AppSettings();
+
+        private readonly string settingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PreciTest", "CymaLab", "Settings.txt");
 
         private static bool IsInDesignMode
         {
@@ -38,6 +44,14 @@ namespace CymaLAB_Ver_1._0
             if (IsInDesignMode)
                 return;
 
+
+            LoadSettings();
+            ApplySettingsToControls();
+
+            advanced_Settings_Control.Advanced_Settings_Changed += advanced_Settings_Control_Advanced_Settings_Changed;
+            measurement_Mode_Control.Measurement_Mode_isChanged += measurement_Mode_Control_Measurement_Mode_isChanged;
+
+
             farand_Tablet_Chart_Control1.signal_Generator1.Mode_Is_Changed += Signal_Generator1_Mode_Is_Changed;
 
             farand_Tablet_Chart_Control1.signal_Generator1.Data_Is_Ready += Signal_Generator1_Data_Is_Ready;
@@ -59,6 +73,45 @@ namespace CymaLAB_Ver_1._0
 
         }
 
+        private void ApplySettingsToControls()
+        {
+            averaging_Control.Averaging_Captures_Count = settings.CaptureAveragingCount;
+
+            advanced_Settings_Control.Reference_TOF_uSec = settings.ReferenceTofUs;
+
+            advanced_Settings_Control.Discard_Time_uSec = settings.DiscardTimeUs;
+
+            measurement_Mode_Control.Length = settings.SampleLengthCm;
+
+            measurement_Mode_Control.Velocity = settings.SampleVelocityMs;
+
+            measurement_Mode_Control.Measurement_Mode = settings.MeasurementMode == "Velocity" 
+                                                        ? Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Velocity_Calculation
+                                                        : Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Length_Calculation;
+        }
+
+        private void LoadSettings()
+        {
+            try
+            {
+                settings = SettingsFile.Load(settingsFilePath);
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is FormatException || ex is ArgumentException)
+            {
+                settings = new AppSettings();
+
+                MessageBox.Show(
+                    this,
+                    "Could not load the settings. Default values will be used."
+                    + Environment.NewLine
+                    + Environment.NewLine
+                    + ex.Message,
+                    "Settings",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+        }
+
         private void Signal_Generator1_Data_Is_Ready(object sender, EventArgs e)
         {
             if (system_mode == System_Mode_Enum.Test_Mode)
@@ -67,6 +120,24 @@ namespace CymaLAB_Ver_1._0
 
                 Update_chart();
             }
+        }
+
+        private void measurement_Mode_Control_Measurement_Mode_isChanged(object sender, EventArgs e)
+        {
+            settings.SampleLengthCm = measurement_Mode_Control.Length;
+
+            settings.SampleVelocityMs = measurement_Mode_Control.Velocity;
+
+            settings.MeasurementMode = measurement_Mode_Control.Measurement_Mode == Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Velocity_Calculation
+                                                                                    ? "Velocity"
+                                                                                    : "Length";
+        }
+
+        private void advanced_Settings_Control_Advanced_Settings_Changed(object sender, EventArgs e)
+        {
+            settings.ReferenceTofUs = advanced_Settings_Control.Reference_TOF_uSec;
+
+            settings.DiscardTimeUs = advanced_Settings_Control.Discard_Time_uSec;
         }
 
         private void Signal_Generator1_Mode_Is_Changed(object sender, EventArgs e)
@@ -85,11 +156,10 @@ namespace CymaLAB_Ver_1._0
 
         private void Update_chart()
         {
-            Commands.
             farand_Tablet_Chart_Control1.PushSamples(Capture_Data, copyInputBuffer: false);
         }
 
-        private void filter_Control1_Filter_Mode_Changed(object sender, EventArgs e)
+        private void filter_Control_Filter_Mode_Changed(object sender, EventArgs e)
         {
             Update_Filter_Parameters();
         }
@@ -155,7 +225,7 @@ namespace CymaLAB_Ver_1._0
 
         private void Update_Averaging()
         {
-            int n = averaging_Control1.Averaging_Captures_Count;
+            int n = averaging_Control.Averaging_Captures_Count;
             switch (system_mode)
             {
                 case System_Mode_Enum.Test_Mode:
@@ -167,8 +237,10 @@ namespace CymaLAB_Ver_1._0
             }
         }
 
-        private void averaging_Control1_AveragingChanged(object sender, EventArgs e)
+        private void averaging_Control_AveragingChanged(object sender, EventArgs e)
         {
+            settings.CaptureAveragingCount = averaging_Control.Averaging_Captures_Count;
+
             Update_Averaging();
         }
 
@@ -179,7 +251,7 @@ namespace CymaLAB_Ver_1._0
             switch (system_mode)
             {
                 case System_Mode_Enum.Test_Mode:
-                    switch (filter_Control1.Filter_Mode)
+                    switch (filter_Control.Filter_Mode)
                     {
                         case Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter:
                             farand_Tablet_Chart_Control1.signal_Generator1.Set_Filter_Parameters(Data_Generate.Signal_Generator.Filter_Mode_Enum.No_Filter, f);
@@ -195,7 +267,7 @@ namespace CymaLAB_Ver_1._0
                     }
                     break;
                 case System_Mode_Enum.Normal_operation:
-                    switch (filter_Control1.Filter_Mode)
+                    switch (filter_Control.Filter_Mode)
                     {
                         case Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter:
                             //Send command to hardware

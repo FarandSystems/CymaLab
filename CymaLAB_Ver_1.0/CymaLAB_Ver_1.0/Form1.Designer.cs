@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.measurement_Mode_Control1 = new Measurement_Mode_Control.Measurement_Mode_Control();
+            this.measurement_Mode_Control = new Measurement_Mode_Control.Measurement_Mode_Control();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.averaging_Control1 = new Averaging_Control.Averaging_Control();
+            this.averaging_Control = new Averaging_Control.Averaging_Control();
             this.transducer_Type1 = new Transducer_Type.Transducer_Type();
-            this.filter_Control1 = new Filter_Control.Filter_Control();
-            this.advanced_Settings_Control1 = new Advanced_Settings_Control.Advanced_Settings_Control();
+            this.filter_Control = new Filter_Control.Filter_Control();
+            this.advanced_Settings_Control = new Advanced_Settings_Control.Advanced_Settings_Control();
             this.signal_Strength_Control1 = new Signal_Strength_Control.Signal_Strength_Control();
             this.command_Box1 = new Command_Box.Command_Box();
             this.tof_Control = new TOF_Contorol.TOF_Control();
@@ -46,17 +46,17 @@
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // measurement_Mode_Control1
+            // measurement_Mode_Control
             // 
-            this.measurement_Mode_Control1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.measurement_Mode_Control1.Length = 0D;
-            this.measurement_Mode_Control1.Location = new System.Drawing.Point(2, 178);
-            this.measurement_Mode_Control1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.measurement_Mode_Control1.Measurement_Mode = Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Length_Calculation;
-            this.measurement_Mode_Control1.Name = "measurement_Mode_Control1";
-            this.measurement_Mode_Control1.Size = new System.Drawing.Size(311, 191);
-            this.measurement_Mode_Control1.TabIndex = 6;
-            this.measurement_Mode_Control1.Velocity = 0D;
+            this.measurement_Mode_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.measurement_Mode_Control.Length = 0D;
+            this.measurement_Mode_Control.Location = new System.Drawing.Point(2, 178);
+            this.measurement_Mode_Control.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.measurement_Mode_Control.Measurement_Mode = Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Length_Calculation;
+            this.measurement_Mode_Control.Name = "measurement_Mode_Control";
+            this.measurement_Mode_Control.Size = new System.Drawing.Size(311, 191);
+            this.measurement_Mode_Control.TabIndex = 6;
+            this.measurement_Mode_Control.Velocity = 0D;
             // 
             // tableLayoutPanel1
             // 
@@ -81,11 +81,11 @@
             // 
             this.panel1.AutoScroll = true;
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.averaging_Control1);
+            this.panel1.Controls.Add(this.averaging_Control);
             this.panel1.Controls.Add(this.transducer_Type1);
-            this.panel1.Controls.Add(this.filter_Control1);
-            this.panel1.Controls.Add(this.advanced_Settings_Control1);
-            this.panel1.Controls.Add(this.measurement_Mode_Control1);
+            this.panel1.Controls.Add(this.filter_Control);
+            this.panel1.Controls.Add(this.advanced_Settings_Control);
+            this.panel1.Controls.Add(this.measurement_Mode_Control);
             this.panel1.Controls.Add(this.signal_Strength_Control1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(2, 74);
@@ -105,16 +105,16 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "label1";
             // 
-            // averaging_Control1
+            // averaging_Control
             // 
-            this.averaging_Control1.Averaging_Captures_Count = 1;
-            this.averaging_Control1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.averaging_Control1.Location = new System.Drawing.Point(2, 501);
-            this.averaging_Control1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.averaging_Control1.Name = "averaging_Control1";
-            this.averaging_Control1.Size = new System.Drawing.Size(311, 126);
-            this.averaging_Control1.TabIndex = 8;
-            this.averaging_Control1.AveragingChanged += new System.EventHandler(this.averaging_Control1_AveragingChanged);
+            this.averaging_Control.Averaging_Captures_Count = 1;
+            this.averaging_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.averaging_Control.Location = new System.Drawing.Point(2, 501);
+            this.averaging_Control.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.averaging_Control.Name = "averaging_Control";
+            this.averaging_Control.Size = new System.Drawing.Size(311, 126);
+            this.averaging_Control.TabIndex = 8;
+            this.averaging_Control.AveragingChanged += new System.EventHandler(this.averaging_Control_AveragingChanged);
             // 
             // transducer_Type1
             // 
@@ -127,28 +127,28 @@
             this.transducer_Type1.TabIndex = 10;
             this.transducer_Type1.piezo_frequency_Changed += new System.EventHandler(this.transducer_Type1_piezo_frequency_Changed);
             // 
-            // filter_Control1
+            // filter_Control
             // 
-            this.filter_Control1.AutoSize = true;
-            this.filter_Control1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.filter_Control1.Filter_Mode = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
-            this.filter_Control1.Location = new System.Drawing.Point(0, 98);
-            this.filter_Control1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.filter_Control1.Name = "filter_Control1";
-            this.filter_Control1.Size = new System.Drawing.Size(311, 84);
-            this.filter_Control1.TabIndex = 5;
-            this.filter_Control1.Filter_Mode_Changed += new System.EventHandler(this.filter_Control1_Filter_Mode_Changed);
+            this.filter_Control.AutoSize = true;
+            this.filter_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.filter_Control.Filter_Mode = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
+            this.filter_Control.Location = new System.Drawing.Point(0, 98);
+            this.filter_Control.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.filter_Control.Name = "filter_Control";
+            this.filter_Control.Size = new System.Drawing.Size(311, 84);
+            this.filter_Control.TabIndex = 5;
+            this.filter_Control.Filter_Mode_Changed += new System.EventHandler(this.filter_Control_Filter_Mode_Changed);
             // 
-            // advanced_Settings_Control1
+            // advanced_Settings_Control
             // 
-            this.advanced_Settings_Control1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.advanced_Settings_Control1.Discard_Time_uSec = 0D;
-            this.advanced_Settings_Control1.Location = new System.Drawing.Point(0, 626);
-            this.advanced_Settings_Control1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.advanced_Settings_Control1.Name = "advanced_Settings_Control1";
-            this.advanced_Settings_Control1.Reference_TOF_uSec = 0D;
-            this.advanced_Settings_Control1.Size = new System.Drawing.Size(311, 130);
-            this.advanced_Settings_Control1.TabIndex = 9;
+            this.advanced_Settings_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.advanced_Settings_Control.Discard_Time_uSec = 0D;
+            this.advanced_Settings_Control.Location = new System.Drawing.Point(0, 626);
+            this.advanced_Settings_Control.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.advanced_Settings_Control.Name = "advanced_Settings_Control";
+            this.advanced_Settings_Control.Reference_TOF_uSec = 0D;
+            this.advanced_Settings_Control.Size = new System.Drawing.Size(311, 130);
+            this.advanced_Settings_Control.TabIndex = 9;
             // 
             // signal_Strength_Control1
             // 
@@ -169,7 +169,7 @@
             this.command_Box1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.command_Box1.Load_Path = null;
             this.command_Box1.Location = new System.Drawing.Point(2, 2);
-            this.command_Box1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.command_Box1.Margin = new System.Windows.Forms.Padding(2);
             this.command_Box1.Name = "command_Box1";
             this.command_Box1.Save_Path = null;
             this.command_Box1.Size = new System.Drawing.Size(334, 68);
@@ -232,11 +232,11 @@
         private TOF_Contorol.TOF_Control tof_Control;
         private Command_Box.Command_Box command_Box1;
         private Farand_Tablet_Chart.Farand_Tablet_Chart_Control farand_Tablet_Chart_Control1;
-        private Filter_Control.Filter_Control filter_Control1;
-        private Measurement_Mode_Control.Measurement_Mode_Control measurement_Mode_Control1;
+        private Filter_Control.Filter_Control filter_Control;
+        private Measurement_Mode_Control.Measurement_Mode_Control measurement_Mode_Control;
         private Signal_Strength_Control.Signal_Strength_Control signal_Strength_Control1;
-        private Averaging_Control.Averaging_Control averaging_Control1;
-        private Advanced_Settings_Control.Advanced_Settings_Control advanced_Settings_Control1;
+        private Averaging_Control.Averaging_Control averaging_Control;
+        private Advanced_Settings_Control.Advanced_Settings_Control advanced_Settings_Control;
         private Transducer_Type.Transducer_Type transducer_Type1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;

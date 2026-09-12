@@ -22,15 +22,26 @@ namespace Advanced_Settings_Control
         public double Reference_TOF_uSec
         {
             get { return reference_TOF_uSec; }
-            set { reference_TOF_uSec = value; }
+
+            set
+            {
+                reference_TOF_uSec = value;
+                textBox_Reference.Text = value.ToString();
+            }
         }
 
         private double discard_Time_uSec;
         public double Discard_Time_uSec
         {
             get { return discard_Time_uSec; }
-            set { discard_Time_uSec = value; }
+
+            set
+            {
+                discard_Time_uSec = value;
+                textBox_Discard.Text = value.ToString();
+            }
         }
+
         public Advanced_Settings_Control()
         {
             InitializeComponent();
@@ -58,35 +69,27 @@ namespace Advanced_Settings_Control
 
         private void pictureBox_Set_Click(object sender, EventArgs e)
         {
-            try
-            {
-                reference_TOF_uSec = Convert.ToDouble(textBox_Reference.Text);
-            }
-            catch 
-            {
+            double reference;
+            double discard;
 
-                MessageBox.Show("Invalid input!" + "\r\n" + "Defualt value for Reference TOF will be loaded." , "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                textBox_Reference.Text = "100";
+            if (!double.TryParse(textBox_Reference.Text, out reference) || double.IsNaN(reference) || double.IsInfinity(reference))
+            {
+                MessageBox.Show("Enter a valid reference TOF.");
+                return;
             }
 
-            try
+            if (!double.TryParse(textBox_Discard.Text, out discard) || double.IsNaN(discard) || double.IsInfinity(discard) || discard < 0 || discard > 255)
             {
-                discard_Time_uSec = Convert.ToDouble(textBox_Discard.Text);
-            }
-            catch 
-            {
-
-                MessageBox.Show("Invalid input!" + "\r\n" + "Defualt value for Discard Time will be loaded.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                textBox_Discard.Text = "20";
-            }
-            
-            if(Advanced_Settings_Changed != null)
-            {
-                Advanced_Settings_Changed(this, EventArgs.Empty);
+                MessageBox.Show("Discard time must be between 0 and 255 us.");
+                return;
             }
 
-            
+            Reference_TOF_uSec = reference;
+            Discard_Time_uSec = discard;
+
+            Advanced_Settings_Changed?.Invoke(this, EventArgs.Empty);
         }
+
 
         private void pictureBox_Set_MouseEnter(object sender, EventArgs e)
         {
