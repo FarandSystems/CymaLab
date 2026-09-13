@@ -1,4 +1,5 @@
 ﻿using Measurement_Mode_Control;
+using Signal_Strength_Control;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Transducer_Type;
 
 namespace CymaLAB_Ver_1._0
 {
@@ -19,6 +21,7 @@ namespace CymaLAB_Ver_1._0
         private AppSettings settings = new AppSettings();
 
         private readonly string settingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PreciTest", "CymaLab", "Settings.txt");
+        private bool settingsInitialized;
 
         private static bool IsInDesignMode
         {
@@ -48,8 +51,13 @@ namespace CymaLAB_Ver_1._0
             LoadSettings();
             ApplySettingsToControls();
 
+            settingsInitialized = true;
+
+            tof_Control.Close_Button_Clicked += Tof_Control_Close_Button_Clicked;
+
             advanced_Settings_Control.Advanced_Settings_Changed += advanced_Settings_Control_Advanced_Settings_Changed;
             measurement_Mode_Control.Measurement_Mode_isChanged += measurement_Mode_Control_Measurement_Mode_isChanged;
+            signal_Strength_Control.Signal_Intensity_isChanged += signal_Strength_Control_Signal_Intensity_isChanged;
 
 
             farand_Tablet_Chart_Control1.signal_Generator1.Mode_Is_Changed += Signal_Generator1_Mode_Is_Changed;
@@ -73,6 +81,7 @@ namespace CymaLAB_Ver_1._0
 
         }
 
+
         private void ApplySettingsToControls()
         {
             averaging_Control.Averaging_Captures_Count = settings.CaptureAveragingCount;
@@ -88,6 +97,25 @@ namespace CymaLAB_Ver_1._0
             measurement_Mode_Control.Measurement_Mode = settings.MeasurementMode == "Velocity" 
                                                         ? Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Velocity_Calculation
                                                         : Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Length_Calculation;
+
+            signal_Strength_Control.Transmitter_Power = settings.TransducerPowerLevel;
+            settings.PulseWidthUs = Constants.PULSE_WIDTHS_US[settings.TransducerPowerLevel - 1];
+            signal_Strength_Control.Reciever_Sensitivity = settings.AmplifierGain;
+
+            transducer_Type.Piezo_frequency_kHz = settings.PiezoFrequencyKhz;
+
+
+        }
+
+        private void SaveSettings()
+        {
+            settings.Validate();
+
+            string directory = Path.GetDirectoryName(settingsFilePath);
+
+            Directory.CreateDirectory(directory);
+
+            SettingsFile.Save(settingsFilePath, settings);
         }
 
         private void LoadSettings()
@@ -110,6 +138,16 @@ namespace CymaLAB_Ver_1._0
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
+        }
+
+
+        private void signal_Strength_Control_Signal_Intensity_isChanged(object sender, EventArgs e)
+        {
+            settings.TransducerPowerLevel = signal_Strength_Control.Transmitter_Power;
+
+            settings.PulseWidthUs = Constants.PULSE_WIDTHS_US[settings.TransducerPowerLevel - 1];
+
+            settings.AmplifierGain = signal_Strength_Control.Reciever_Sensitivity;
         }
 
         private void Signal_Generator1_Data_Is_Ready(object sender, EventArgs e)
@@ -164,65 +202,6 @@ namespace CymaLAB_Ver_1._0
             Update_Filter_Parameters();
         }
 
-        //private void Update_Filter_Mode()
-        //{
-        //    switch (system_mode)
-        //    {
-        //        case System_Mode_Enum.Test_Mode:
-        //            switch (filter_Control1.Filter_Mode)
-        //            {
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter:
-        //                    farand_Tablet_Chart_Control1.signal_Generator1.Set_Filter_Parameters(Data_Generate.Signal_Generator.Filter_Mode_Enum.No_Filter, 10, 40);
-        //                    break;
-
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.Weak_BandPass:
-        //                    farand_Tablet_Chart_Control1.signal_Generator1.Set_Filter_Parameters(Data_Generate.Signal_Generator.Filter_Mode_Enum.Weak_BandPass_Filter, 10, 40);
-        //                    break;
-
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.Strong_BandPass:
-        //                    farand_Tablet_Chart_Control1.signal_Generator1.Set_Filter_Parameters(Data_Generate.Signal_Generator.Filter_Mode_Enum.Strong_BandPass_Filter, 10, 40);
-        //                    break;
-        //            }
-        //            label1.Text = filter_Control1.Filter_Mode.ToString();
-        //            break;
-
-        //        case System_Mode_Enum.Normal_operation:
-        //            switch (filter_Control1.Filter_Mode)
-        //            {
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter:
-        //                    // Send Command to PT-201   
-        //                    break;
-
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.Weak_BandPass:
-        //                    // Send Command to PT-201
-        //                    break;
-
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.Strong_BandPass:
-        //                    // Send Command to PT-201  blet_Chart_Control1.signal_Generator1.Set_Filter_Parameters(Data_Generate.Signal_Generator.Filter_Mode_Enum.Strong_BandPass_Filter, 10, 40);
-        //                    break;
-        //            }
-        //            label1.Text = filter_Control1.Filter_Mode.ToString();
-        //            break;
-        //        case System_Mode_Enum.Idle:
-        //            switch (filter_Control1.Filter_Mode)
-        //            {
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter:
-        //                    // Send Command to PT-201
-        //                    break;
-
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.Weak_BandPass:
-        //                    // Send Command to PT-201
-        //                    break;
-        //                case Filter_Control.Filter_Control.Filter_Mode_Enum.Strong_BandPass:
-        //                    // Send Command to PT-201
-        //                    break;
-        //            }
-        //            label1.Text = filter_Control1.Filter_Mode.ToString();
-        //            break;
-
-        //    }
-        //}
-
         private void Update_Averaging()
         {
             int n = averaging_Control.Averaging_Captures_Count;
@@ -246,7 +225,7 @@ namespace CymaLAB_Ver_1._0
 
         private void Update_Filter_Parameters()
         {
-            double f = transducer_Type1.Piezo_frequency_kHz;
+            double f = transducer_Type.Piezo_frequency_kHz;
 
             switch (system_mode)
             {
@@ -284,15 +263,52 @@ namespace CymaLAB_Ver_1._0
             
         }
 
-        private void transducer_Type1_piezo_frequency_Changed(object sender, EventArgs e)
+        private void transducer_Type_piezo_frequency_Changed(object sender, EventArgs e)
         {
+            settings.TransducerType = "P";
+
+            settings.PiezoFrequencyKhz = transducer_Type.Piezo_frequency_kHz;
+
             Update_Filter_Parameters();
+        }
+
+        private void Tof_Control_Close_Button_Clicked(object sender, EventArgs e)
+        {
+            Close();
         }
 
         private void timer_Auto_Start_Simulation_Tick(object sender, EventArgs e)
         {
             farand_Tablet_Chart_Control1.signal_Generator1.checkBox_use_Simulated_Click(null, null);
             timer_Auto_Start_Simulation.Stop();
+        }
+
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (e.Cancel || !settingsInitialized)
+                return;
+
+            try
+            {
+                SaveSettings();
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is ArgumentException)
+            {
+                e.Cancel = true;
+
+                MessageBox.Show(
+                    this,
+                    "Could not save settings."
+                    + Environment.NewLine
+                    + Environment.NewLine
+                    + ex.Message,
+                    "Settings",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }

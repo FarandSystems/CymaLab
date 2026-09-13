@@ -15,9 +15,11 @@
         public bool PowerFilteringActive { get; set; } = false;
 
         public string TransducerType { get; set; } = "P";
+        public double PiezoFrequencyKhz { get; set; } = 55.0;
+
         public string FilterMode { get; set; } = "OFF";
         public string MeasurementMode { get; set; } = "Velocity";
-        public string AmplifierGain { get; set; } = "Low";
+        public int AmplifierGain { get; set; } = 1;
 
         public int TransducerPowerLevel { get; set; } = 5;
         public int CaptureAveragingCount { get; set; } = 16;
@@ -43,8 +45,11 @@
             if (CaptureAveragingCount != 1 && CaptureAveragingCount != 4 && CaptureAveragingCount != 8 && CaptureAveragingCount != 16 && CaptureAveragingCount != 32)
                 throw new System.ArgumentException("Capture averaging count must be 1, 4, 8, 16 or 32.");
 
-            if (TransducerType != "P" && TransducerType != "S")
-                throw new System.ArgumentException("Transducer type must be P or S.");
+            if (TransducerType != "P")
+                throw new System.ArgumentException("Transducer type must be P.");
+
+            if (PiezoFrequencyKhz != Constants.PIEZO_FREQUENCY_KHZ)
+                throw new System.ArgumentException($"The available transducer frequency is {Constants.PIEZO_FREQUENCY_KHZ} kHz.");
 
             if (FilterMode != "ON" && FilterMode != "OFF")
                 throw new System.ArgumentException("Filter mode must be ON or OFF.");
@@ -52,8 +57,9 @@
             if (MeasurementMode != "Velocity" && MeasurementMode != "Length")
                 throw new System.ArgumentException("Measurement mode must be Velocity or Length.");
 
-            if (AmplifierGain != "Low" && AmplifierGain != "High")
-                throw new System.ArgumentException("Amplifier gain must be Low or High.");
+            if (AmplifierGain < 1 || AmplifierGain > 4)
+                throw new System.ArgumentException("Amplifier gain level must be between 1 and 4.");
+
         }
     }
 }

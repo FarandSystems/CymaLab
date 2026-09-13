@@ -19,20 +19,79 @@ namespace Signal_Strength_Control
         public int Reciever_Sensitivity
         {
             get { return reciever_Sensitivity; }
-            set { reciever_Sensitivity = value; }
+
+            set
+            {
+                if (value < 1 || value > 4)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                reciever_Sensitivity = value;
+
+                UpdateReceiverSelection();
+            }
         }
 
         private int transmitter_Power = 1;
         public int Transmitter_Power
         {
             get { return transmitter_Power; }
-            set { transmitter_Power = value; }
+
+            set
+            {
+                if (value < 1 || value > 8)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                transmitter_Power = value;
+
+                UpdateTransmitterSelection();
+            }
         }
 
         public event EventHandler Signal_Intensity_isChanged;
         public Signal_Strength_Control()
         {
             InitializeComponent();
+        }
+
+
+        private void UpdateReceiverSelection()
+        {
+            PictureBox[] indicators =
+            {
+                pictureBox_Receiver1,
+                pictureBox_Receiver2,
+                pictureBox_Receiver3,
+                pictureBox_Receiver4
+            };
+
+            for (int i = 0; i < indicators.Length; i++)
+            {
+                indicators[i].Image = i < reciever_Sensitivity
+                                          ? Properties.Resources.LED2_Green_ON
+                                          : Properties.Resources.LED2_Green_OFF;
+            }
+        }
+
+        private void UpdateTransmitterSelection()
+        {
+            PictureBox[] indicators =
+            {
+                pictureBox_Transducer1,
+                pictureBox_Transducer2,
+                pictureBox_Transducer3,
+                pictureBox_Transducer4,
+                pictureBox_Transducer5,
+                pictureBox_Transducer6,
+                pictureBox_Transducer7,
+                pictureBox_Transducer8
+            };
+
+            for (int i = 0; i < indicators.Length; i++)
+            {
+                indicators[i].Image = i < transmitter_Power
+                                          ? Properties.Resources.LED2_Green_ON
+                                          : Properties.Resources.LED2_Green_OFF;
+            }
         }
 
         private void Trun_Off_All_Receiver_LEDs()

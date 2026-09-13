@@ -48,10 +48,9 @@
             this.fancy_Lable_Control_None.Fancy_lable_text = "None";
             this.fancy_Lable_Control_None.Inactive_Highlight_Color = System.Drawing.Color.LightGray;
             this.fancy_Lable_Control_None.Inactive_Normal_Color = System.Drawing.Color.DarkGray;
-            this.fancy_Lable_Control_None.Location = new System.Drawing.Point(11, 47);
-            this.fancy_Lable_Control_None.Margin = new System.Windows.Forms.Padding(4);
+            this.fancy_Lable_Control_None.Location = new System.Drawing.Point(8, 25);
             this.fancy_Lable_Control_None.Name = "fancy_Lable_Control_None";
-            this.fancy_Lable_Control_None.Size = new System.Drawing.Size(80, 33);
+            this.fancy_Lable_Control_None.Size = new System.Drawing.Size(60, 27);
             this.fancy_Lable_Control_None.TabIndex = 0;
             this.fancy_Lable_Control_None.Fancy_Label_Clicked += new System.EventHandler(this.fancy_Lable_Control_None_Fancy_Label_Clicked);
             // 
@@ -66,10 +65,9 @@
             this.fancy_Lable_Control4.Fancy_lable_text = "4 Captures";
             this.fancy_Lable_Control4.Inactive_Highlight_Color = System.Drawing.Color.LightGray;
             this.fancy_Lable_Control4.Inactive_Normal_Color = System.Drawing.Color.DarkGray;
-            this.fancy_Lable_Control4.Location = new System.Drawing.Point(97, 47);
-            this.fancy_Lable_Control4.Margin = new System.Windows.Forms.Padding(4);
+            this.fancy_Lable_Control4.Location = new System.Drawing.Point(73, 25);
             this.fancy_Lable_Control4.Name = "fancy_Lable_Control4";
-            this.fancy_Lable_Control4.Size = new System.Drawing.Size(111, 33);
+            this.fancy_Lable_Control4.Size = new System.Drawing.Size(88, 27);
             this.fancy_Lable_Control4.TabIndex = 1;
             this.fancy_Lable_Control4.Fancy_Label_Clicked += new System.EventHandler(this.fancy_Lable_Control_None_Fancy_Label_Clicked);
             // 
@@ -84,10 +82,9 @@
             this.fancy_Lable_Control8.Fancy_lable_text = "8 Captures";
             this.fancy_Lable_Control8.Inactive_Highlight_Color = System.Drawing.Color.LightGray;
             this.fancy_Lable_Control8.Inactive_Normal_Color = System.Drawing.Color.DarkGray;
-            this.fancy_Lable_Control8.Location = new System.Drawing.Point(240, 47);
-            this.fancy_Lable_Control8.Margin = new System.Windows.Forms.Padding(4);
+            this.fancy_Lable_Control8.Location = new System.Drawing.Point(180, 25);
             this.fancy_Lable_Control8.Name = "fancy_Lable_Control8";
-            this.fancy_Lable_Control8.Size = new System.Drawing.Size(111, 33);
+            this.fancy_Lable_Control8.Size = new System.Drawing.Size(88, 27);
             this.fancy_Lable_Control8.TabIndex = 2;
             this.fancy_Lable_Control8.Fancy_Label_Clicked += new System.EventHandler(this.fancy_Lable_Control_None_Fancy_Label_Clicked);
             // 
@@ -102,10 +99,9 @@
             this.fancy_Lable_Control16.Fancy_lable_text = "16 Captures";
             this.fancy_Lable_Control16.Inactive_Highlight_Color = System.Drawing.Color.LightGray;
             this.fancy_Lable_Control16.Inactive_Normal_Color = System.Drawing.Color.DarkGray;
-            this.fancy_Lable_Control16.Location = new System.Drawing.Point(88, 97);
-            this.fancy_Lable_Control16.Margin = new System.Windows.Forms.Padding(4);
+            this.fancy_Lable_Control16.Location = new System.Drawing.Point(66, 66);
             this.fancy_Lable_Control16.Name = "fancy_Lable_Control16";
-            this.fancy_Lable_Control16.Size = new System.Drawing.Size(122, 33);
+            this.fancy_Lable_Control16.Size = new System.Drawing.Size(97, 27);
             this.fancy_Lable_Control16.TabIndex = 3;
             this.fancy_Lable_Control16.Fancy_Label_Clicked += new System.EventHandler(this.fancy_Lable_Control_None_Fancy_Label_Clicked);
             // 
@@ -120,10 +116,9 @@
             this.fancy_Lable_Control32.Fancy_lable_text = "32 Captures";
             this.fancy_Lable_Control32.Inactive_Highlight_Color = System.Drawing.Color.LightGray;
             this.fancy_Lable_Control32.Inactive_Normal_Color = System.Drawing.Color.DarkGray;
-            this.fancy_Lable_Control32.Location = new System.Drawing.Point(240, 97);
-            this.fancy_Lable_Control32.Margin = new System.Windows.Forms.Padding(4);
+            this.fancy_Lable_Control32.Location = new System.Drawing.Point(180, 66);
             this.fancy_Lable_Control32.Name = "fancy_Lable_Control32";
-            this.fancy_Lable_Control32.Size = new System.Drawing.Size(122, 33);
+            this.fancy_Lable_Control32.Size = new System.Drawing.Size(97, 27);
             this.fancy_Lable_Control32.TabIndex = 4;
             this.fancy_Lable_Control32.Fancy_Label_Clicked += new System.EventHandler(this.fancy_Lable_Control_None_Fancy_Label_Clicked);
             // 
@@ -137,8 +132,10 @@
             this.groupBox_Averaging.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox_Averaging.ForeColor = System.Drawing.Color.White;
             this.groupBox_Averaging.Location = new System.Drawing.Point(2, 1);
+            this.groupBox_Averaging.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox_Averaging.Name = "groupBox_Averaging";
-            this.groupBox_Averaging.Size = new System.Drawing.Size(400, 152);
+            this.groupBox_Averaging.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox_Averaging.Size = new System.Drawing.Size(300, 102);
             this.groupBox_Averaging.TabIndex = 5;
             this.groupBox_Averaging.TabStop = false;
             this.groupBox_Averaging.Text = "Averaging";
@@ -146,12 +143,13 @@
             // 
             // Averaging_Control
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.groupBox_Averaging);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Averaging_Control";
-            this.Size = new System.Drawing.Size(415, 163);
+            this.Size = new System.Drawing.Size(311, 108);
             this.groupBox_Averaging.ResumeLayout(false);
             this.groupBox_Averaging.PerformLayout();
             this.ResumeLayout(false);

@@ -40,11 +40,13 @@ namespace CymaLAB_Ver_1._0
 
                 writer.WriteLine("Transducer Type = " + settings.TransducerType);
 
+                writer.WriteLine("Piezo Frequency (kHz) = " + Format(settings.PiezoFrequencyKhz, "0.00"));
+
                 writer.WriteLine("Filter Mode = " + settings.FilterMode);
 
                 writer.WriteLine("Measurement Mode = " + settings.MeasurementMode);
 
-                writer.WriteLine("Amplifier Gain = " + settings.AmplifierGain);
+                writer.WriteLine("Amplifier Gain = " + settings.AmplifierGain.ToString(CultureInfo.InvariantCulture));
 
 
                 writer.WriteLine("Transducer Power Level = " + settings.TransducerPowerLevel.ToString(CultureInfo.InvariantCulture));
@@ -123,6 +125,10 @@ namespace CymaLAB_Ver_1._0
                             settings.TransducerType = value;
                             break;
 
+                        case "Piezo Frequency (kHz)":
+                            settings.PiezoFrequencyKhz = ParseNumber(value);
+                            break;
+
                         case "Filter Mode":
                             settings.FilterMode = value;
                             break;
@@ -132,7 +138,7 @@ namespace CymaLAB_Ver_1._0
                             break;
 
                         case "Amplifier Gain":
-                            settings.AmplifierGain = value;
+                            settings.AmplifierGain = int.Parse(value, CultureInfo.InvariantCulture);
                             break;
 
                         case "Tranducer Power Level": // Misspell at previous version so for parsing the previous versions this needed!

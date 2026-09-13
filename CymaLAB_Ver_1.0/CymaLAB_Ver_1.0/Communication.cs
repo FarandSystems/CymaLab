@@ -49,8 +49,8 @@ namespace CymaLAB_Ver_1._0
 
 
             Vcp.Connection_Ready += Vcp_Connection_Ready;
-            Vcp.Normal_Operation_Starts += Vcp_Normal_Operation_Starts;
-            Vcp.Connection_Failed += Vcp_Connection_Failed;
+            //Vcp.Normal_Operation_Starts += Vcp_Normal_Operation_Starts;
+            //Vcp.Connection_Failed += Vcp_Connection_Failed;
             Vcp.Received_Data_Ready += Vcp_Received_Data_Ready;
 
             Vcp.Start_VCP_Connection = true;
@@ -78,7 +78,7 @@ namespace CymaLAB_Ver_1._0
 
             byte[] receivedData = (byte[])source.Clone();
 
-            Process_Complete_Rx_Packet(receivedData);
+            //Process_Complete_Rx_Packet(receivedData);
         }
 
 

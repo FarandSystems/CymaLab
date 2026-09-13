@@ -53,7 +53,12 @@ namespace CymaLAB_Ver_1._0
 
         public const double PIEZO_PHASE_SCALE = 0.01;
 
+        public static readonly double[] PULSE_WIDTHS_US =
+        {
+            1, 2, 5, 7, 10, 15, 20, 25
+        };
 
+        public const double PIEZO_FREQUENCY_KHZ = 55.0;
 
         // ====================================== //
 

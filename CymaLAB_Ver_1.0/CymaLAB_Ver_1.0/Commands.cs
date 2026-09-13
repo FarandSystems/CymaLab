@@ -11,9 +11,9 @@ namespace CymaLAB_Ver_1._0
     {
         private readonly Communication communication;
 
-        public Commands(Communication communication)
-        {
-            this.communication = communication;
-        }
+        //public Commands(Communication communication)
+        //{
+        //    this.communication = communication;
+        //}
     }
 }
