@@ -32,16 +32,16 @@
             this.measurement_Mode_Control = new Measurement_Mode_Control.Measurement_Mode_Control();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.advanced_Settings_Control = new Advanced_Settings_Control.Advanced_Settings_Control();
             this.averaging_Control = new Averaging_Control.Averaging_Control();
             this.signal_Strength_Control = new Signal_Strength_Control.Signal_Strength_Control();
+            this.filter_Control = new Filter_Control.Filter_Control();
             this.label1 = new System.Windows.Forms.Label();
             this.transducer_Type = new Transducer_Type.Transducer_Type();
-            this.advanced_Settings_Control = new Advanced_Settings_Control.Advanced_Settings_Control();
-            this.command_Box1 = new Command_Box.Command_Box();
+            this.command_Box = new Command_Box.Command_Box();
             this.tof_Control = new TOF_Contorol.TOF_Control();
             this.farand_Tablet_Chart_Control1 = new Farand_Tablet_Chart.Farand_Tablet_Chart_Control();
             this.timer_Auto_Start_Simulation = new System.Windows.Forms.Timer(this.components);
-            this.filter_Control = new Filter_Control.Filter_Control();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -64,7 +64,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 338F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.command_Box1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.command_Box, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.tof_Control, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.farand_Tablet_Chart_Control1, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -93,6 +93,17 @@
             this.panel1.Size = new System.Drawing.Size(334, 698);
             this.panel1.TabIndex = 0;
             // 
+            // advanced_Settings_Control
+            // 
+            this.advanced_Settings_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.advanced_Settings_Control.Discard_Time_uSec = 0D;
+            this.advanced_Settings_Control.Location = new System.Drawing.Point(2, 587);
+            this.advanced_Settings_Control.Margin = new System.Windows.Forms.Padding(2);
+            this.advanced_Settings_Control.Name = "advanced_Settings_Control";
+            this.advanced_Settings_Control.Reference_TOF_uSec = 0D;
+            this.advanced_Settings_Control.Size = new System.Drawing.Size(311, 106);
+            this.advanced_Settings_Control.TabIndex = 9;
+            // 
             // averaging_Control
             // 
             this.averaging_Control.Averaging_Captures_Count = 1;
@@ -114,6 +125,18 @@
             this.signal_Strength_Control.Size = new System.Drawing.Size(311, 144);
             this.signal_Strength_Control.TabIndex = 7;
             this.signal_Strength_Control.Transmitter_Power = 1;
+            // 
+            // filter_Control
+            // 
+            this.filter_Control.AutoSize = true;
+            this.filter_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.filter_Control.Filter_Mode = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
+            this.filter_Control.Location = new System.Drawing.Point(0, 61);
+            this.filter_Control.Margin = new System.Windows.Forms.Padding(2);
+            this.filter_Control.Name = "filter_Control";
+            this.filter_Control.Size = new System.Drawing.Size(311, 82);
+            this.filter_Control.TabIndex = 5;
+            this.filter_Control.Filter_Mode_Changed += new System.EventHandler(this.filter_Control_Filter_Mode_Changed);
             // 
             // label1
             // 
@@ -137,30 +160,19 @@
             this.transducer_Type.TabIndex = 10;
             this.transducer_Type.piezo_frequency_Changed += new System.EventHandler(this.transducer_Type_piezo_frequency_Changed);
             // 
-            // advanced_Settings_Control
+            // command_Box
             // 
-            this.advanced_Settings_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.advanced_Settings_Control.Discard_Time_uSec = 0D;
-            this.advanced_Settings_Control.Location = new System.Drawing.Point(2, 587);
-            this.advanced_Settings_Control.Margin = new System.Windows.Forms.Padding(2);
-            this.advanced_Settings_Control.Name = "advanced_Settings_Control";
-            this.advanced_Settings_Control.Reference_TOF_uSec = 0D;
-            this.advanced_Settings_Control.Size = new System.Drawing.Size(311, 106);
-            this.advanced_Settings_Control.TabIndex = 9;
-            // 
-            // command_Box1
-            // 
-            this.command_Box1._IsConnected = false;
-            this.command_Box1._IsLive = true;
-            this.command_Box1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.command_Box1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.command_Box1.Load_Path = null;
-            this.command_Box1.Location = new System.Drawing.Point(2, 2);
-            this.command_Box1.Margin = new System.Windows.Forms.Padding(2);
-            this.command_Box1.Name = "command_Box1";
-            this.command_Box1.Save_Path = null;
-            this.command_Box1.Size = new System.Drawing.Size(334, 68);
-            this.command_Box1.TabIndex = 1;
+            this.command_Box._IsConnected = false;
+            this.command_Box._IsLive = true;
+            this.command_Box.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.command_Box.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.command_Box.Load_Path = null;
+            this.command_Box.Location = new System.Drawing.Point(2, 2);
+            this.command_Box.Margin = new System.Windows.Forms.Padding(2);
+            this.command_Box.Name = "command_Box";
+            this.command_Box.Save_Path = null;
+            this.command_Box.Size = new System.Drawing.Size(334, 68);
+            this.command_Box.TabIndex = 1;
             // 
             // tof_Control
             // 
@@ -192,18 +204,6 @@
             this.timer_Auto_Start_Simulation.Interval = 500;
             this.timer_Auto_Start_Simulation.Tick += new System.EventHandler(this.timer_Auto_Start_Simulation_Tick);
             // 
-            // filter_Control
-            // 
-            this.filter_Control.AutoSize = true;
-            this.filter_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.filter_Control.Filter_Mode = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
-            this.filter_Control.Location = new System.Drawing.Point(0, 61);
-            this.filter_Control.Margin = new System.Windows.Forms.Padding(2);
-            this.filter_Control.Name = "filter_Control";
-            this.filter_Control.Size = new System.Drawing.Size(311, 82);
-            this.filter_Control.TabIndex = 5;
-            this.filter_Control.Filter_Mode_Changed += new System.EventHandler(this.filter_Control_Filter_Mode_Changed);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -229,7 +229,7 @@
         #endregion
 
         private TOF_Contorol.TOF_Control tof_Control;
-        private Command_Box.Command_Box command_Box1;
+        private Command_Box.Command_Box command_Box;
         private Farand_Tablet_Chart.Farand_Tablet_Chart_Control farand_Tablet_Chart_Control1;
         private Filter_Control.Filter_Control filter_Control;
         private Measurement_Mode_Control.Measurement_Mode_Control measurement_Mode_Control;

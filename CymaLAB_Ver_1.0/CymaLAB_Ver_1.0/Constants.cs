@@ -106,6 +106,9 @@ namespace CymaLAB_Ver_1._0
         public const double WEAK_FILTER_RATIO = 10.0;
         public const double STRONG_FILTER_RATIO = 4.0;
 
+        public const int DEFAULT_DOWNSAMPLE_RATIO = 10;
+        public const int DEFAULT_SAMPLE_START_INDEX = 0;
+
         // ====================================== //
 
 
@@ -188,6 +191,13 @@ namespace CymaLAB_Ver_1._0
         public const byte SIGNAL_OPTIONS_VALUE = 0x07;
 
         public const int MAX_PENDING_COMMANDS = 32;
+        // ==================================== //
+
+
+        // ================ UI ================ //
+
+        public const int HARDWARE_DISPLAY_INTERVAL_MS = 125;
+
         // ==================================== //
     }
 }

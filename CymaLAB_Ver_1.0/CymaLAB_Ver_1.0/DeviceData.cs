@@ -18,4 +18,7 @@
     public short DiagnosticFilteredTofUs { get; set; }
 
     public short Peak5AdvanceUs { get; set; }
+
+    public double StartTimeUs { get; set; }
+    public double SampleIntervalUs { get; set; }
 }

@@ -14,6 +14,7 @@ namespace CymaLAB_Ver_1._0
         }
 
         public event Action ConnectionLost;
+        public event Action Connected;
         public event Action<string> StatusChanged;
         public event Action<byte[]> PacketReceived;
 
@@ -128,12 +129,13 @@ namespace CymaLAB_Ver_1._0
 
         private void Vcp_NormalOperationStarted(object sender, EventArgs e)
         {
-            // The service calls this only after the handshake succeeds.
             vcp.FrameLength = Constants.RX_BUFFER_SIZE;
 
             isConnected = true;
 
             StatusChanged?.Invoke("CymaLab USB connected on " + vcp.CurrentPortName);
+
+            Connected?.Invoke();
         }
 
         private void Vcp_StatusChanged(object sender, VcpStatusChangedEventArgs e)

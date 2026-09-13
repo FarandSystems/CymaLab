@@ -69,6 +69,18 @@ namespace Farand_Tablet_Chart
         private ZoomButtonMode pendingSingleZoom = ZoomButtonMode.None;
         private bool zoomWasAppliedDuringHold = false;
 
+        private bool captureMode;
+
+        private double captureStartUs;
+        private double captureIntervalUs = 1.0;
+
+        private double captureDefaultMinimumUs;
+        private double captureDefaultMaximumUs;
+
+        private double captureMaximumStartUs;
+        private double captureMinimumSpanUs;
+        private double captureMaximumSpanUs;
+
         public event EventHandler<XAxisViewChangedEventArgs> XAxisViewChanged;
 
         public double XAxisMinimum
@@ -210,7 +222,7 @@ namespace Farand_Tablet_Chart
             defaultYMin = fixedYMin;
             defaultYMax = fixedYMax;
 
-            SetFixedYRange( fixedYMin, fixedYMax );
+            SetFixedYRange(fixedYMin, fixedYMax);
 
             yMin = defaultYMin;
             yMax = defaultYMax;
@@ -325,7 +337,7 @@ namespace Farand_Tablet_Chart
             chartMain.TextAntiAliasingQuality = TextAntiAliasingQuality.Normal;
 
             ChartArea area = new ChartArea(ChartAreaName);
-            Color grid_Color = Color.FromArgb(100,100,100);
+            Color grid_Color = Color.FromArgb(100, 100, 100);
 
             area.BorderDashStyle = ChartDashStyle.Solid;
             area.BorderColor = grid_Color;
@@ -371,7 +383,7 @@ namespace Farand_Tablet_Chart
             area.AxisY.Maximum = yMax;
 
             area.CursorX.IsUserEnabled = false;
-            area.CursorY.IsUserEnabled = false;          
+            area.CursorY.IsUserEnabled = false;
 
 
             chartMain.ChartAreas.Add(area);
@@ -379,10 +391,104 @@ namespace Farand_Tablet_Chart
             Series series = new Series(SeriesName);
             series.ChartArea = ChartAreaName;
             series.ChartType = SeriesChartType.FastLine;
+            series.Color = Color.LimeGreen;
             series.BorderWidth = 2;
             series.IsXValueIndexed = false;
 
             chartMain.Series.Add(series);
+        }
+
+        public void ConfigureCaptureView(double minimumUs, double maximumUs, double maximumStartUs, double minimumSpanUs, double maximumSpanUs)
+        {
+            if (!IsFinite(minimumUs) || !IsFinite(maximumUs)
+                || !IsFinite(maximumStartUs) || !IsFinite(minimumSpanUs)
+                || !IsFinite(maximumSpanUs) || minimumUs < 0 || maximumUs <= minimumUs
+                || maximumStartUs < 0 || minimumSpanUs <= 0 || maximumSpanUs < minimumSpanUs)
+            {
+                throw new ArgumentException("Invalid capture time range.");
+            }
+
+            captureMode = true;
+            autoFollowX = false;
+
+            captureMaximumStartUs = maximumStartUs;
+            captureMinimumSpanUs = minimumSpanUs;
+            captureMaximumSpanUs = maximumSpanUs;
+
+            sampleBuffer.Clear();
+
+            double[] ignored;
+            while (sampleQueue.TryDequeue(out ignored))
+            {
+            }
+
+            xMin = minimumUs;
+            xMax = maximumUs;
+
+            ClampXRangeToAvailableData();
+
+            captureDefaultMinimumUs = xMin;
+            captureDefaultMaximumUs = xMax;
+
+            chartMain.ChartAreas[ChartAreaName].AxisX.Title = "Time (µs)";
+
+            UpdateChartPoints();
+        }
+
+        public void ShowCapture(double[] samples, double startTimeUs, double sampleIntervalUs)
+        {
+            if (!captureMode)
+                throw new InvalidOperationException("Configure the capture view first.");
+
+            if (samples == null)
+                throw new ArgumentNullException(nameof(samples));
+
+            if (!IsFinite(startTimeUs) || !IsFinite(sampleIntervalUs) || startTimeUs < 0 || sampleIntervalUs <= 0)
+            {
+                throw new ArgumentException("Invalid capture timing.");
+            }
+
+            captureStartUs = startTimeUs;
+            captureIntervalUs = sampleIntervalUs;
+
+            sampleBuffer.Clear();
+            sampleBuffer.AddRange(samples);
+
+            if (autoScaleY)
+                AutoScaleVisibleY();
+
+            UpdateChartPoints();
+        }
+
+        private double SampleIndexToX(int index)
+        {
+            if (captureMode)
+                return captureStartUs + index * captureIntervalUs;
+
+            return firstSampleIndex + index;
+        }
+
+        private void GetVisibleSampleRange(out int startIndex, out int endIndex)
+        {
+            double origin = captureMode
+                ? captureStartUs
+                : firstSampleIndex;
+
+            double interval = captureMode
+                ? captureIntervalUs
+                : 1.0;
+
+            double first = Math.Floor((xMin - origin) / interval);
+            double last = Math.Ceiling((xMax - origin) / interval);
+
+            startIndex = (int)Math.Max(0, Math.Min(sampleBuffer.Count, first));
+
+            endIndex = (int)Math.Max(-1, Math.Min(sampleBuffer.Count - 1, last));
+        }
+
+        private static bool IsFinite(double value)
+        {
+            return !double.IsNaN(value) && !double.IsInfinity(value);
         }
 
         private void WireEvents()
@@ -420,6 +526,13 @@ namespace Farand_Tablet_Chart
 
         public void ResetView()
         {
+            if (captureMode)
+            {
+                SetXView(captureDefaultMinimumUs, captureDefaultMaximumUs);
+
+                return;
+            }
+
             double oldXMin = xMin;
             double oldXMax = xMax;
 
@@ -548,6 +661,9 @@ namespace Farand_Tablet_Chart
 
         private void RenderTimer_Tick(object sender, EventArgs e)
         {
+            if (captureMode)
+                return;
+
             bool receivedNewSamples = DrainSampleQueue();
 
             if (!receivedNewSamples)
@@ -779,8 +895,10 @@ namespace Farand_Tablet_Chart
                 return;
             }
 
-            int startIndex = Math.Max(0, (int)Math.Floor(xMin - firstSampleIndex));
-            int endIndex = Math.Min(sampleBuffer.Count - 1, (int)Math.Ceiling(xMax - firstSampleIndex));
+            int startIndex;
+            int endIndex;
+
+            GetVisibleSampleRange(out startIndex, out endIndex);
 
             if (endIndex < startIndex)
             {
@@ -834,12 +952,14 @@ namespace Farand_Tablet_Chart
 
             if (sampleBuffer.Count > 0)
             {
-                int startIndex = Math.Max(0, (int)Math.Floor(xMin - firstSampleIndex));
-                int endIndex = Math.Min(sampleBuffer.Count - 1, (int)Math.Ceiling(xMax - firstSampleIndex));
+                int startIndex;
+                int endIndex;
+
+                GetVisibleSampleRange(out startIndex, out endIndex);
 
                 for (int i = startIndex; i <= endIndex; i++)
                 {
-                    double x = firstSampleIndex + i;
+                    double x = SampleIndexToX(i);
                     double y = sampleBuffer[i];
 
                     if (!double.IsNaN(y) && !double.IsInfinity(y))
@@ -1070,8 +1190,10 @@ namespace Farand_Tablet_Chart
 
             double newRange = range * factor;
 
-            if (newRange < 10)
-                newRange = 10;
+            double minimumRange = captureMode ? captureMinimumSpanUs : 10.0;
+
+            if (newRange < minimumRange)
+                newRange = minimumRange;
 
             double half = newRange * 0.5;
 
@@ -1114,6 +1236,18 @@ namespace Farand_Tablet_Chart
 
         private void ClampXRangeToAvailableData()
         {
+            if (captureMode)
+            {
+                double span = Math.Max(captureMinimumSpanUs, Math.Min(captureMaximumSpanUs, xMax - xMin));
+
+                xMin = Math.Max(0, Math.Min(captureMaximumStartUs, xMin));
+
+                xMax = xMin + span;
+
+                return;
+            }
+
+
             if (sampleBuffer.Count <= 0)
             {
                 if (xMin < 0)
@@ -1191,7 +1325,7 @@ namespace Farand_Tablet_Chart
 
         private void btnZoomXIn_MouseDown(object sender, MouseEventArgs e)
         {
-            
+
         }
 
         private void pictureBox_ZoomXin_MouseDown(object sender, MouseEventArgs e)
@@ -1216,7 +1350,7 @@ namespace Farand_Tablet_Chart
                     BeginZoomHold(ZoomButtonMode.YOut);
                     break;
             }
-          
+
         }
 
         private void pictureBox_ZoomXin_MouseUp(object sender, MouseEventArgs e)
@@ -1295,13 +1429,13 @@ namespace Farand_Tablet_Chart
 
             int w = this.Width;
             int h = this.Height;
-           
+
 
             chartMain.Top = H0;
             chartMain.Left = W0;
             chartMain.Width = w - W0 - H0;
             chartMain.Height = h - W0 - H0;
-            
+
             pictureBox_ZoomXOut.Top = h - W0 + (W0 - P0) / 2;
             pictureBox_ZoomXOut.Left = W0 + (w - W0 - H0) / 2 - D0 / 2 - P0;
             pictureBox_ZoomXin.Top = h - W0 + (W0 - P0) / 2;

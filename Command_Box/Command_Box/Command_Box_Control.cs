@@ -147,9 +147,10 @@ namespace Command_Box
 
         private void pictureBox_Run_Click(object sender, EventArgs e)
         {
-            _isLive = !_isLive;
+            if (!_isConnected)
+                return;
 
-            Update_Live_Pic();
+            LiveKey_Clicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void pictureBox_Run_MouseEnter(object sender, EventArgs e)

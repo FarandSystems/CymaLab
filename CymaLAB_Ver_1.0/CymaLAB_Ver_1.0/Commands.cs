@@ -14,6 +14,12 @@ namespace CymaLAB_Ver_1._0
 
         public event Action<Exception> CommandFailed;
 
+        private int sentDownSampleRatio = Constants.DEFAULT_DOWNSAMPLE_RATIO;
+
+        private int sentStartIndex = Constants.DEFAULT_SAMPLE_START_INDEX;
+
+        public event Action<DeviceData> MeasurementReceived;
+
         public Commands(Communication communication)
         {
             if (communication == null)
@@ -44,26 +50,52 @@ namespace CymaLAB_Ver_1._0
 
         private void Communication_PacketReceived(byte[] packet)
         {
+            DeviceData data;
+
             try
             {
-                RespondToPacket();
+                lock (commandLock)
+                {
+                    if (!captureInProgress)
+                        return;
+
+                    data = PacketParser.Parse(packet);
+
+                    if (data == null)
+                        return;
+
+                    double adcIntervalUs = Constants.MICROSECONDS_PER_SECOND / Constants.ADC_SAMPLE_RATE_HZ;
+
+                    data.StartTimeUs = sentStartIndex * adcIntervalUs;
+
+                    data.SampleIntervalUs = sentDownSampleRatio * adcIntervalUs;
+
+                    // This response may change sampling for the NEXT capture.
+                    RespondToPacket();
+                }
             }
             catch (IOException ex)
             {
                 HandleSendFailure(ex);
+                return;
             }
             catch (InvalidOperationException ex)
             {
                 HandleSendFailure(ex);
+                return;
             }
             catch (UnauthorizedAccessException ex)
             {
                 HandleSendFailure(ex);
+                return;
             }
             catch (TimeoutException ex)
             {
                 HandleSendFailure(ex);
+                return;
             }
+
+            MeasurementReceived?.Invoke(data);
         }
 
         private void Communication_ConnectionLost()
@@ -158,6 +190,69 @@ namespace CymaLAB_Ver_1._0
         private void SendImmediate(byte[] command)
         {
             communication.Send(command);
+
+            if (command[Constants.COMMAND_ID_INDEX] == (byte)DeviceCommand.SamplingParameters)
+            {
+                sentDownSampleRatio = command[Constants.SAMPLING_DOWNSAMPLE_INDEX];
+
+                sentStartIndex = Utils.GetUInt16LE(command, Constants.SAMPLING_START_INDEX);
+            }
+        }
+
+        public void StartCapture(AppSettings settings, int downSampleRatio, int startIndex)
+        {
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
+            settings.Validate();
+
+            // DiscardTimeUs is a double in settings but one byte on the wire.
+            if (double.IsNaN(settings.DiscardTimeUs) || double.IsInfinity(settings.DiscardTimeUs) || settings.DiscardTimeUs < 0 || settings.DiscardTimeUs > byte.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException(nameof(settings.DiscardTimeUs));
+            }
+
+            var measurementMode = settings.MeasurementMode == "Velocity"
+                    ? Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Velocity_Calculation
+                    : Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Length_Calculation;
+
+            // Build and validate everything before sending any command.
+            byte[][] startupCommands =
+            {
+                BuildSamplingCommand(downSampleRatio,startIndex, settings.PreTriggerTimeUs,(int)settings.DiscardTimeUs),
+
+                BuildSignalIntensityCommand(settings.TransducerPowerLevel),
+
+                BuildAmplifierGainCommand(settings.AmplifierGain),
+
+                BuildAveragingCommand(settings.CaptureAveragingCount),
+
+                BuildFilterCommand(settings.FilterMode,settings.PiezoFrequencyKhz),
+
+                BuildMeasurementCommand(measurementMode,settings.SampleLengthCm,settings.SampleVelocityMs)
+            };
+
+            lock (commandLock)
+            {
+                if (!communication.IsConnected)
+                {
+                    throw new InvalidOperationException("The device is not connected.");
+                }
+
+                if (captureInProgress)
+                {
+                    throw new InvalidOperationException("Stop capture before applying startup settings.");
+                }
+
+                pendingCommands.Clear();
+
+                foreach (byte[] command in startupCommands)
+                {
+                    SendImmediate(command);
+                }
+
+                StartCapture();
+            }
         }
 
         public void StartCapture()

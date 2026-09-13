@@ -1,4 +1,5 @@
-﻿using Measurement_Mode_Control;
+﻿using Command_Box;
+using Measurement_Mode_Control;
 using Signal_Strength_Control;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,15 @@ namespace CymaLAB_Ver_1._0
         private Communication communication;
         private Commands commands;
 
+        private DeviceData latestDeviceData;
+
+        private readonly SamplingParameters sampling = new SamplingParameters();
+
+        private readonly System.Windows.Forms.Timer hardwareDisplayTimer = new System.Windows.Forms.Timer
+        {
+            Interval = Constants.HARDWARE_DISPLAY_INTERVAL_MS
+        };
+
         private static bool IsInDesignMode
         {
             get { return LicenseManager.UsageMode == LicenseUsageMode.Designtime; }
@@ -38,7 +48,7 @@ namespace CymaLAB_Ver_1._0
             Idle
         }
 
-        System_Mode_Enum system_mode = System_Mode_Enum.Normal_operation;   
+        System_Mode_Enum system_mode = System_Mode_Enum.Normal_operation;
         public Form1()
         {
             InitializeComponent();
@@ -71,14 +81,16 @@ namespace CymaLAB_Ver_1._0
             farand_Tablet_Chart_Control1.InitChartBehavior(
                         renderFps: 8,
                         interactionHz: 8,
-                        visiblePointCount: 720,
-                        maxStoredPointCount: 720,
+                        visiblePointCount: Constants.CAPTURE_SAMPLE_COUNT,
+                        maxStoredPointCount: Constants.CAPTURE_SAMPLE_COUNT,
                         autoStart: true,
                         drainAllQueuedBatches: true,
-                        fixedYMin: -1,
-                        fixedYMax: 1,
-                        enableAutoScaleY: false
+                        fixedYMin: -1100,
+                        fixedYMax: 1100,
+                        enableAutoScaleY: true
                     );
+
+            ConfigureHardwareChart();
 
             communication = new Communication();
 
@@ -86,11 +98,161 @@ namespace CymaLAB_Ver_1._0
             commands.CommandFailed += Commands_CommandFailed;
 
             communication.StatusChanged += Communication_StatusChanged;
+            communication.Connected += Communication_ConnectionChanged;
+            communication.ConnectionLost += Communication_ConnectionChanged;
+
+            command_Box.LiveKey_Clicked += Command_Box_LiveKey_Clicked;
+
+
+            UpdateConnectionControls();
+
+            commands.MeasurementReceived += Commands_MeasurementReceived;
+
+            farand_Tablet_Chart_Control1.XAxisViewChanged += Chart_XAxisViewChanged;
+
+            hardwareDisplayTimer.Tick += HardwareDisplayTimer_Tick;
+            hardwareDisplayTimer.Start();
 
             communication.Start();
 
             //timer_Auto_Start_Simulation.Start();
 
+        }
+
+        private void Commands_MeasurementReceived(DeviceData data)
+        {
+            System.Threading.Interlocked.Exchange(ref latestDeviceData, data);
+        }
+
+        private void ApplyHardwareSetting(Action applySetting)
+        {
+            if (!settingsInitialized || system_mode != System_Mode_Enum.Normal_operation || communication == null || commands == null || !communication.IsConnected)
+            {
+                return;
+            }
+
+            try
+            {
+                applySetting();
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is TimeoutException || ex is InvalidOperationException || ex is ArgumentException)
+            {
+                MessageBox.Show(
+                    this,
+                    "Could not send the setting to the device."
+                    + Environment.NewLine
+                    + ex.Message,
+                    "Device settings",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                UpdateConnectionControls();
+            }
+        }
+
+        private void HardwareDisplayTimer_Tick(object sender, EventArgs e)
+        {
+            DeviceData data = System.Threading.Interlocked.Exchange(ref latestDeviceData, null);
+
+            if (data == null)
+                return;
+
+            if (communication == null || !communication.IsConnected || system_mode != System_Mode_Enum.Normal_operation)
+            {
+                return;
+            }
+
+            Capture_Data = new double[data.CapturedSignal.Length];
+
+            for (int sampleIndex = 0; sampleIndex < data.CapturedSignal.Length; sampleIndex++)
+            {
+                Capture_Data[sampleIndex] = data.CapturedSignal[sampleIndex];
+            }
+
+            farand_Tablet_Chart_Control1.ShowCapture(Capture_Data, data.StartTimeUs, data.SampleIntervalUs);
+        }
+
+        private void Command_Box_LiveKey_Clicked(object sender, EventArgs e)
+        {
+            if (communication == null || commands == null || !communication.IsConnected)
+            {
+                UpdateConnectionControls();
+                return;
+            }
+
+            if (system_mode != System_Mode_Enum.Normal_operation)
+                return;
+
+            try
+            {
+                if (commands.CaptureInProgress)
+                {
+                    commands.StopCapture();
+
+                    System.Diagnostics.Debug.WriteLine(
+                        "Capture stop command sent.");
+                }
+                else
+                {
+                    commands.StartCapture(settings, sampling.DownSampleRatio, sampling.StartIndex);
+
+                    System.Diagnostics.Debug.WriteLine("Startup settings and capture start command sent.");
+                }
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is TimeoutException || ex is InvalidOperationException || ex is ArgumentException)
+            {
+                MessageBox.Show(
+                    this,
+                    ex.Message,
+                    "Capture",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                UpdateConnectionControls();
+            }
+        }
+
+        private void RunOnUiThread(Action action)
+        {
+            if (IsDisposed || Disposing || !IsHandleCreated)
+                return;
+
+            if (InvokeRequired)
+            {
+                try
+                {
+                    BeginInvoke(new Action(() =>
+                    {
+                        if (!IsDisposed && !Disposing)
+                            action();
+                    }));
+                }
+                catch (InvalidOperationException)
+                {
+                    // The form's handle may disappear during closing.
+                }
+
+                return;
+            }
+
+            action();
+        }
+
+        private void Communication_ConnectionChanged()
+        {
+            RunOnUiThread(UpdateConnectionControls);
+        }
+
+        private void UpdateConnectionControls()
+        {
+            bool connected = communication != null && communication.IsConnected;
+
+            bool capturing = connected && commands != null && commands.CaptureInProgress;
+
+            command_Box._IsConnected = connected;
+            command_Box._IsLive = capturing;
         }
 
 
@@ -106,7 +268,7 @@ namespace CymaLAB_Ver_1._0
 
             measurement_Mode_Control.Velocity = settings.SampleVelocityMs;
 
-            measurement_Mode_Control.Measurement_Mode = settings.MeasurementMode == "Velocity" 
+            measurement_Mode_Control.Measurement_Mode = settings.MeasurementMode == "Velocity"
                                                         ? Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Velocity_Calculation
                                                         : Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Length_Calculation;
 
@@ -157,6 +319,8 @@ namespace CymaLAB_Ver_1._0
         private void Commands_CommandFailed(Exception exception)
         {
             System.Diagnostics.Debug.WriteLine("Command failed: " + exception.Message);
+
+            RunOnUiThread(UpdateConnectionControls);
         }
 
         private void Communication_StatusChanged(string message)
@@ -167,12 +331,28 @@ namespace CymaLAB_Ver_1._0
 
         private void signal_Strength_Control_Signal_Intensity_isChanged(object sender, EventArgs e)
         {
-            settings.TransducerPowerLevel = signal_Strength_Control.Transmitter_Power;
+            int powerLevel = signal_Strength_Control.Transmitter_Power;
+            int gainLevel = signal_Strength_Control.Reciever_Sensitivity;
 
-            settings.PulseWidthUs = Constants.PULSE_WIDTHS_US[settings.TransducerPowerLevel - 1];
+            bool powerChanged = settings.TransducerPowerLevel != powerLevel;
 
-            settings.AmplifierGain = signal_Strength_Control.Reciever_Sensitivity;
+            bool gainChanged = settings.AmplifierGain != gainLevel;
+
+            settings.TransducerPowerLevel = powerLevel;
+            settings.PulseWidthUs = Constants.PULSE_WIDTHS_US[powerLevel - 1];
+
+            settings.AmplifierGain = gainLevel;
+
+            ApplyHardwareSetting(() =>
+            {
+                if (powerChanged)
+                    commands.SetSignalIntensity(powerLevel);
+
+                if (gainChanged)
+                    commands.SetAmplifierGain(gainLevel);
+            });
         }
+
 
         private void Signal_Generator1_Data_Is_Ready(object sender, EventArgs e)
         {
@@ -186,20 +366,34 @@ namespace CymaLAB_Ver_1._0
 
         private void measurement_Mode_Control_Measurement_Mode_isChanged(object sender, EventArgs e)
         {
-            settings.SampleLengthCm = measurement_Mode_Control.Length;
+            var mode = measurement_Mode_Control.Measurement_Mode;
 
+            settings.SampleLengthCm = measurement_Mode_Control.Length;
             settings.SampleVelocityMs = measurement_Mode_Control.Velocity;
 
-            settings.MeasurementMode = measurement_Mode_Control.Measurement_Mode == Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Velocity_Calculation
-                                                                                    ? "Velocity"
-                                                                                    : "Length";
+            settings.MeasurementMode =
+                mode == Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Velocity_Calculation
+                        ? "Velocity"
+                        : "Length";
+
+            ApplyHardwareSetting(() => commands.SetMeasurement(mode, settings.SampleLengthCm, settings.SampleVelocityMs));
         }
 
         private void advanced_Settings_Control_Advanced_Settings_Changed(object sender, EventArgs e)
         {
+            bool discardChanged = settings.DiscardTimeUs != advanced_Settings_Control.Discard_Time_uSec;
+
             settings.ReferenceTofUs = advanced_Settings_Control.Reference_TOF_uSec;
 
             settings.DiscardTimeUs = advanced_Settings_Control.Discard_Time_uSec;
+
+            if (discardChanged)
+            {
+                ApplyHardwareSetting(() =>
+                {
+                    commands.SetSampling(sampling.DownSampleRatio, sampling.StartIndex, settings.PreTriggerTimeUs, GetDiscardTimeUs());
+                });
+            }
         }
 
         private void Signal_Generator1_Mode_Is_Changed(object sender, EventArgs e)
@@ -230,14 +424,16 @@ namespace CymaLAB_Ver_1._0
 
         private void Update_Averaging()
         {
-            int n = averaging_Control.Averaging_Captures_Count;
+            int count = settings.CaptureAveragingCount;
+
             switch (system_mode)
             {
                 case System_Mode_Enum.Test_Mode:
-                    farand_Tablet_Chart_Control1.signal_Generator1.Set_Average_Count(n);
+                    farand_Tablet_Chart_Control1.signal_Generator1.Set_Average_Count(count);
                     break;
+
                 case System_Mode_Enum.Normal_operation:
-                    //Send command to hardware
+                    ApplyHardwareSetting(() => commands.SetAveraging(count));
                     break;
             }
         }
@@ -272,21 +468,10 @@ namespace CymaLAB_Ver_1._0
                     }
                     break;
                 case System_Mode_Enum.Normal_operation:
-                    switch (filter_Control.Filter_Mode)
-                    {
-                        case Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter:
-                            //Send command to hardware
-                            break;
-                        case Filter_Control.Filter_Control.Filter_Mode_Enum.Weak_BandPass:
-                            //Send command to hardware
-                            break;
-                        case Filter_Control.Filter_Control.Filter_Mode_Enum.Strong_BandPass:
-                            //Send command to hardware
-                            break;
-                    }
+                    ApplyHardwareSetting(() => commands.SetFilter(settings.FilterMode, settings.PiezoFrequencyKhz));
                     break;
             }
-            
+
         }
 
         private void transducer_Type_piezo_frequency_Changed(object sender, EventArgs e)
@@ -300,13 +485,117 @@ namespace CymaLAB_Ver_1._0
 
         private void Tof_Control_Close_Button_Clicked(object sender, EventArgs e)
         {
-            Close();
+            bool resumeCapture = communication != null && communication.IsConnected && commands != null && commands.CaptureInProgress;
+
+            try
+            {
+                if (resumeCapture)
+                    commands.StopCapture();
+
+                UpdateConnectionControls();
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is TimeoutException || ex is InvalidOperationException)
+            {
+                MessageBox.Show(
+                    this,
+                    "Could not stop capture."
+                    + Environment.NewLine
+                    + ex.Message,
+                    "Capture",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                UpdateConnectionControls();
+                return;
+            }
+
+            DialogResult result = MessageBox.Show(
+                this,
+                "Do you want to exit the application?",
+                "Exit?",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.OK)
+            {
+                Close();
+
+                // Closing may be cancelled if saving settings fails.
+                if (IsDisposed || Disposing)
+                    return;
+            }
+
+            // Resume after Cancel, or if OnFormClosing cancelled the close.
+            if (resumeCapture && communication != null && communication.IsConnected && commands != null)
+            {
+                try
+                {
+                    commands.StartCapture();
+                }
+                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is TimeoutException || ex is InvalidOperationException)
+                {
+                    MessageBox.Show(
+                        this,
+                        "Could not resume capture."
+                        + Environment.NewLine
+                        + ex.Message,
+                        "Capture",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+
+            UpdateConnectionControls();
+        }
+
+        private void ConfigureHardwareChart()
+        {
+            double adcIntervalUs = Constants.MICROSECONDS_PER_SECOND / Constants.ADC_SAMPLE_RATE_HZ;
+
+            double minimumWindowUs = Constants.CAPTURE_SAMPLE_COUNT * Constants.MIN_DOWNSAMPLE_RATIO * adcIntervalUs;
+
+            double maximumWindowUs = Constants.CAPTURE_SAMPLE_COUNT * Constants.MAX_DOWNSAMPLE_RATIO * adcIntervalUs;
+
+            farand_Tablet_Chart_Control1.ConfigureCaptureView(sampling.StartTimeUs, sampling.StartTimeUs + Constants.CAPTURE_SAMPLE_COUNT * sampling.SampleIntervalUs,
+                                                              Constants.MAX_SAMPLE_START_INDEX * adcIntervalUs, minimumWindowUs, maximumWindowUs);
         }
 
         private void timer_Auto_Start_Simulation_Tick(object sender, EventArgs e)
         {
             farand_Tablet_Chart_Control1.signal_Generator1.checkBox_use_Simulated_Click(null, null);
             timer_Auto_Start_Simulation.Stop();
+        }
+
+        private void Chart_XAxisViewChanged(object sender, Farand_Tablet_Chart.XAxisViewChangedEventArgs e)
+        {
+            if (!settingsInitialized || system_mode != System_Mode_Enum.Normal_operation)
+            {
+                return;
+            }
+
+            bool changed = sampling.SetTimeWindow(e.XMin, e.XMax);
+
+            if (!changed)
+                return;
+
+            System.Diagnostics.Debug.WriteLine($"Sampling requested: start={sampling.StartIndex}, " + $"ratio={sampling.DownSampleRatio}");
+
+            ApplyHardwareSetting(() =>
+            {
+                commands.SetSampling(sampling.DownSampleRatio, sampling.StartIndex, settings.PreTriggerTimeUs, GetDiscardTimeUs());
+            });
+        }
+
+        private int GetDiscardTimeUs()
+        {
+            double value = settings.DiscardTimeUs;
+
+            if (double.IsNaN(value) || double.IsInfinity(value) || value < 0 || value > byte.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException(nameof(settings.DiscardTimeUs));
+            }
+
+            return (int)value;
         }
 
 
@@ -339,12 +628,26 @@ namespace CymaLAB_Ver_1._0
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
+            hardwareDisplayTimer.Stop();
+            hardwareDisplayTimer.Tick -= HardwareDisplayTimer_Tick;
+            hardwareDisplayTimer.Dispose();
+
+            command_Box.LiveKey_Clicked -= Command_Box_LiveKey_Clicked;
+
             // Stop the worker before removing its command handlers.
             if (communication != null)
+            {
                 communication.Stop();
+            }
+
+            System.Threading.Interlocked.Exchange(
+                ref latestDeviceData,
+                null);
+
 
             if (commands != null)
             {
+                commands.MeasurementReceived -= Commands_MeasurementReceived;
                 commands.CommandFailed -= Commands_CommandFailed;
                 commands.Dispose();
                 commands = null;
@@ -356,6 +659,8 @@ namespace CymaLAB_Ver_1._0
                 communication.Dispose();
                 communication = null;
             }
+
+            farand_Tablet_Chart_Control1.XAxisViewChanged -= Chart_XAxisViewChanged;
 
             base.OnFormClosed(e);
         }
