@@ -19,6 +19,11 @@ namespace CymaLAB_Ver_1._0
         public const int WIFI_CONNECT_TIMEOUT_MS = 4000;
         public const int WIFI_PACKET_TIMEOUT_MS = 5000;
 
+        public const int USB_BAUD_RATE = 38400;
+
+        public const int DETECTION_RESPONSE_INDEX = 2;
+        public const byte DETECTION_RESPONSE_VALUE = 0x55;
+
 
         public static readonly byte[] DETECTION_PC_COMMAND =
         {
@@ -59,6 +64,34 @@ namespace CymaLAB_Ver_1._0
         };
 
         public const double PIEZO_FREQUENCY_KHZ = 55.0;
+
+
+
+        public const int MIN_DOWNSAMPLE_RATIO = 1;
+        public const int MAX_DOWNSAMPLE_RATIO = 10;
+
+        public const double PRETRIGGER_COUNTS_PER_US = 2.0;
+
+        public const double MAX_PRETRIGGER_US = ushort.MaxValue / PRETRIGGER_COUNTS_PER_US;
+
+
+        public static readonly byte[] AMPLIFIER_GAIN_CHANNELS =
+        {
+            0, 1, 2, 3
+        };
+
+
+        public static readonly int[] AVERAGING_COUNTS =
+        {
+            1, 4, 8, 16, 32
+        };
+
+
+
+        public const double FILTER_FREQUENCY_SCALE = 100.0;
+
+        public const double WEAK_FILTER_RATIO = 10.0;
+        public const double STRONG_FILTER_RATIO = 4.0;
 
         // ====================================== //
 
@@ -101,6 +134,39 @@ namespace CymaLAB_Ver_1._0
             0x00,
             0xAA
         };
+
+        public const int COMMAND_FRAME_SIZE_BYTES = 8;
+
+        public const int COMMAND_ID_INDEX = 0;
+        public const int COMMAND_VALUE_INDEX = 1;
+
+        public const int COMMAND_CHECKSUM_INDEX = COMMAND_FRAME_SIZE_BYTES - 1;
+
+        public const int FILTER_LPF_ENABLED_INDEX = 1;
+        public const int FILTER_LPF_FREQUENCY_INDEX = 2;
+
+        public const int FILTER_HPF_ENABLED_INDEX = 4;
+        public const int FILTER_HPF_FREQUENCY_INDEX = 5;
+
+        public const int SAMPLING_DOWNSAMPLE_INDEX = 1;
+        public const int SAMPLING_START_INDEX = 2;
+        public const int SAMPLING_PRETRIGGER_INDEX = 4;
+        public const int SAMPLING_DISCARD_INDEX = 6;
+        public const int MAX_SAMPLE_START_INDEX = 3600;
+        public const int AMPLIFIER_GAIN_CHANNEL_INDEX = 1;
+        public const int AVERAGING_COUNT_INDEX = 1;
+
+        public const int MEASUREMENT_MODE_INDEX = 1;
+        public const int MEASUREMENT_LENGTH_INDEX = 2;
+        public const int MEASUREMENT_VELOCITY_INDEX = 4;
+        public const int MEASUREMENT_OPTIONS_INDEX = 6;
+
+
+        public const byte MEASUREMENT_LENGTH_MODE = 0;
+        public const byte MEASUREMENT_VELOCITY_MODE = 1;
+
+        // Retained from the previous command implementation.
+        public const byte MEASUREMENT_OPTIONS_VALUE = 0x07;
 
         public const int MAX_PENDING_COMMANDS = 32;
         // ==================================== //

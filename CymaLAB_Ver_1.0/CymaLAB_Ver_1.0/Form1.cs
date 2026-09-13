@@ -23,6 +23,8 @@ namespace CymaLAB_Ver_1._0
         private readonly string settingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PreciTest", "CymaLab", "Settings.txt");
         private bool settingsInitialized;
 
+        private Communication communication;
+
         private static bool IsInDesignMode
         {
             get { return LicenseManager.UsageMode == LicenseUsageMode.Designtime; }
@@ -35,7 +37,7 @@ namespace CymaLAB_Ver_1._0
             Idle
         }
 
-        System_Mode_Enum system_mode = System_Mode_Enum.Normal_operation;
+        System_Mode_Enum system_mode = System_Mode_Enum.Normal_operation;   
         public Form1()
         {
             InitializeComponent();
@@ -77,7 +79,13 @@ namespace CymaLAB_Ver_1._0
                         enableAutoScaleY: false
                     );
 
-            timer_Auto_Start_Simulation.Start();
+            communication = new Communication();
+
+            communication.StatusChanged += Communication_StatusChanged;
+
+            communication.Start();
+
+            //timer_Auto_Start_Simulation.Start();
 
         }
 
@@ -103,6 +111,8 @@ namespace CymaLAB_Ver_1._0
             signal_Strength_Control.Reciever_Sensitivity = settings.AmplifierGain;
 
             transducer_Type.Piezo_frequency_kHz = settings.PiezoFrequencyKhz;
+
+            filter_Control.Filter_Mode = settings.FilterMode;
 
 
         }
@@ -138,6 +148,12 @@ namespace CymaLAB_Ver_1._0
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
+        }
+
+
+        private void Communication_StatusChanged(string message)
+        {
+            System.Diagnostics.Debug.WriteLine(message);
         }
 
 
@@ -199,6 +215,8 @@ namespace CymaLAB_Ver_1._0
 
         private void filter_Control_Filter_Mode_Changed(object sender, EventArgs e)
         {
+            settings.FilterMode = filter_Control.Filter_Mode;
+
             Update_Filter_Parameters();
         }
 
@@ -309,6 +327,18 @@ namespace CymaLAB_Ver_1._0
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            if (communication != null)
+            {
+                communication.StatusChanged -= Communication_StatusChanged;
+                communication.Dispose();
+                communication = null;
+            }
+
+            base.OnFormClosed(e);
         }
     }
 }

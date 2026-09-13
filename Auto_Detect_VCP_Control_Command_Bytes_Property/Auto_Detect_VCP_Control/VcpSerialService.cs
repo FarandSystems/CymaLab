@@ -666,7 +666,7 @@ namespace Auto_Detect_VCP_Control
                 if (startupAcknowledged)
                 {
                     RaiseStatus(
-                        "ORCA startup acknowledgment received.",
+                        "startup acknowledgment received.",
                         CurrentPortName,
                         true);
 

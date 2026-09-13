@@ -36,8 +36,6 @@ namespace CymaLAB_Ver_1._0
 
                 writer.WriteLine("Pulse Width (uSec.) = " + Format(settings.PulseWidthUs));
 
-                writer.WriteLine("Power Filtering Active = " + settings.PowerFilteringActive);
-
                 writer.WriteLine("Transducer Type = " + settings.TransducerType);
 
                 writer.WriteLine("Piezo Frequency (kHz) = " + Format(settings.PiezoFrequencyKhz, "0.00"));
@@ -117,9 +115,6 @@ namespace CymaLAB_Ver_1._0
                             settings.PulseWidthUs = ParseNumber(value);
                             break;
 
-                        case "Power Filtering Active":
-                            settings.PowerFilteringActive = bool.Parse(value);
-                            break;
 
                         case "Transducer Type":
                             settings.TransducerType = value;
@@ -130,7 +125,14 @@ namespace CymaLAB_Ver_1._0
                             break;
 
                         case "Filter Mode":
-                            settings.FilterMode = value;
+                            Filter_Control.Filter_Control.Filter_Mode_Enum filterMode;
+
+                            if (!Enum.TryParse(value, true, out filterMode) || !Enum.IsDefined(typeof(Filter_Control.Filter_Control.Filter_Mode_Enum), filterMode))
+                            {
+                                throw new FormatException("Invalid filter mode.");
+                            }
+
+                            settings.FilterMode = filterMode;
                             break;
 
                         case "Measurement Mode":

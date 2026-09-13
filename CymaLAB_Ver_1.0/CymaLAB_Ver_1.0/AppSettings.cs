@@ -12,12 +12,15 @@
 
         public double PulseWidthUs { get; set; } = 10.0;
 
-        public bool PowerFilteringActive { get; set; } = false;
+        public Filter_Control.Filter_Control.Filter_Mode_Enum FilterMode
+        {
+            get;
+            set;
+        } = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
 
         public string TransducerType { get; set; } = "P";
         public double PiezoFrequencyKhz { get; set; } = 55.0;
 
-        public string FilterMode { get; set; } = "OFF";
         public string MeasurementMode { get; set; } = "Velocity";
         public int AmplifierGain { get; set; } = 1;
 
@@ -51,8 +54,10 @@
             if (PiezoFrequencyKhz != Constants.PIEZO_FREQUENCY_KHZ)
                 throw new System.ArgumentException($"The available transducer frequency is {Constants.PIEZO_FREQUENCY_KHZ} kHz.");
 
-            if (FilterMode != "ON" && FilterMode != "OFF")
-                throw new System.ArgumentException("Filter mode must be ON or OFF.");
+            if (!System.Enum.IsDefined(typeof(Filter_Control.Filter_Control.Filter_Mode_Enum), FilterMode))
+            {
+                throw new System.ArgumentException("Invalid filter mode.");
+            }
 
             if (MeasurementMode != "Velocity" && MeasurementMode != "Length")
                 throw new System.ArgumentException("Measurement mode must be Velocity or Length.");

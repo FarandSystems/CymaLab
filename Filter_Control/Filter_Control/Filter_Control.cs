@@ -24,9 +24,22 @@ namespace Filter_Control
         public Filter_Mode_Enum Filter_Mode
         {
             get { return filter_Mode; }
-            set { filter_Mode = value; }
+
+            set
+            {
+                filter_Mode = value;
+
+                bool enabled = filter_Mode != Filter_Mode_Enum.No_Filter;
+
+                Band_Pass_Filter_label._IsActive = enabled;
+
+                Band_Pass_Filter_label.Fancy_lable_text = enabled
+                                                          ? "Band Pass Filter: ON"
+                                                          : "Band Pass Filter: OFF";
+                Update_Filter_Icon();
+            }
         }
-    
+
         public Filter_Control()
         {
             InitializeComponent();

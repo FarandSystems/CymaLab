@@ -34,7 +34,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.averaging_Control = new Averaging_Control.Averaging_Control();
             this.signal_Strength_Control = new Signal_Strength_Control.Signal_Strength_Control();
-            this.filter_Control = new Filter_Control.Filter_Control();
             this.label1 = new System.Windows.Forms.Label();
             this.transducer_Type = new Transducer_Type.Transducer_Type();
             this.advanced_Settings_Control = new Advanced_Settings_Control.Advanced_Settings_Control();
@@ -42,6 +41,7 @@
             this.tof_Control = new TOF_Contorol.TOF_Control();
             this.farand_Tablet_Chart_Control1 = new Farand_Tablet_Chart.Farand_Tablet_Chart_Control();
             this.timer_Auto_Start_Simulation = new System.Windows.Forms.Timer(this.components);
+            this.filter_Control = new Filter_Control.Filter_Control();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -114,18 +114,6 @@
             this.signal_Strength_Control.Size = new System.Drawing.Size(311, 144);
             this.signal_Strength_Control.TabIndex = 7;
             this.signal_Strength_Control.Transmitter_Power = 1;
-            // 
-            // filter_Control
-            // 
-            this.filter_Control.AutoSize = true;
-            this.filter_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.filter_Control.Filter_Mode = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
-            this.filter_Control.Location = new System.Drawing.Point(0, 61);
-            this.filter_Control.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.filter_Control.Name = "filter_Control";
-            this.filter_Control.Size = new System.Drawing.Size(311, 82);
-            this.filter_Control.TabIndex = 5;
-            this.filter_Control.Filter_Mode_Changed += new System.EventHandler(this.filter_Control_Filter_Mode_Changed);
             // 
             // label1
             // 
@@ -203,6 +191,18 @@
             // 
             this.timer_Auto_Start_Simulation.Interval = 500;
             this.timer_Auto_Start_Simulation.Tick += new System.EventHandler(this.timer_Auto_Start_Simulation_Tick);
+            // 
+            // filter_Control
+            // 
+            this.filter_Control.AutoSize = true;
+            this.filter_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.filter_Control.Filter_Mode = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
+            this.filter_Control.Location = new System.Drawing.Point(0, 61);
+            this.filter_Control.Margin = new System.Windows.Forms.Padding(2);
+            this.filter_Control.Name = "filter_Control";
+            this.filter_Control.Size = new System.Drawing.Size(311, 82);
+            this.filter_Control.TabIndex = 5;
+            this.filter_Control.Filter_Mode_Changed += new System.EventHandler(this.filter_Control_Filter_Mode_Changed);
             // 
             // Form1
             // 

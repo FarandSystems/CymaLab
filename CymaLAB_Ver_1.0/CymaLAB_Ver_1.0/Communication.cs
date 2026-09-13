@@ -1,117 +1,99 @@
-﻿using Auto_Detect_VCP_Control;
-using Hlk_Wifi_Wrapper_Component;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static CymaLAB_Ver_1._0.Enums;
-using System.Windows.Forms;
+﻿using System;
+using Auto_Detect_VCP_Control;
 
 namespace CymaLAB_Ver_1._0
 {
-    class Communication
+    public sealed class Communication
     {
-        private CommunicationTransport active_Transport = CommunicationTransport.None;
-        private HLK_Wifi_Wrapper WiFi;
-        private Auto_Detect_VCP_Control.Auto_Detect_VCP_Control Vcp;
+        private readonly VcpSerialService vcp;
+        private volatile bool isConnected;
 
-        private Connection_Mode connection_Mode = Connection_Mode.Disconnected;
-        public Connection_Mode Connection_Mode
+        public bool IsConnected
         {
-            get { return connection_Mode; }
-            set { connection_Mode = value; }
+            get { return isConnected; }
         }
 
-        
+        public event Action<string> StatusChanged;
 
-        private Communication(HLK_Wifi_Wrapper wifi, Auto_Detect_VCP_Control.Auto_Detect_VCP_Control vcp)
+        public Communication()
         {
-            WiFi = wifi;
-            Vcp = vcp;
+            vcp = new VcpSerialService
+            {
+                BaudRate = Constants.USB_BAUD_RATE,
+
+                FrameLength = Constants.COMMAND_FRAME_SIZE_BYTES,
+
+                StartupCommandBytes = (byte[])Constants.DETECTION_PC_COMMAND.Clone(),
+
+                ResponseByteIndex = Constants.DETECTION_RESPONSE_INDEX,
+
+                ResponseByte = Constants.DETECTION_RESPONSE_VALUE
+            };
+
+            vcp.FrameValidator = ValidateDetectionFrame;
+
+            vcp.PortOpened += Vcp_PortOpened;
+            vcp.NormalOperationStarted += Vcp_NormalOperationStarted;
+            vcp.StatusChanged += Vcp_StatusChanged;
         }
 
-
-        private void Initialize_VCP()
+        public void Start()
         {
-
-            Vcp.Rx_Byte_Count = 8;          // receive  bytes every packet
-            Vcp.Baud_Rate = 38400;
-            Vcp.Is_Minimised = true;
-
-
-            Vcp.Communication_Response = 0x55;
-            Vcp.Communication_Response_Byte_Index = 2;
-
-            Vcp.Start_Communication_Byte = 0x55;
-            Vcp.Start_Communication_Byte_Index = 2;
-            Vcp.Command_Bytes = (byte[])Constants.DETECTION_PC_COMMAND.Clone();
-
-
-            Vcp.Connection_Ready += Vcp_Connection_Ready;
-            //Vcp.Normal_Operation_Starts += Vcp_Normal_Operation_Starts;
-            //Vcp.Connection_Failed += Vcp_Connection_Failed;
-            Vcp.Received_Data_Ready += Vcp_Received_Data_Ready;
-
-            Vcp.Start_VCP_Connection = true;
+            vcp.Start();
         }
 
-        private void Vcp_Connection_Ready(object sender, EventArgs e)
+        public void Stop()
         {
-
+            vcp.Stop();
+            isConnected = false;
         }
 
-
-        private void Vcp_Received_Data_Ready(object sender, EventArgs e)
+        public void Dispose()
         {
-            if (active_Transport != CommunicationTransport.Usb)
-            {
-                return;
-            }
-
-            byte[] source = Vcp.Rx_Bytes;
-
-            if (source == null || source.Length != Constants.RX_BUFFER_SIZE)
-            {
-                return;
-            }
-
-            byte[] receivedData = (byte[])source.Clone();
-
-            //Process_Complete_Rx_Packet(receivedData);
+            vcp.Dispose();
+            isConnected = false;
         }
 
-
-        private void Send_Uc_Command(byte[] command, Connection_Mode connection_Mode)
+        private void Vcp_PortOpened(object sender, EventArgs e)
         {
-            if (command == null || command.Length != 8)
+            // Every newly opened port must complete detection first.
+            isConnected = false;
+
+            vcp.FrameLength = Constants.COMMAND_FRAME_SIZE_BYTES;
+        }
+
+        private bool ValidateDetectionFrame(byte[] frame)
+        {
+            byte[] expected = Constants.DETECTION_DEVICE_RESPONSE;
+
+            if (frame == null || frame.Length != expected.Length)
+                return false;
+
+            for (int index = 0; index < expected.Length; index++)
             {
-                throw new ArgumentException(
-                    "The MCU command must contain exactly 8 bytes.",
-                    nameof(command));
+                if (frame[index] != expected[index])
+                    return false;
             }
 
-            if (connection_Mode != Connection_Mode.Connected)
-            {
-                return;
-            }
+            return true;
+        }
 
-            switch (active_Transport)
-            {
-                case CommunicationTransport.Wifi:
-                    if (WiFi.IsConnected)
-                    {
-                        WiFi.Send_Data(command);
-                    }
-                    break;
+        private void Vcp_NormalOperationStarted(object sender, EventArgs e)
+        {
+            // The service calls this only after the handshake succeeds.
+            vcp.FrameLength = Constants.RX_BUFFER_SIZE;
 
-                case CommunicationTransport.Usb:
-                    if (Vcp.Is_Port_Open)
-                    {
-                        Vcp.Send_Data(command);
-                    }
-                    break;
-            }
+            isConnected = true;
+
+            StatusChanged?.Invoke("CymaLab USB connected on " + vcp.CurrentPortName);
+        }
+
+        private void Vcp_StatusChanged(object sender, VcpStatusChangedEventArgs e)
+        {
+            if (!e.IsOpen)
+                isConnected = false;
+
+            StatusChanged?.Invoke(e.Message);
         }
     }
 }
