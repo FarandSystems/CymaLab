@@ -13,7 +13,9 @@ namespace CymaLAB_Ver_1._0
             get { return isConnected; }
         }
 
+        public event Action ConnectionLost;
         public event Action<string> StatusChanged;
+        public event Action<byte[]> PacketReceived;
 
         public Communication()
         {
@@ -30,9 +32,11 @@ namespace CymaLAB_Ver_1._0
                 ResponseByte = Constants.DETECTION_RESPONSE_VALUE
             };
 
-            vcp.FrameValidator = ValidateDetectionFrame;
+            vcp.FrameDecoder = Utils.DecodeUsbData;
+            vcp.FrameValidator = ValidateReceivedData;
 
             vcp.PortOpened += Vcp_PortOpened;
+            vcp.FrameReceived += Vcp_FrameReceived;
             vcp.NormalOperationStarted += Vcp_NormalOperationStarted;
             vcp.StatusChanged += Vcp_StatusChanged;
         }
@@ -48,6 +52,24 @@ namespace CymaLAB_Ver_1._0
             isConnected = false;
         }
 
+        public void Send(byte[] command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            if (command.Length != Constants.COMMAND_FRAME_SIZE_BYTES)
+            {
+                throw new ArgumentException("A command must contain exactly one frame.", nameof(command));
+            }
+
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("The device is not connected.");
+            }
+
+            vcp.Send(command);
+        }
+
         public void Dispose()
         {
             vcp.Dispose();
@@ -60,6 +82,32 @@ namespace CymaLAB_Ver_1._0
             isConnected = false;
 
             vcp.FrameLength = Constants.COMMAND_FRAME_SIZE_BYTES;
+        }
+
+        private void Vcp_FrameReceived(object sender, VcpFrameReceivedEventArgs e)
+        {
+            if (!isConnected)
+                return;
+
+            if (e.Frame.Length != Constants.RX_BUFFER_SIZE)
+                return;
+
+            // Already decoded and validated by VcpSerialService.
+            PacketReceived?.Invoke(e.Frame);
+        }
+
+        private bool ValidateReceivedData(byte[] data)
+        {
+            if (data == null)
+                return false;
+
+            if (data.Length == Constants.COMMAND_FRAME_SIZE_BYTES)
+                return ValidateDetectionFrame(data);
+
+            if (data.Length == Constants.RX_BUFFER_SIZE)
+                return Utils.Validate_Rx_Packet(data);
+
+            return false;
         }
 
         private bool ValidateDetectionFrame(byte[] frame)
@@ -91,7 +139,14 @@ namespace CymaLAB_Ver_1._0
         private void Vcp_StatusChanged(object sender, VcpStatusChangedEventArgs e)
         {
             if (!e.IsOpen)
+            {
+                bool wasConnected = isConnected;
+
                 isConnected = false;
+
+                if (wasConnected)
+                    ConnectionLost?.Invoke();
+            }
 
             StatusChanged?.Invoke(e.Message);
         }

@@ -24,6 +24,19 @@ namespace CymaLAB_Ver_1._0
         public const int DETECTION_RESPONSE_INDEX = 2;
         public const byte DETECTION_RESPONSE_VALUE = 0x55;
 
+        public const int USB_ENCODING_FLAGS_INDEX = 0;
+        public const int USB_FRAME_DATA_START_INDEX = 1;
+
+        public const int USB_FRAME_DATA_BYTE_COUNT =
+            FRAME_SIZE_BYTES - USB_FRAME_DATA_START_INDEX;
+
+        public const byte USB_ESCAPED_BYTE = 0x1A;
+        public const byte USB_DECODED_FLAGS_VALUE = 0x00;
+
+        public const byte USB_FLAGS_LOW_MASK = 0x0F;
+        public const byte USB_FLAGS_HIGH_MASK = 0xE0;
+        public const int USB_FLAGS_HIGH_SHIFT = 1;
+
 
         public static readonly byte[] DETECTION_PC_COMMAND =
         {
@@ -167,6 +180,12 @@ namespace CymaLAB_Ver_1._0
 
         // Retained from the previous command implementation.
         public const byte MEASUREMENT_OPTIONS_VALUE = 0x07;
+
+        public const int SIGNAL_PULSE_WIDTH_INDEX = 1;
+        public const int SIGNAL_AMPLIFIER_GAIN_INDEX = 5;
+        public const int SIGNAL_OPTIONS_INDEX = 6;
+
+        public const byte SIGNAL_OPTIONS_VALUE = 0x07;
 
         public const int MAX_PENDING_COMMANDS = 32;
         // ==================================== //

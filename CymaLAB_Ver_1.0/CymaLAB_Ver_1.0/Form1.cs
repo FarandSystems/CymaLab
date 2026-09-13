@@ -24,6 +24,7 @@ namespace CymaLAB_Ver_1._0
         private bool settingsInitialized;
 
         private Communication communication;
+        private Commands commands;
 
         private static bool IsInDesignMode
         {
@@ -80,6 +81,9 @@ namespace CymaLAB_Ver_1._0
                     );
 
             communication = new Communication();
+
+            commands = new Commands(communication);
+            commands.CommandFailed += Commands_CommandFailed;
 
             communication.StatusChanged += Communication_StatusChanged;
 
@@ -150,6 +154,10 @@ namespace CymaLAB_Ver_1._0
             }
         }
 
+        private void Commands_CommandFailed(Exception exception)
+        {
+            System.Diagnostics.Debug.WriteLine("Command failed: " + exception.Message);
+        }
 
         private void Communication_StatusChanged(string message)
         {
@@ -331,6 +339,17 @@ namespace CymaLAB_Ver_1._0
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
+            // Stop the worker before removing its command handlers.
+            if (communication != null)
+                communication.Stop();
+
+            if (commands != null)
+            {
+                commands.CommandFailed -= Commands_CommandFailed;
+                commands.Dispose();
+                commands = null;
+            }
+
             if (communication != null)
             {
                 communication.StatusChanged -= Communication_StatusChanged;

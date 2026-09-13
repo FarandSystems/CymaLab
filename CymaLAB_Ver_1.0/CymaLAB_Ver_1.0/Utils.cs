@@ -27,6 +27,46 @@ namespace CymaLAB_Ver_1._0
             return receivedChecksum == calculatedChecksum;
         }
 
+        public static byte[] DecodeUsbData(byte[] encodedData)
+        {
+            if (encodedData == null)
+                throw new ArgumentNullException(nameof(encodedData));
+
+            if (encodedData.Length % Constants.FRAME_SIZE_BYTES != 0)
+            {
+                throw new ArgumentException("USB data must contain complete frames.", nameof(encodedData));
+            }
+
+            byte[] decodedData = (byte[])encodedData.Clone();
+
+            for (int frameStartIndex = 0; frameStartIndex < decodedData.Length; frameStartIndex += Constants.FRAME_SIZE_BYTES)
+            {
+                int flagsIndex = frameStartIndex + Constants.USB_ENCODING_FLAGS_INDEX;
+
+                byte encodedFlags = decodedData[flagsIndex];
+
+                // Restore the seven flags: abc0defg -> 0abcdefg.
+                int flags = (encodedFlags & Constants.USB_FLAGS_LOW_MASK) | ((encodedFlags & Constants.USB_FLAGS_HIGH_MASK) >> Constants.USB_FLAGS_HIGH_SHIFT);
+
+                for (int dataIndex = 0; dataIndex < Constants.USB_FRAME_DATA_BYTE_COUNT; dataIndex++)
+                {
+                    bool restoreEscapedByte = (flags & (1 << dataIndex)) != 0;
+
+                    if (restoreEscapedByte)
+                    {
+                        int byteIndex = frameStartIndex + Constants.USB_FRAME_DATA_START_INDEX + dataIndex;
+
+                        decodedData[byteIndex] = Constants.USB_ESCAPED_BYTE;
+                    }
+                }
+
+                // The MCU calculated the checksum with this byte equal to zero.
+                decodedData[flagsIndex] = Constants.USB_DECODED_FLAGS_VALUE;
+            }
+
+            return decodedData;
+        }
+
         public static uint Calculate_Checksum24(byte[] packet)
         {
             if (packet == null || packet.Length < Constants.PAYLOAD_SIZE)

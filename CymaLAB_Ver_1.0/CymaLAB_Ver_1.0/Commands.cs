@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using static CymaLAB_Ver_1._0.Enums;
 
 namespace CymaLAB_Ver_1._0
@@ -11,9 +12,221 @@ namespace CymaLAB_Ver_1._0
     {
         private readonly Communication communication;
 
+        public event Action<Exception> CommandFailed;
+
         public Commands(Communication communication)
         {
+            if (communication == null)
+                throw new ArgumentNullException(nameof(communication));
+
             this.communication = communication;
+
+            communication.PacketReceived += Communication_PacketReceived;
+            communication.ConnectionLost += Communication_ConnectionLost;
+        }
+
+        private readonly object commandLock = new object();
+
+        private readonly List<byte[]> pendingCommands = new List<byte[]>();
+
+        private bool captureInProgress;
+
+        public bool CaptureInProgress
+        {
+            get
+            {
+                lock (commandLock)
+                {
+                    return captureInProgress;
+                }
+            }
+        }
+
+        private void Communication_PacketReceived(byte[] packet)
+        {
+            try
+            {
+                RespondToPacket();
+            }
+            catch (IOException ex)
+            {
+                HandleSendFailure(ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                HandleSendFailure(ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                HandleSendFailure(ex);
+            }
+            catch (TimeoutException ex)
+            {
+                HandleSendFailure(ex);
+            }
+        }
+
+        private void Communication_ConnectionLost()
+        {
+            Reset();
+        }
+
+        private void HandleSendFailure(Exception exception)
+        {
+            Reset();
+
+            CommandFailed?.Invoke(exception);
+        }
+
+        public void RespondToPacket()
+        {
+            lock (commandLock)
+            {
+                if (!captureInProgress)
+                    return;
+
+                if (pendingCommands.Count > 0)
+                {
+                    byte[] command = pendingCommands[0];
+
+                    SendImmediate(command);
+
+                    // Remove only after sending succeeds.
+                    pendingCommands.RemoveAt(0);
+                }
+                else
+                {
+                    SendImmediate((byte[])Constants.HEARTBEAT_COMMAND.Clone());
+                }
+            }
+        }
+        public void Reset()
+        {
+            lock (commandLock)
+            {
+                captureInProgress = false;
+                pendingCommands.Clear();
+            }
+        }
+
+        public void Dispose()
+        {
+            communication.PacketReceived -= Communication_PacketReceived;
+            communication.ConnectionLost -= Communication_ConnectionLost;
+
+            Reset();
+        }
+
+        private void SubmitCommand(byte[] command)
+        {
+            lock (commandLock)
+            {
+                if (!communication.IsConnected)
+                {
+                    throw new InvalidOperationException("The device is not connected.");
+                }
+
+                if (!captureInProgress)
+                {
+                    SendImmediate(command);
+                    return;
+                }
+
+                byte commandId = command[Constants.COMMAND_ID_INDEX];
+
+                // Replace an older pending value for the same setting.
+                for (int index = 0; index < pendingCommands.Count; index++)
+                {
+                    if (pendingCommands[index][Constants.COMMAND_ID_INDEX] == commandId)
+                    {
+                        pendingCommands[index] = (byte[])command.Clone();
+                        return;
+                    }
+                }
+
+                if (pendingCommands.Count >= Constants.MAX_PENDING_COMMANDS)
+                {
+                    throw new InvalidOperationException("The pending command queue is full.");
+                }
+
+                pendingCommands.Add((byte[])command.Clone());
+            }
+        }
+
+
+
+        private void SendImmediate(byte[] command)
+        {
+            communication.Send(command);
+        }
+
+        public void StartCapture()
+        {
+            lock (commandLock)
+            {
+                if (captureInProgress)
+                    return;
+
+                pendingCommands.Clear();
+
+                // Set before sending so the first received packet gets a response.
+                captureInProgress = true;
+
+                try
+                {
+                    SendImmediate(BuildCaptureCommand(true));
+                }
+                catch
+                {
+                    captureInProgress = false;
+                    pendingCommands.Clear();
+
+                    throw;
+                }
+            }
+        }
+
+        public void StopCapture()
+        {
+            lock (commandLock)
+            {
+                SendImmediate(BuildCaptureCommand(false));
+
+                captureInProgress = false;
+                pendingCommands.Clear();
+            }
+        }
+
+        public void SetAmplifierGain(int gainLevel)
+        {
+            SubmitCommand(BuildAmplifierGainCommand(gainLevel));
+        }
+
+        public void SetSignalIntensity(int powerLevel)
+        {
+            SubmitCommand(BuildSignalIntensityCommand(powerLevel));
+        }
+
+        public void SetSampling(int downSampleRatio, int startIndex, double preTriggerUs, int discardUs)
+        {
+            byte[] command = BuildSamplingCommand(downSampleRatio, startIndex, preTriggerUs, discardUs);
+
+            SubmitCommand(command);
+        }
+
+        public void SetAveraging(int count)
+        {
+            SubmitCommand(BuildAveragingCommand(count));
+        }
+
+        public void SetFilter(Filter_Control.Filter_Control.Filter_Mode_Enum mode, double centerFrequencyKhz)
+        {
+            SubmitCommand(BuildFilterCommand(mode, centerFrequencyKhz));
+        }
+
+        public void SetMeasurement(Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum mode, double sampleLengthCm, double sampleVelocityMs)
+        {
+            SubmitCommand(BuildMeasurementCommand(mode, sampleLengthCm, sampleVelocityMs));
         }
 
         public byte[] BuildMeasurementCommand(Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum mode, double sampleLengthCm, double sampleVelocityMs)
@@ -173,6 +386,29 @@ namespace CymaLAB_Ver_1._0
             frame[Constants.SAMPLING_DISCARD_INDEX] = (byte)discardUs;
 
             return FinalizeCommandFrame(frame);
+        }
+
+        public byte[] BuildSignalIntensityCommand(int powerLevel)
+        {
+            if (powerLevel < 1 || powerLevel > Constants.PULSE_WIDTHS_US.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(powerLevel));
+            }
+
+            double pulseWidthUs = Constants.PULSE_WIDTHS_US[powerLevel - 1];
+
+            if (double.IsNaN(pulseWidthUs) || double.IsInfinity(pulseWidthUs) || pulseWidthUs <= 0 || pulseWidthUs > int.MaxValue || pulseWidthUs != Math.Truncate(pulseWidthUs))
+            {
+                throw new InvalidOperationException("Pulse widths must be positive whole microseconds " + "within the Int32 range.");
+            }
+
+            byte[] command = CreateCommandFrame(Enums.DeviceCommand.SignalIntensity);
+
+            Utils.SetInt32LE(command, Constants.SIGNAL_PULSE_WIDTH_INDEX, (int)pulseWidthUs);
+
+            command[Constants.SIGNAL_OPTIONS_INDEX] = Constants.SIGNAL_OPTIONS_VALUE;
+
+            return FinalizeCommandFrame(command);
         }
 
         public byte[] BuildCaptureCommand(bool start)
