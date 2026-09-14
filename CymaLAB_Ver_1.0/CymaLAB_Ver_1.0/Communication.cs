@@ -22,6 +22,15 @@ namespace CymaLAB_Ver_1._0
         public event Action<string> StatusChanged;
         public event Action<byte[]> PacketReceived;
 
+        private volatile Enums.CommunicationTransport activeTransport = Enums.CommunicationTransport.None;
+
+        private CancellationTokenSource wifiCancellation;
+        private Task wifiTask;
+
+        private volatile NetworkStream wifiStream;
+
+        private readonly object wifiSendLock = new object();
+
         public Communication()
         {
             vcp = new VcpSerialService
@@ -137,16 +146,140 @@ namespace CymaLAB_Ver_1._0
             }
         }
 
-
-        public void Start()
+        private async Task RunWifiAsync(CancellationToken token)
         {
-            vcp.Start();
+            TcpClient client = null;
+
+            try
+            {
+                StatusChanged?.Invoke("Connecting to Wi-Fi device...");
+
+                WifiPacketBuffer receiveBuffer = new WifiPacketBuffer();
+
+                client = await OpenWifiConnectionAsync(receiveBuffer, token).ConfigureAwait(false);
+
+                token.ThrowIfCancellationRequested();
+
+                using (token.Register(() => client.Close()))
+                {
+                    NetworkStream stream = client.GetStream();
+
+                    stream.WriteTimeout = Constants.WIFI_WRITE_TIMEOUT_MS;
+                    wifiStream = stream;
+
+                    token.ThrowIfCancellationRequested();
+
+                    isConnected = true;
+
+                    StatusChanged?.Invoke("CymaLab Wi-Fi connected on " + Constants.WIFI_SERVER_IP + ":" + Constants.WIFI_SERVER_PORT);
+
+                    Connected?.Invoke();
+
+                    byte[] receivedBytes = new byte[Constants.WIFI_READ_BUFFER_SIZE];
+
+                    while (true)
+                    {
+                        token.ThrowIfCancellationRequested();
+
+                        // Also process bytes left over from detection.
+                        byte[] packet;
+
+                        while (receiveBuffer.TryReadPacket(out packet))
+                        {
+                            token.ThrowIfCancellationRequested();
+
+                            PacketReceived?.Invoke(packet);
+                        }
+
+                        int receivedCount = await stream.ReadAsync(receivedBytes, 0, receivedBytes.Length, token).ConfigureAwait(false);
+
+                        if (receivedCount == 0)
+                        {
+                            throw new IOException("The device closed the Wi-Fi connection.");
+                        }
+
+                        receiveBuffer.Append(receivedBytes, receivedCount);
+                    }
+                }
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                // Normal shutdown or transport change.
+            }
+            catch (Exception ex) when (ex is IOException || ex is SocketException || ex is TimeoutException || ex is ObjectDisposedException)
+            {
+                if (!token.IsCancellationRequested)
+                {
+                    StatusChanged?.Invoke("Wi-Fi connection ended: " + ex.Message);
+                }
+            }
+            finally
+            {
+                wifiStream = null;
+
+                if (client != null)
+                    client.Close();
+
+                MarkDisconnected();
+            }
+        }
+
+
+        public void Start(Enums.CommunicationTransport transport)
+        {
+            if (transport != Enums.CommunicationTransport.Usb && transport != Enums.CommunicationTransport.Wifi)
+            {
+                throw new ArgumentOutOfRangeException(nameof(transport));
+            }
+
+            Stop();
+
+            activeTransport = transport;
+
+            if (transport == Enums.CommunicationTransport.Usb)
+            {
+                StatusChanged?.Invoke("Searching for USB device...");
+                vcp.Start();
+            }
+            else
+            {
+                wifiCancellation = new CancellationTokenSource();
+
+                CancellationToken token = wifiCancellation.Token;
+
+                wifiTask = Task.Run(() => RunWifiAsync(token));
+            }
         }
 
         public void Stop()
         {
+            // Cancellation closes the Wi-Fi socket, interrupting pending I/O.
+            if (wifiCancellation != null)
+                wifiCancellation.Cancel();
+
             vcp.Stop();
-            isConnected = false;
+
+            try
+            {
+                // Finish the old receiver before another connection can start.
+                if (wifiTask != null)
+                    wifiTask.GetAwaiter().GetResult();
+            }
+            finally
+            {
+                wifiTask = null;
+                wifiStream = null;
+
+                if (wifiCancellation != null)
+                {
+                    wifiCancellation.Dispose();
+                    wifiCancellation = null;
+                }
+
+                MarkDisconnected();
+
+                activeTransport = Enums.CommunicationTransport.None;
+            }
         }
 
         public void Send(byte[] command)
@@ -160,21 +293,63 @@ namespace CymaLAB_Ver_1._0
             }
 
             if (!IsConnected)
-            {
                 throw new InvalidOperationException("The device is not connected.");
-            }
 
-            vcp.Send(command);
+            switch (activeTransport)
+            {
+                case Enums.CommunicationTransport.Usb:
+                    vcp.Send(command);
+                    break;
+
+                case Enums.CommunicationTransport.Wifi:
+                    lock (wifiSendLock)
+                    {
+                        NetworkStream stream = wifiStream;
+
+                        if (!IsConnected || stream == null)
+                        {
+                            throw new InvalidOperationException("The Wi-Fi device is not connected.");
+                        }
+
+                        try
+                        {
+                            stream.Write(command, 0, command.Length);
+                        }
+                        catch
+                        {
+                            // Wake the receive loop so it handles connection loss.
+                            stream.Close();
+                            throw;
+                        }
+                    }
+                    break;
+
+                default:
+                    throw new InvalidOperationException("No communication transport is active.");
+            }
         }
 
         public void Dispose()
         {
+            Stop();
             vcp.Dispose();
+        }
+
+        private void MarkDisconnected()
+        {
+            bool wasConnected = isConnected;
+
             isConnected = false;
+
+            if (wasConnected)
+                ConnectionLost?.Invoke();
         }
 
         private void Vcp_PortOpened(object sender, EventArgs e)
         {
+            if (activeTransport != Enums.CommunicationTransport.Usb)
+                return;
+
             // Every newly opened port must complete detection first.
             isConnected = false;
 
@@ -183,6 +358,9 @@ namespace CymaLAB_Ver_1._0
 
         private void Vcp_FrameReceived(object sender, VcpFrameReceivedEventArgs e)
         {
+            if (activeTransport != Enums.CommunicationTransport.Usb)
+                return;
+
             if (!isConnected)
                 return;
 
@@ -225,6 +403,9 @@ namespace CymaLAB_Ver_1._0
 
         private void Vcp_NormalOperationStarted(object sender, EventArgs e)
         {
+            if (activeTransport != Enums.CommunicationTransport.Usb)
+                return;
+
             vcp.FrameLength = Constants.RX_BUFFER_SIZE;
 
             isConnected = true;
@@ -236,6 +417,9 @@ namespace CymaLAB_Ver_1._0
 
         private void Vcp_StatusChanged(object sender, VcpStatusChangedEventArgs e)
         {
+            if (activeTransport != Enums.CommunicationTransport.Usb)
+                return;
+
             if (!e.IsOpen)
             {
                 bool wasConnected = isConnected;

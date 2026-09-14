@@ -243,14 +243,11 @@ namespace Command_Box
 
         private void UpdateCommunicationModeDisplay()
         {
-            if (communicationMode == CommunicationModeEnum.Wifi)
-            {
-                pictureBox_Connection_Mode.Image = Properties.Resources.Wifi;
-            }
-            else
-            {
-                pictureBox_Connection_Mode.Image = Properties.Resources.Usb;
-            }
+            bool useUsb = communicationMode == CommunicationModeEnum.USB;
+
+            pictureBox_Connection_Mode.Image = useUsb ? Properties.Resources.Usb : Properties.Resources.Wifi;
+
+            pictureBox_Firmware_Update.Enabled = useUsb;
         }
 
 
@@ -430,12 +427,10 @@ namespace Command_Box
             {
                 SelectCommunicationMode(CommunicationModeEnum.Wifi);
 
-                pictureBox_Firmware_Update.Enabled = false;
             }
             else
             {
                 SelectCommunicationMode(CommunicationModeEnum.USB);
-                pictureBox_Firmware_Update.Enabled = true;
             }
 
             UpdateCommunicationModeDisplay();

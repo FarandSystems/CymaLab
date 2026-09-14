@@ -44,6 +44,8 @@ namespace CymaLAB_Ver_1._0
         public const int WIFI_READ_BUFFER_SIZE = 4096;
         public const int WIFI_DETECTION_TIMEOUT_MS = 2000;
 
+        public const int WIFI_WRITE_TIMEOUT_MS = 1000;
+
 
         public static readonly byte[] DETECTION_PC_COMMAND =
         {

@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -119,15 +120,54 @@ namespace CymaLAB_Ver_1._0
             hardwareDisplayTimer.Tick += HardwareDisplayTimer_Tick;
             hardwareDisplayTimer.Start();
 
-            communication.Start();
+            communication.Start(GetSelectedTransport());
 
             //timer_Auto_Start_Simulation.Start();
 
         }
 
+        private Enums.CommunicationTransport GetSelectedTransport()
+        {
+            return command_Box.CommunicationMode == Command_Box.CommunicationModeEnum.USB
+                    ? Enums.CommunicationTransport.Usb
+                    : Enums.CommunicationTransport.Wifi;
+        }
+
         private void Command_Box_CommunicationModeChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (communication == null || commands == null)
+                return;
+
+            command_Box.Enabled = false;
+
+            try
+            {
+                if (communication.IsConnected && commands.CaptureInProgress)
+                {
+                    try
+                    {
+                        commands.StopCapture();
+                    }
+                    catch (Exception ex) when (ex is IOException || ex is SocketException || ex is TimeoutException || ex is InvalidOperationException || ex is UnauthorizedAccessException)
+                    {
+                        // The old connection may already have failed.
+                        System.Diagnostics.Debug.WriteLine("Could not stop the previous capture: " + ex.Message);
+                    }
+                }
+
+                communication.Stop();
+
+                commands.Reset();
+
+                System.Threading.Interlocked.Exchange(ref latestDeviceData, null);
+
+                communication.Start(GetSelectedTransport());
+            }
+            finally
+            {
+                command_Box.Enabled = true;
+                UpdateConnectionControls();
+            }
         }
 
         private void UpdateMeasurementResult()
@@ -703,6 +743,8 @@ namespace CymaLAB_Ver_1._0
             command_Box.LiveKey_Clicked -= Command_Box_LiveKey_Clicked;
 
             tof_Control.TOF_Changed -= Tof_Control_TOF_Changed;
+
+            command_Box.CommunicationModeChanged -= Command_Box_CommunicationModeChanged;
 
             // Stop the worker before removing its command handlers.
             if (communication != null)
