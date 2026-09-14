@@ -38,6 +38,13 @@ namespace CymaLAB_Ver_1._0
         public const int USB_FLAGS_HIGH_SHIFT = 1;
 
 
+        public const string WIFI_SERVER_IP = "192.168.16.254";
+        public const int WIFI_SERVER_PORT = 5000;
+
+        public const int WIFI_READ_BUFFER_SIZE = 4096;
+        public const int WIFI_DETECTION_TIMEOUT_MS = 2000;
+
+
         public static readonly byte[] DETECTION_PC_COMMAND =
         {
             0x00,
@@ -99,7 +106,7 @@ namespace CymaLAB_Ver_1._0
             1, 4, 8, 16, 32
         };
 
-
+        public const int TOF_FILTER_STABLE_MODE = 1;
 
         public const double FILTER_FREQUENCY_SCALE = 100.0;
 
@@ -108,6 +115,8 @@ namespace CymaLAB_Ver_1._0
 
         public const int DEFAULT_DOWNSAMPLE_RATIO = 10;
         public const int DEFAULT_SAMPLE_START_INDEX = 0;
+
+        public const double CENTIMETERS_PER_METER = 100.0;
 
         // ====================================== //
 

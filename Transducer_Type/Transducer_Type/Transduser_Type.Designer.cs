@@ -38,13 +38,14 @@
             // 
             this.groupBox_Transducer_Type.Controls.Add(this.fancy_Lable_Control_P_Type_55);
             this.groupBox_Transducer_Type.Controls.Add(this.fancy_Lable_Control_S_Type);
+            this.groupBox_Transducer_Type.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox_Transducer_Type.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox_Transducer_Type.ForeColor = System.Drawing.Color.White;
-            this.groupBox_Transducer_Type.Location = new System.Drawing.Point(2, 2);
-            this.groupBox_Transducer_Type.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox_Transducer_Type.Location = new System.Drawing.Point(0, 0);
+            this.groupBox_Transducer_Type.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox_Transducer_Type.Name = "groupBox_Transducer_Type";
-            this.groupBox_Transducer_Type.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox_Transducer_Type.Size = new System.Drawing.Size(301, 54);
+            this.groupBox_Transducer_Type.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox_Transducer_Type.Size = new System.Drawing.Size(380, 62);
             this.groupBox_Transducer_Type.TabIndex = 0;
             this.groupBox_Transducer_Type.TabStop = false;
             this.groupBox_Transducer_Type.Text = "Transducer Type";
@@ -78,7 +79,7 @@
             this.fancy_Lable_Control_S_Type.Fancy_lable_text = "S Type (55 kHz)";
             this.fancy_Lable_Control_S_Type.Inactive_Highlight_Color = System.Drawing.Color.LightGray;
             this.fancy_Lable_Control_S_Type.Inactive_Normal_Color = System.Drawing.Color.DarkGray;
-            this.fancy_Lable_Control_S_Type.Location = new System.Drawing.Point(161, 27);
+            this.fancy_Lable_Control_S_Type.Location = new System.Drawing.Point(246, 27);
             this.fancy_Lable_Control_S_Type.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.fancy_Lable_Control_S_Type.Name = "fancy_Lable_Control_S_Type";
             this.fancy_Lable_Control_S_Type.Size = new System.Drawing.Size(121, 19);
@@ -90,9 +91,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.groupBox_Transducer_Type);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Transducer_Type";
-            this.Size = new System.Drawing.Size(311, 62);
+            this.Size = new System.Drawing.Size(380, 62);
             this.groupBox_Transducer_Type.ResumeLayout(false);
             this.groupBox_Transducer_Type.PerformLayout();
             this.ResumeLayout(false);

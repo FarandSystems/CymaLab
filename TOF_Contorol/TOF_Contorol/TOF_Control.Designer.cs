@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TOF_Control));
             this.label_Time_Of_Flight = new System.Windows.Forms.Label();
             this.label_Measurement_Result = new System.Windows.Forms.Label();
@@ -38,8 +37,8 @@
             this.pictureBox_TOF_Increase = new System.Windows.Forms.PictureBox();
             this.pictureBox_TOF_Key = new System.Windows.Forms.PictureBox();
             this.pictureBox_TOF_Decrease = new System.Windows.Forms.PictureBox();
-            this.timer_Increase = new System.Windows.Forms.Timer(this.components);
-            this.timer_Decrease = new System.Windows.Forms.Timer(this.components);
+            this.timer_Increase = new System.Windows.Forms.Timer();
+            this.timer_Decrease = new System.Windows.Forms.Timer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Close)).BeginInit();
@@ -57,10 +56,10 @@
             this.label_Time_Of_Flight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label_Time_Of_Flight.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_Time_Of_Flight.ForeColor = System.Drawing.Color.White;
-            this.label_Time_Of_Flight.Location = new System.Drawing.Point(807, 10);
-            this.label_Time_Of_Flight.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.label_Time_Of_Flight.Location = new System.Drawing.Point(605, 8);
+            this.label_Time_Of_Flight.Margin = new System.Windows.Forms.Padding(2, 8, 2, 0);
             this.label_Time_Of_Flight.Name = "label_Time_Of_Flight";
-            this.label_Time_Of_Flight.Size = new System.Drawing.Size(566, 34);
+            this.label_Time_Of_Flight.Size = new System.Drawing.Size(424, 28);
             this.label_Time_Of_Flight.TabIndex = 4;
             this.label_Time_Of_Flight.Text = "Time Of Flight";
             // 
@@ -70,10 +69,10 @@
             this.label_Measurement_Result.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label_Measurement_Result.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_Measurement_Result.ForeColor = System.Drawing.Color.White;
-            this.label_Measurement_Result.Location = new System.Drawing.Point(807, 54);
-            this.label_Measurement_Result.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.label_Measurement_Result.Location = new System.Drawing.Point(605, 44);
+            this.label_Measurement_Result.Margin = new System.Windows.Forms.Padding(2, 8, 2, 0);
             this.label_Measurement_Result.Name = "label_Measurement_Result";
-            this.label_Measurement_Result.Size = new System.Drawing.Size(566, 34);
+            this.label_Measurement_Result.Size = new System.Drawing.Size(424, 28);
             this.label_Measurement_Result.TabIndex = 5;
             this.label_Measurement_Result.Text = "Measurement Result";
             // 
@@ -83,10 +82,10 @@
             this.label_Range.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label_Range.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_Range.ForeColor = System.Drawing.Color.White;
-            this.label_Range.Location = new System.Drawing.Point(304, 44);
-            this.label_Range.Margin = new System.Windows.Forms.Padding(10, 0, 3, 0);
+            this.label_Range.Location = new System.Drawing.Point(228, 36);
+            this.label_Range.Margin = new System.Windows.Forms.Padding(8, 0, 2, 0);
             this.label_Range.Name = "label_Range";
-            this.label_Range.Size = new System.Drawing.Size(487, 44);
+            this.label_Range.Size = new System.Drawing.Size(365, 36);
             this.label_Range.TabIndex = 6;
             this.label_Range.Text = "Range:";
             // 
@@ -94,10 +93,11 @@
             // 
             this.pictureBox_Close.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_Close.Image = global::TOF_Contorol.Properties.Resources.Close;
-            this.pictureBox_Close.Location = new System.Drawing.Point(1379, 3);
+            this.pictureBox_Close.Location = new System.Drawing.Point(1033, 2);
+            this.pictureBox_Close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox_Close.Name = "pictureBox_Close";
             this.tableLayoutPanel1.SetRowSpan(this.pictureBox_Close, 2);
-            this.pictureBox_Close.Size = new System.Drawing.Size(138, 82);
+            this.pictureBox_Close.Size = new System.Drawing.Size(105, 68);
             this.pictureBox_Close.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Close.TabIndex = 8;
             this.pictureBox_Close.TabStop = false;
@@ -107,10 +107,10 @@
             // 
             this.pictureBox_TOF_Light.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox_TOF_Light.Image = global::TOF_Contorol.Properties.Resources.LED2_Green_OFF;
-            this.pictureBox_TOF_Light.Location = new System.Drawing.Point(767, 10);
-            this.pictureBox_TOF_Light.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.pictureBox_TOF_Light.Location = new System.Drawing.Point(575, 8);
+            this.pictureBox_TOF_Light.Margin = new System.Windows.Forms.Padding(2, 8, 2, 2);
             this.pictureBox_TOF_Light.Name = "pictureBox_TOF_Light";
-            this.pictureBox_TOF_Light.Size = new System.Drawing.Size(24, 25);
+            this.pictureBox_TOF_Light.Size = new System.Drawing.Size(18, 20);
             this.pictureBox_TOF_Light.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_TOF_Light.TabIndex = 3;
             this.pictureBox_TOF_Light.TabStop = false;
@@ -119,9 +119,10 @@
             // 
             this.pictureBox_TOF_Increase.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox_TOF_Increase.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_TOF_Increase.Image")));
-            this.pictureBox_TOF_Increase.Location = new System.Drawing.Point(144, 0);
+            this.pictureBox_TOF_Increase.Location = new System.Drawing.Point(108, 0);
+            this.pictureBox_TOF_Increase.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox_TOF_Increase.Name = "pictureBox_TOF_Increase";
-            this.pictureBox_TOF_Increase.Size = new System.Drawing.Size(64, 82);
+            this.pictureBox_TOF_Increase.Size = new System.Drawing.Size(48, 68);
             this.pictureBox_TOF_Increase.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_TOF_Increase.TabIndex = 2;
             this.pictureBox_TOF_Increase.TabStop = false;
@@ -136,8 +137,9 @@
             this.pictureBox_TOF_Key.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_TOF_Key.Image = global::TOF_Contorol.Properties.Resources.TOF_Key_Manual;
             this.pictureBox_TOF_Key.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox_TOF_Key.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox_TOF_Key.Name = "pictureBox_TOF_Key";
-            this.pictureBox_TOF_Key.Size = new System.Drawing.Size(208, 82);
+            this.pictureBox_TOF_Key.Size = new System.Drawing.Size(156, 68);
             this.pictureBox_TOF_Key.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_TOF_Key.TabIndex = 1;
             this.pictureBox_TOF_Key.TabStop = false;
@@ -148,9 +150,9 @@
             this.pictureBox_TOF_Decrease.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox_TOF_Decrease.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_TOF_Decrease.Image")));
             this.pictureBox_TOF_Decrease.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox_TOF_Decrease.Margin = new System.Windows.Forms.Padding(3, 3, 1000, 3);
+            this.pictureBox_TOF_Decrease.Margin = new System.Windows.Forms.Padding(2, 2, 750, 2);
             this.pictureBox_TOF_Decrease.Name = "pictureBox_TOF_Decrease";
-            this.pictureBox_TOF_Decrease.Size = new System.Drawing.Size(64, 82);
+            this.pictureBox_TOF_Decrease.Size = new System.Drawing.Size(48, 68);
             this.pictureBox_TOF_Decrease.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_TOF_Decrease.TabIndex = 0;
             this.pictureBox_TOF_Decrease.TabStop = false;
@@ -171,11 +173,11 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 7;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 15F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 8F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel1.Controls.Add(this.pictureBox_Close, 6, 0);
@@ -186,11 +188,12 @@
             this.tableLayoutPanel1.Controls.Add(this.label_Time_Of_Flight, 5, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1520, 88);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1140, 72);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // panel1
@@ -199,21 +202,23 @@
             this.panel1.Controls.Add(this.pictureBox_TOF_Decrease);
             this.panel1.Controls.Add(this.pictureBox_TOF_Key);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(23, 3);
+            this.panel1.Location = new System.Drawing.Point(17, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
             this.tableLayoutPanel1.SetRowSpan(this.panel1, 2);
-            this.panel1.Size = new System.Drawing.Size(208, 82);
+            this.panel1.Size = new System.Drawing.Size(156, 68);
             this.panel1.TabIndex = 9;
             // 
             // TOF_Control
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.tableLayoutPanel1);
-            this.MinimumSize = new System.Drawing.Size(700, 88);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MinimumSize = new System.Drawing.Size(525, 72);
             this.Name = "TOF_Control";
-            this.Size = new System.Drawing.Size(1520, 88);
+            this.Size = new System.Drawing.Size(1140, 72);
             this.Load += new System.EventHandler(this.TOF_Control_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Close)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TOF_Light)).EndInit();

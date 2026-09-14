@@ -64,6 +64,8 @@ namespace CymaLAB_Ver_1._0
             LoadSettings();
             ApplySettingsToControls();
 
+            tof_Control.Auto_TOF = true;
+
             settingsInitialized = true;
 
             tof_Control.Close_Button_Clicked += Tof_Control_Close_Button_Clicked;
@@ -76,6 +78,10 @@ namespace CymaLAB_Ver_1._0
             farand_Tablet_Chart_Control1.signal_Generator1.Mode_Is_Changed += Signal_Generator1_Mode_Is_Changed;
 
             farand_Tablet_Chart_Control1.signal_Generator1.Data_Is_Ready += Signal_Generator1_Data_Is_Ready;
+
+            tof_Control.TOF_Changed += Tof_Control_TOF_Changed;
+
+            command_Box.CommunicationModeChanged += Command_Box_CommunicationModeChanged;
 
 
             farand_Tablet_Chart_Control1.InitChartBehavior(
@@ -117,6 +123,40 @@ namespace CymaLAB_Ver_1._0
 
             //timer_Auto_Start_Simulation.Start();
 
+        }
+
+        private void Command_Box_CommunicationModeChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void UpdateMeasurementResult()
+        {
+            double tofUs = tof_Control.TOF_uSec;
+
+            double lengthCm = settings.SampleLengthCm;
+            double velocityMs = settings.SampleVelocityMs;
+
+            bool validTof = !double.IsNaN(tofUs) && !double.IsInfinity(tofUs) && tofUs > 0;
+
+            if (settings.MeasurementMode == "Velocity")
+            {
+                bool validLength = !double.IsNaN(lengthCm) && !double.IsInfinity(lengthCm) && lengthCm > 0;
+
+                velocityMs = validTof && validLength
+                    ? MeasurementCalculator.CalculateVelocity(lengthCm, tofUs)
+                    : double.NaN;
+            }
+            else
+            {
+                bool validVelocity = !double.IsNaN(velocityMs) && !double.IsInfinity(velocityMs) && velocityMs > 0;
+
+                lengthCm = validTof && validVelocity
+                    ? MeasurementCalculator.CalculateLength(velocityMs, tofUs)
+                    : double.NaN;
+            }
+
+            tof_Control.ShowMeasurementResult(lengthCm, velocityMs);
         }
 
         private void Commands_MeasurementReceived(DeviceData data)
@@ -170,6 +210,9 @@ namespace CymaLAB_Ver_1._0
             }
 
             farand_Tablet_Chart_Control1.ShowCapture(Capture_Data, data.StartTimeUs, data.SampleIntervalUs);
+
+            UpdateTofDisplay(data);
+            UpdateMeasurementResult();
         }
 
         private void Command_Box_LiveKey_Clicked(object sender, EventArgs e)
@@ -328,6 +371,11 @@ namespace CymaLAB_Ver_1._0
             System.Diagnostics.Debug.WriteLine(message);
         }
 
+        private void Tof_Control_TOF_Changed(object sender, EventArgs e)
+        {
+            UpdateMeasurementResult();
+        }
+
 
         private void signal_Strength_Control_Signal_Intensity_isChanged(object sender, EventArgs e)
         {
@@ -364,6 +412,24 @@ namespace CymaLAB_Ver_1._0
             }
         }
 
+        private void UpdateTofDisplay(DeviceData data)
+        {
+            tof_Control.TOF_Stable = data.FilterTofMode == Constants.TOF_FILTER_STABLE_MODE;
+
+            if (!tof_Control.Auto_TOF)
+                return;
+
+            double correctedTofUs = data.AutoTimeOfFlightUs + settings.TofOffsetUs;
+
+            if (double.IsNaN(correctedTofUs) || double.IsInfinity(correctedTofUs))
+            {
+                tof_Control.TOF_Stable = false;
+                return;
+            }
+
+            tof_Control.TOF_uSec = correctedTofUs;
+        }
+
         private void measurement_Mode_Control_Measurement_Mode_isChanged(object sender, EventArgs e)
         {
             var mode = measurement_Mode_Control.Measurement_Mode;
@@ -377,6 +443,8 @@ namespace CymaLAB_Ver_1._0
                         : "Length";
 
             ApplyHardwareSetting(() => commands.SetMeasurement(mode, settings.SampleLengthCm, settings.SampleVelocityMs));
+
+            UpdateMeasurementResult();
         }
 
         private void advanced_Settings_Control_Advanced_Settings_Changed(object sender, EventArgs e)
@@ -634,15 +702,15 @@ namespace CymaLAB_Ver_1._0
 
             command_Box.LiveKey_Clicked -= Command_Box_LiveKey_Clicked;
 
+            tof_Control.TOF_Changed -= Tof_Control_TOF_Changed;
+
             // Stop the worker before removing its command handlers.
             if (communication != null)
             {
                 communication.Stop();
             }
 
-            System.Threading.Interlocked.Exchange(
-                ref latestDeviceData,
-                null);
+            System.Threading.Interlocked.Exchange(ref latestDeviceData, null);
 
 
             if (commands != null)

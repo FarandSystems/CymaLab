@@ -39,8 +39,8 @@
             // pictureBox_Filter_Icon
             // 
             this.pictureBox_Filter_Icon.Image = global::Filter_Control.Properties.Resources.Band_Pass_Filter_Inactive;
-            this.pictureBox_Filter_Icon.Location = new System.Drawing.Point(226, 12);
-            this.pictureBox_Filter_Icon.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox_Filter_Icon.Location = new System.Drawing.Point(305, 16);
+            this.pictureBox_Filter_Icon.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Filter_Icon.Name = "pictureBox_Filter_Icon";
             this.pictureBox_Filter_Icon.Size = new System.Drawing.Size(62, 60);
             this.pictureBox_Filter_Icon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -53,13 +53,14 @@
             this.groupBox1.Controls.Add(this.Center_Frequency_label);
             this.groupBox1.Controls.Add(this.Band_Pass_Filter_label);
             this.groupBox1.Controls.Add(this.pictureBox_Filter_Icon);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.groupBox1.Location = new System.Drawing.Point(2, 0);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox1.Size = new System.Drawing.Size(300, 80);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(380, 85);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filter Mode";
@@ -108,9 +109,9 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.groupBox1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Filter_Control";
-            this.Size = new System.Drawing.Size(311, 85);
+            this.Size = new System.Drawing.Size(380, 85);
             this.Load += new System.EventHandler(this.UserControl1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Filter_Icon)).EndInit();
             this.groupBox1.ResumeLayout(false);

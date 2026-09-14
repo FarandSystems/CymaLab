@@ -1,5 +1,9 @@
 ﻿using System;
 using Auto_Detect_VCP_Control;
+using System.IO;
+using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CymaLAB_Ver_1._0
 {
@@ -41,6 +45,98 @@ namespace CymaLAB_Ver_1._0
             vcp.NormalOperationStarted += Vcp_NormalOperationStarted;
             vcp.StatusChanged += Vcp_StatusChanged;
         }
+
+        private async Task<TcpClient> OpenWifiConnectionAsync(WifiPacketBuffer receiveBuffer, CancellationToken cancellationToken)
+        {
+            if (receiveBuffer == null)
+                throw new ArgumentNullException(nameof(receiveBuffer));
+
+            receiveBuffer.Reset();
+
+            TcpClient client = new TcpClient
+            {
+                NoDelay = true
+            };
+
+            try
+            {
+                // First establish the TCP connection.
+                using (CancellationTokenSource connectTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+                {
+                    connectTimeout.CancelAfter(Constants.WIFI_CONNECT_TIMEOUT_MS);
+
+                    using (connectTimeout.Token.Register(() => client.Close()))
+                    {
+                        try
+                        {
+                            connectTimeout.Token.ThrowIfCancellationRequested();
+
+                            await client.ConnectAsync(Constants.WIFI_SERVER_IP, Constants.WIFI_SERVER_PORT).ConfigureAwait(false);
+
+                            connectTimeout.Token.ThrowIfCancellationRequested();
+                        }
+                        catch (Exception ex) when (connectTimeout.IsCancellationRequested)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            throw new TimeoutException("The Wi-Fi TCP connection timed out.", ex);
+                        }
+                    }
+                }
+
+                NetworkStream stream = client.GetStream();
+
+                // Then verify that the device responds to our protocol.
+                using (CancellationTokenSource detectionTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+                {
+                    detectionTimeout.CancelAfter(Constants.WIFI_DETECTION_TIMEOUT_MS);
+
+                    using (detectionTimeout.Token.Register(() => client.Close()))
+                    {
+                        try
+                        {
+                            byte[] detectionCommand = (byte[])Constants.DETECTION_PC_COMMAND.Clone();
+
+                            await stream.WriteAsync(detectionCommand, 0, detectionCommand.Length, detectionTimeout.Token).ConfigureAwait(false);
+
+                            byte[] receivedBytes = new byte[Constants.WIFI_READ_BUFFER_SIZE];
+
+                            while (!receiveBuffer.DetectionComplete)
+                            {
+                                int receivedCount = await stream.ReadAsync(receivedBytes, 0, receivedBytes.Length, detectionTimeout.Token).ConfigureAwait(false);
+
+                                if (receivedCount == 0)
+                                {
+                                    throw new IOException("The Wi-Fi connection closed during detection.");
+                                }
+
+                                receiveBuffer.Append(receivedBytes, receivedCount);
+
+                                receiveBuffer.TryReadDetectionResponse();
+                            }
+
+                            detectionTimeout.Token.ThrowIfCancellationRequested();
+                        }
+                        catch (Exception ex) when (detectionTimeout.IsCancellationRequested)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            throw new TimeoutException("The device did not answer Wi-Fi detection.", ex);
+                        }
+                    }
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                return client;
+            }
+            catch
+            {
+                client.Close();
+                throw;
+            }
+        }
+
 
         public void Start()
         {

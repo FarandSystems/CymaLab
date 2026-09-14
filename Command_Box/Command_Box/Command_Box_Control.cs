@@ -50,6 +50,26 @@ namespace Command_Box
             }
         }
 
+        private CommunicationModeEnum communicationMode = CommunicationModeEnum.Wifi;
+
+        public CommunicationModeEnum CommunicationMode
+        {
+            get { return communicationMode; }
+            set
+            {
+                if (!Enum.IsDefined(typeof(CommunicationModeEnum), value))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+
+                communicationMode = value;
+
+                UpdateCommunicationModeDisplay();
+            }
+        }
+
+        public event EventHandler CommunicationModeChanged;
+
         private bool _isLive = true;
         public bool _IsLive
         {
@@ -221,6 +241,18 @@ namespace Command_Box
             }
         }
 
+        private void UpdateCommunicationModeDisplay()
+        {
+            if (communicationMode == CommunicationModeEnum.Wifi)
+            {
+                pictureBox_Connection_Mode.Image = Properties.Resources.Wifi;
+            }
+            else
+            {
+                pictureBox_Connection_Mode.Image = Properties.Resources.Usb;
+            }
+        }
+
 
         private void pictureBox_Save_MouseEnter(object sender, EventArgs e)
         {
@@ -381,5 +413,38 @@ namespace Command_Box
         {
             pictureBox_Firmware_Update.Image = Properties.Resources.Firmware_Update_Highlighted;
         }
+
+        private void SelectCommunicationMode(CommunicationModeEnum mode)
+        {
+            if (communicationMode == mode)
+                return;
+
+            CommunicationMode = mode;
+
+            CommunicationModeChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void pictureBox_Connection_Mode_Click(object sender, EventArgs e)
+        {
+            if (communicationMode == CommunicationModeEnum.USB)
+            {
+                SelectCommunicationMode(CommunicationModeEnum.Wifi);
+
+                pictureBox_Firmware_Update.Enabled = false;
+            }
+            else
+            {
+                SelectCommunicationMode(CommunicationModeEnum.USB);
+                pictureBox_Firmware_Update.Enabled = true;
+            }
+
+            UpdateCommunicationModeDisplay();
+        }
+    }
+
+    public enum CommunicationModeEnum
+    {
+        USB,
+        Wifi
     }
 }

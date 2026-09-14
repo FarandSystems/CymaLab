@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace TOF_Contorol
 {
-    public partial class TOF_Control: UserControl
+    public partial class TOF_Control : UserControl
     {
         string key_State_Increase = "Idle";
         string key_State_Decrease = "Idle";
@@ -35,7 +35,7 @@ namespace TOF_Contorol
         public bool Auto_TOF
         {
             get { return auto_TOF; }
-            set 
+            set
             {
                 auto_TOF = value;
                 Update_Key_Pic();
@@ -48,7 +48,7 @@ namespace TOF_Contorol
         public bool TOF_Stable
         {
             get { return tOF_Stable; }
-            set 
+            set
             {
                 tOF_Stable = value;
 
@@ -56,18 +56,23 @@ namespace TOF_Contorol
             }
         }
 
-        private double tOF_mSec = 0.1 ;
-        public double TOF_mSec
+        private double tofUs = 100.0;
+
+        public double TOF_uSec
         {
-            get { return tOF_mSec; }
-            set { tOF_mSec = value; }
+            get { return tofUs; }
+            set
+            {
+                tofUs = value;
+                Update_Time_Of_Flight(false);
+            }
         }
 
         private double sample_Length_cm = 30;
         public double Sample_Length_cm
         {
             get { return sample_Length_cm; }
-            set 
+            set
             {
                 sample_Length_cm = value;
 
@@ -79,7 +84,7 @@ namespace TOF_Contorol
         public double Sample_Velocity_m_Sec
         {
             get { return sample_Velocity_m_Sec; }
-            set 
+            set
             {
                 sample_Velocity_m_Sec = value;
 
@@ -106,13 +111,13 @@ namespace TOF_Contorol
 
         private void Update_Increase_Pic()
         {
-            if(auto_TOF == true)
+            if (auto_TOF == true)
             {
                 pictureBox_TOF_Increase.Image = Properties.Resources.Increase_TOF_Inactive;
             }
             else
             {
-                if(increase_MouseEnter == false || increase_MouseDown == false)
+                if (increase_MouseEnter == false || increase_MouseDown == false)
                 {
                     pictureBox_TOF_Increase.Image = Properties.Resources.Increase_TOF_Active;
                 }
@@ -132,7 +137,7 @@ namespace TOF_Contorol
             }
             else
             {
-                if(decrease_MouseEnter == false || decrease_MouseDown == false)
+                if (decrease_MouseEnter == false || decrease_MouseDown == false)
                 {
                     pictureBox_TOF_Decrease.Image = Properties.Resources.Decrease_TOF_Active;
                 }
@@ -143,48 +148,49 @@ namespace TOF_Contorol
             }
         }
 
-        private void Update_Time_Of_Flight()
+        private void Update_Time_Of_Flight(bool notifyChange = true)
         {
-            label_Time_Of_Flight.Text = "Time Of Flight (mSec) = " + Math.Round(TOF_mSec, 3);
+            label_Time_Of_Flight.Text =
+                "Time Of Flight (µs) = " + tofUs.ToString("0.00");
 
-            if (TOF_Changed != null)
-            {
-                TOF_Changed(this, EventArgs.Empty);
-            }
+            if (notifyChange)
+                TOF_Changed?.Invoke(this, EventArgs.Empty);
         }
+
+
 
         private void pictureBox_TOF_Key_Click(object sender, EventArgs e)
         {
-         
+
             auto_TOF = !auto_TOF;
             Update_Key_Pic();
             Update_Increase_Pic();
             Update_Decrease_Pic();
-       
+
         }
 
         private void pictureBox_TOF_Increase_Click(object sender, EventArgs e)
         {
-            if(auto_TOF == false)
+            if (auto_TOF == false)
             {
-                tOF_mSec += 0.01;
+                tofUs += 10.0;
 
             }
             Update_Increase_Pic();
             Update_Time_Of_Flight();
-            
+
         }
 
         private void pictureBox_TOF_Decrease_Click(object sender, EventArgs e)
         {
-            if(auto_TOF == false)
+            if (auto_TOF == false)
             {
-                tOF_mSec -= 0.01;
+                tofUs -= 10.0;
 
             }
             Update_Decrease_Pic();
             Update_Time_Of_Flight();
-            
+
         }
 
         private void pictureBox_TOF_Increase_MouseEnter(object sender, EventArgs e)
@@ -224,7 +230,7 @@ namespace TOF_Contorol
 
         private void pictureBox_TOF_Increase_MouseDown(object sender, MouseEventArgs e)
         {
-           increase_MouseDown = true;
+            increase_MouseDown = true;
 
             Update_Increase_Pic();
         }
@@ -256,7 +262,7 @@ namespace TOF_Contorol
             {
 
                 case "Idle":
-                    if(increase_MouseDown == true && auto_TOF == false)
+                    if (increase_MouseDown == true && auto_TOF == false)
                     {
                         key_State_Increase = "Wait";
                         time_Counter_Increase = 0;
@@ -266,7 +272,7 @@ namespace TOF_Contorol
 
                 case "Wait":
                     time_Counter_Increase++;
-                    if(time_Counter_Increase == 10)
+                    if (time_Counter_Increase == 10)
                     {
                         key_State_Increase = "Change";
                     }
@@ -279,7 +285,7 @@ namespace TOF_Contorol
                     break;
 
                 case "Change":
-                    tOF_mSec += 0.01;
+                    tofUs += 10.0;
                     Update_Time_Of_Flight();
                     time_Counter_Increase++;
 
@@ -296,9 +302,9 @@ namespace TOF_Contorol
                     break;
 
                 case "Fast_Change":
-                    tOF_mSec += 0.1;
+                    tofUs += 10.0;
                     Update_Time_Of_Flight();
-                    if(increase_MouseDown == false)
+                    if (increase_MouseDown == false)
                     {
                         key_State_Increase = "Idle";
                     }
@@ -335,7 +341,7 @@ namespace TOF_Contorol
                     break;
 
                 case "Change":
-                    tOF_mSec -= 0.01;
+                    tofUs -= 10.0;
                     Update_Time_Of_Flight();
                     time_Counter_Decrease++;
 
@@ -352,7 +358,7 @@ namespace TOF_Contorol
                     break;
 
                 case "Fast_Change":
-                    tOF_mSec -= 0.1;
+                    tofUs -= 10.0;
                     Update_Time_Of_Flight();
                     if (decrease_MouseDown == false)
                     {
@@ -369,7 +375,7 @@ namespace TOF_Contorol
 
         private void pictureBox_Close_Click(object sender, EventArgs e)
         {
-            if(Close_Button_Clicked != null)
+            if (Close_Button_Clicked != null)
             {
                 Close_Button_Clicked(this, EventArgs.Empty);
             }
@@ -377,7 +383,7 @@ namespace TOF_Contorol
 
         private void Update_TOF_Pic()
         {
-            if(tOF_Stable == false)
+            if (tOF_Stable == false)
             {
                 pictureBox_TOF_Light.Image = Properties.Resources.LED2_Green_OFF;
             }
@@ -386,6 +392,19 @@ namespace TOF_Contorol
                 pictureBox_TOF_Light.Image = Properties.Resources.LED2_Green_ON;
 
             }
+        }
+
+        public void ShowMeasurementResult(double lengthCm, double velocityMs)
+        {
+            string lengthText = double.IsNaN(lengthCm) || double.IsInfinity(lengthCm)
+                    ? "—"
+                    : lengthCm.ToString("0.00");
+
+            string velocityText = double.IsNaN(velocityMs) || double.IsInfinity(velocityMs)
+                    ? "—"
+                    : velocityMs.ToString("0.00");
+
+            label_Measurement_Result.Text = "L (cm) = " + lengthText + ", V (m/s) = " + velocityText;
         }
     }
 }

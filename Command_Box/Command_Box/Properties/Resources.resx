@@ -166,4 +166,10 @@
   <data name="Save_File_Inactive" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Save_File_Inactive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Usb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Usb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Wifi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Wifi.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

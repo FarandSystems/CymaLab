@@ -45,22 +45,24 @@
             this.groupBox_Advanced_Settings.Controls.Add(this.textBox_Reference);
             this.groupBox_Advanced_Settings.Controls.Add(this.label_Discard);
             this.groupBox_Advanced_Settings.Controls.Add(this.label_Reference);
+            this.groupBox_Advanced_Settings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox_Advanced_Settings.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox_Advanced_Settings.ForeColor = System.Drawing.Color.White;
-            this.groupBox_Advanced_Settings.Location = new System.Drawing.Point(2, 2);
-            this.groupBox_Advanced_Settings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox_Advanced_Settings.Location = new System.Drawing.Point(0, 0);
+            this.groupBox_Advanced_Settings.Margin = new System.Windows.Forms.Padding(10);
             this.groupBox_Advanced_Settings.Name = "groupBox_Advanced_Settings";
-            this.groupBox_Advanced_Settings.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox_Advanced_Settings.Size = new System.Drawing.Size(300, 101);
+            this.groupBox_Advanced_Settings.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox_Advanced_Settings.Size = new System.Drawing.Size(380, 110);
             this.groupBox_Advanced_Settings.TabIndex = 0;
             this.groupBox_Advanced_Settings.TabStop = false;
             this.groupBox_Advanced_Settings.Text = "Advanced Settings";
             // 
             // pictureBox_Set
             // 
+            this.pictureBox_Set.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox_Set.Image = global::Advanced_Settings_Control.Properties.Resources.Set_Key_Normal;
-            this.pictureBox_Set.Location = new System.Drawing.Point(243, 36);
-            this.pictureBox_Set.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox_Set.Location = new System.Drawing.Point(324, 36);
+            this.pictureBox_Set.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Set.Name = "pictureBox_Set";
             this.pictureBox_Set.Size = new System.Drawing.Size(48, 47);
             this.pictureBox_Set.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -75,8 +77,8 @@
             // textBox_Discard
             // 
             this.textBox_Discard.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_Discard.Location = new System.Drawing.Point(159, 66);
-            this.textBox_Discard.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox_Discard.Location = new System.Drawing.Point(209, 66);
+            this.textBox_Discard.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_Discard.Name = "textBox_Discard";
             this.textBox_Discard.Size = new System.Drawing.Size(76, 26);
             this.textBox_Discard.TabIndex = 3;
@@ -84,8 +86,8 @@
             // textBox_Reference
             // 
             this.textBox_Reference.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_Reference.Location = new System.Drawing.Point(159, 27);
-            this.textBox_Reference.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox_Reference.Location = new System.Drawing.Point(209, 27);
+            this.textBox_Reference.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_Reference.Name = "textBox_Reference";
             this.textBox_Reference.Size = new System.Drawing.Size(76, 26);
             this.textBox_Reference.TabIndex = 2;
@@ -118,9 +120,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.groupBox_Advanced_Settings);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Advanced_Settings_Control";
-            this.Size = new System.Drawing.Size(311, 110);
+            this.Size = new System.Drawing.Size(380, 110);
             this.groupBox_Advanced_Settings.ResumeLayout(false);
             this.groupBox_Advanced_Settings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Set)).EndInit();
