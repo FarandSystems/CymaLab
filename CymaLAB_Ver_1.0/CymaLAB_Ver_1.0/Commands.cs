@@ -136,6 +136,8 @@ namespace CymaLAB_Ver_1._0
         {
             lock (commandLock)
             {
+                communication.SetCaptureExpected(false);
+
                 captureInProgress = false;
                 pendingCommands.Clear();
             }
@@ -269,10 +271,14 @@ namespace CymaLAB_Ver_1._0
 
                 try
                 {
+                    communication.SetCaptureExpected(true);
+
                     SendImmediate(BuildCaptureCommand(true));
                 }
                 catch
                 {
+                    communication.SetCaptureExpected(false);
+
                     captureInProgress = false;
                     pendingCommands.Clear();
 
@@ -286,6 +292,8 @@ namespace CymaLAB_Ver_1._0
             lock (commandLock)
             {
                 SendImmediate(BuildCaptureCommand(false));
+
+                communication.SetCaptureExpected(false);
 
                 captureInProgress = false;
                 pendingCommands.Clear();

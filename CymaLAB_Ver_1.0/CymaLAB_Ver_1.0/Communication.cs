@@ -3,6 +3,7 @@ using Auto_Detect_VCP_Control;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace CymaLAB_Ver_1._0
@@ -30,6 +31,11 @@ namespace CymaLAB_Ver_1._0
         private volatile NetworkStream wifiStream;
 
         private readonly object wifiSendLock = new object();
+
+        private readonly object captureWatchdogLock = new object();
+
+        private bool captureExpected;
+        private long lastCapturePacketTimestamp;
 
         public Communication()
         {
@@ -192,39 +198,44 @@ namespace CymaLAB_Ver_1._0
 
                     stream.WriteTimeout = Constants.WIFI_WRITE_TIMEOUT_MS;
                     wifiStream = stream;
-
-                    token.ThrowIfCancellationRequested();
-
-                    isConnected = true;
-
-                    StatusChanged?.Invoke("CymaLab Wi-Fi connected on " + Constants.WIFI_SERVER_IP + ":" + Constants.WIFI_SERVER_PORT);
-
-                    Connected?.Invoke();
-
-                    byte[] receivedBytes = new byte[Constants.WIFI_READ_BUFFER_SIZE];
-
-                    while (true)
+                    SetCaptureExpected(false);
+                    using (var captureWatchdog = new System.Threading.Timer(_ => CheckWifiCaptureTimeout(stream), null, Constants.WIFI_WATCHDOG_INTERVAL_MS, Constants.WIFI_WATCHDOG_INTERVAL_MS))
                     {
                         token.ThrowIfCancellationRequested();
 
-                        // Also process bytes left over from detection.
-                        byte[] packet;
+                        isConnected = true;
 
-                        while (receiveBuffer.TryReadPacket(out packet))
+                        StatusChanged?.Invoke("CymaLab Wi-Fi connected on " + Constants.WIFI_SERVER_IP + ":" + Constants.WIFI_SERVER_PORT);
+
+                        Connected?.Invoke();
+
+                        byte[] receivedBytes = new byte[Constants.WIFI_READ_BUFFER_SIZE];
+
+                        while (true)
                         {
                             token.ThrowIfCancellationRequested();
 
-                            PacketReceived?.Invoke(packet);
+                            // Also process bytes left over from detection.
+                            byte[] packet;
+
+                            while (receiveBuffer.TryReadPacket(out packet))
+                            {
+                                token.ThrowIfCancellationRequested();
+
+                                RecordCapturePacket();
+
+                                PacketReceived?.Invoke(packet);
+                            }
+
+                            int receivedCount = await stream.ReadAsync(receivedBytes, 0, receivedBytes.Length, token).ConfigureAwait(false);
+
+                            if (receivedCount == 0)
+                            {
+                                throw new IOException("The device closed the Wi-Fi connection.");
+                            }
+
+                            receiveBuffer.Append(receivedBytes, receivedCount);
                         }
-
-                        int receivedCount = await stream.ReadAsync(receivedBytes, 0, receivedBytes.Length, token).ConfigureAwait(false);
-
-                        if (receivedCount == 0)
-                        {
-                            throw new IOException("The device closed the Wi-Fi connection.");
-                        }
-
-                        receiveBuffer.Append(receivedBytes, receivedCount);
                     }
                 }
             }
@@ -247,6 +258,54 @@ namespace CymaLAB_Ver_1._0
                     client.Close();
 
                 MarkDisconnected();
+            }
+        }
+
+        public void SetCaptureExpected(bool expected)
+        {
+            lock (captureWatchdogLock)
+            {
+                captureExpected = expected;
+                lastCapturePacketTimestamp = Stopwatch.GetTimestamp();
+            }
+        }
+
+        private void RecordCapturePacket()
+        {
+            lock (captureWatchdogLock)
+            {
+                lastCapturePacketTimestamp = Stopwatch.GetTimestamp();
+            }
+        }
+
+        private void CheckWifiCaptureTimeout(NetworkStream sessionStream)
+        {
+            lock (captureWatchdogLock)
+            {
+                // A callback from an old session must not affect a new one.
+                if (!ReferenceEquals(wifiStream, sessionStream))
+                    return;
+
+                if (!captureExpected || !isConnected)
+                    return;
+
+                double elapsedMs = (Stopwatch.GetTimestamp() - lastCapturePacketTimestamp) * 1000.0 / Stopwatch.Frequency;
+
+                if (elapsedMs < Constants.WIFI_CAPTURE_TIMEOUT_MS)
+                    return;
+
+                captureExpected = false;
+
+                // Interrupt ReadAsync. The existing receiver handles
+                // connection loss and the reconnection loop retries.
+                try
+                {
+                    sessionStream.Close();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Another shutdown path already closed it.
+                }
             }
         }
 
@@ -363,6 +422,8 @@ namespace CymaLAB_Ver_1._0
 
         private void MarkDisconnected()
         {
+            SetCaptureExpected(false);
+
             bool wasConnected = isConnected;
 
             isConnected = false;

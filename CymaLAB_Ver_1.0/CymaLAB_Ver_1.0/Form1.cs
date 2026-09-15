@@ -81,6 +81,7 @@ namespace CymaLAB_Ver_1._0
             farand_Tablet_Chart_Control1.signal_Generator1.Data_Is_Ready += Signal_Generator1_Data_Is_Ready;
 
             tof_Control.TOF_Changed += Tof_Control_TOF_Changed;
+            ClearAutomaticMeasurement();
 
             command_Box.CommunicationModeChanged += Command_Box_CommunicationModeChanged;
 
@@ -277,7 +278,7 @@ namespace CymaLAB_Ver_1._0
                 }
                 else
                 {
-                    commands.StartCapture(settings, sampling.DownSampleRatio, sampling.StartIndex);
+                    StartHardwareCapture();
 
                     System.Diagnostics.Debug.WriteLine("Startup settings and capture start command sent.");
                 }
@@ -329,9 +330,7 @@ namespace CymaLAB_Ver_1._0
             {
                 if (communication == null || !communication.IsConnected)
                 {
-                    System.Threading.Interlocked.Exchange(ref latestDeviceData, null);
-
-                    tof_Control.TOF_Stable = false;
+                    ClearAutomaticMeasurement();
                 }
 
                 UpdateConnectionControls();
@@ -464,21 +463,28 @@ namespace CymaLAB_Ver_1._0
 
         private void UpdateTofDisplay(DeviceData data)
         {
-            tof_Control.TOF_Stable = data.FilterTofMode == Constants.TOF_FILTER_STABLE_MODE;
-
             if (!tof_Control.Auto_TOF)
-                return;
-
-            double correctedTofUs = data.AutoTimeOfFlightUs + settings.TofOffsetUs;
-
-            if (double.IsNaN(correctedTofUs) || double.IsInfinity(correctedTofUs))
             {
                 tof_Control.TOF_Stable = false;
                 return;
             }
 
-            tof_Control.TOF_uSec = correctedTofUs;
+            double correctedTofUs = data.AutoTimeOfFlightUs + settings.TofOffsetUs;
+
+            bool valid = !double.IsNaN(correctedTofUs) && !double.IsInfinity(correctedTofUs) && correctedTofUs > 0;
+
+            tof_Control.TOF_uSec = valid ? correctedTofUs : double.NaN;
+
+            tof_Control.TOF_Stable = valid && data.FilterTofMode == Constants.TOF_FILTER_STABLE_MODE;
         }
+
+        private void StartHardwareCapture()
+        {
+            ClearAutomaticMeasurement();
+
+            commands.StartCapture(settings, sampling.DownSampleRatio, sampling.StartIndex);
+        }
+
 
         private void measurement_Mode_Control_Measurement_Mode_isChanged(object sender, EventArgs e)
         {
@@ -648,9 +654,10 @@ namespace CymaLAB_Ver_1._0
             {
                 try
                 {
-                    commands.StartCapture();
+                    StartHardwareCapture();
                 }
-                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is TimeoutException || ex is InvalidOperationException)
+                catch (Exception ex) when (ex is IOException || ex is SocketException || ex is UnauthorizedAccessException ||
+                                           ex is TimeoutException || ex is InvalidOperationException || ex is ArgumentException)
                 {
                     MessageBox.Show(
                         this,
@@ -702,6 +709,21 @@ namespace CymaLAB_Ver_1._0
             {
                 commands.SetSampling(sampling.DownSampleRatio, sampling.StartIndex, settings.PreTriggerTimeUs, GetDiscardTimeUs());
             });
+        }
+
+        private void ClearAutomaticMeasurement()
+        {
+            System.Threading.Interlocked.Exchange(
+                ref latestDeviceData, null);
+
+            tof_Control.TOF_Stable = false;
+
+            if (tof_Control.Auto_TOF)
+            {
+                tof_Control.TOF_uSec = double.NaN;
+            }
+
+            UpdateMeasurementResult();
         }
 
         private int GetDiscardTimeUs()

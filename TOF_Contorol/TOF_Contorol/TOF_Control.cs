@@ -30,6 +30,8 @@ namespace TOF_Contorol
 
         private bool decrease_MouseDown = false;
 
+        private double lastManualTofUs = 100.0;
+
 
         private bool auto_TOF = false;
         public bool Auto_TOF
@@ -37,10 +39,39 @@ namespace TOF_Contorol
             get { return auto_TOF; }
             set
             {
+                if (auto_TOF == value)
+                    return;
+
+                if (value)
+                {
+                    // Remember the manual setting before entering Auto.
+                    if (!double.IsNaN(tofUs) && !double.IsInfinity(tofUs))
+                    {
+                        lastManualTofUs = tofUs;
+                    }
+
+                    // Wait for a new automatic measurement.
+                    tofUs = double.NaN;
+                }
+                else
+                {
+                    tofUs = lastManualTofUs;
+                }
+
                 auto_TOF = value;
+
+                TOF_Stable = false;
+
+                increase_MouseDown = false;
+                decrease_MouseDown = false;
+
+                key_State_Increase = "Idle";
+                key_State_Decrease = "Idle";
+
                 Update_Key_Pic();
                 Update_Increase_Pic();
                 Update_Decrease_Pic();
+                Update_Time_Of_Flight();
             }
         }
 
@@ -150,8 +181,11 @@ namespace TOF_Contorol
 
         private void Update_Time_Of_Flight(bool notifyChange = true)
         {
-            label_Time_Of_Flight.Text =
-                "Time Of Flight (µs) = " + tofUs.ToString("0.00");
+
+            // Format Text (Invalid and Valid)
+            string text = double.IsNaN(tofUs) || double.IsInfinity(tofUs) ? "—" : tofUs.ToString("0.00");
+
+            label_Time_Of_Flight.Text = "Time Of Flight (µs) = " + text;
 
             if (notifyChange)
                 TOF_Changed?.Invoke(this, EventArgs.Empty);
@@ -163,9 +197,6 @@ namespace TOF_Contorol
         {
 
             auto_TOF = !auto_TOF;
-            Update_Key_Pic();
-            Update_Increase_Pic();
-            Update_Decrease_Pic();
 
         }
 
