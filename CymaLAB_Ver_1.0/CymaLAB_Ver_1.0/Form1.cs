@@ -30,6 +30,8 @@ namespace CymaLAB_Ver_1._0
 
         private DeviceData latestDeviceData;
 
+        private FirmwareUpdater firmwareUpdater;
+
         private readonly SamplingParameters sampling = new SamplingParameters();
 
         private readonly System.Windows.Forms.Timer hardwareDisplayTimer = new System.Windows.Forms.Timer
@@ -105,6 +107,9 @@ namespace CymaLAB_Ver_1._0
             commands = new Commands(communication);
             commands.CommandFailed += Commands_CommandFailed;
 
+            firmwareUpdater = new FirmwareUpdater(communication, commands);
+            command_Box.Firmware_Update_Clicked += Command_Box_Firmware_Update_Clicked;
+
             communication.StatusChanged += Communication_StatusChanged;
             communication.Connected += Communication_ConnectionChanged;
             communication.ConnectionLost += Communication_ConnectionChanged;
@@ -125,6 +130,31 @@ namespace CymaLAB_Ver_1._0
 
             //timer_Auto_Start_Simulation.Start();
 
+        }
+
+        private void Command_Box_Firmware_Update_Clicked(object sender, EventArgs e)
+        {
+            if (firmwareUpdater == null || firmwareUpdater.IsBusy)
+                return;
+
+            if (GetSelectedTransport() != Enums.CommunicationTransport.Usb)
+            {
+                MessageBox.Show(
+                    this,
+                    "Select USB communication before updating firmware.",
+                    "Firmware update",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                return;
+            }
+
+            using (var dialog = new FirmwareUpdateDialog(firmwareUpdater, communication))
+            {
+                dialog.ShowDialog(this);
+            }
+
+            UpdateConnectionControls();
         }
 
         private Enums.CommunicationTransport GetSelectedTransport()
@@ -609,6 +639,9 @@ namespace CymaLAB_Ver_1._0
 
         private void Tof_Control_Close_Button_Clicked(object sender, EventArgs e)
         {
+            if (firmwareUpdater != null && firmwareUpdater.IsBusy)
+                return;
+
             bool resumeCapture = communication != null && communication.IsConnected && commands != null && commands.CaptureInProgress;
 
             try
@@ -743,6 +776,12 @@ namespace CymaLAB_Ver_1._0
         {
             base.OnFormClosing(e);
 
+            if (firmwareUpdater != null && firmwareUpdater.IsBusy)
+            {
+                e.Cancel = true;
+                return;
+            }
+
             if (e.Cancel || !settingsInitialized)
                 return;
 
@@ -775,6 +814,8 @@ namespace CymaLAB_Ver_1._0
             command_Box.LiveKey_Clicked -= Command_Box_LiveKey_Clicked;
 
             tof_Control.TOF_Changed -= Tof_Control_TOF_Changed;
+
+            command_Box.Firmware_Update_Clicked -= Command_Box_Firmware_Update_Clicked;
 
             command_Box.CommunicationModeChanged -= Command_Box_CommunicationModeChanged;
 

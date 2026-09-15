@@ -18,6 +18,21 @@ namespace CymaLAB_Ver_1._0
             get { return isConnected; }
         }
 
+        public Enums.CommunicationTransport ActiveTransport
+        {
+            get { return activeTransport; }
+        }
+
+        public string CurrentUsbPortName
+        {
+            get
+            {
+                return activeTransport == Enums.CommunicationTransport.Usb
+                    ? vcp.CurrentPortName
+                    : null;
+            }
+        }
+
         public event Action ConnectionLost;
         public event Action Connected;
         public event Action<string> StatusChanged;

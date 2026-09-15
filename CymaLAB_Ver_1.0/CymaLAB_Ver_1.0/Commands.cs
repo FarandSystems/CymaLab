@@ -257,6 +257,25 @@ namespace CymaLAB_Ver_1._0
             }
         }
 
+        public void EnterBootloader()
+        {
+            lock (commandLock)
+            {
+                if (!communication.IsConnected || communication.ActiveTransport != Enums.CommunicationTransport.Usb)
+                {
+                    throw new InvalidOperationException("Firmware update requires a USB connection.");
+                }
+
+                byte[] command = FinalizeCommandFrame(CreateCommandFrame(Enums.DeviceCommand.FirmwareUpdate));
+
+                // Clear capture state, pending commands and the watchdog.
+                Reset();
+
+                // Send immediately: do not wait for another capture packet.
+                SendImmediate(command);
+            }
+        }
+
         public void StartCapture()
         {
             lock (commandLock)

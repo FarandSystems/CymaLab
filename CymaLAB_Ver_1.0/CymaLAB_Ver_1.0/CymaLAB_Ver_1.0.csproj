@@ -53,6 +53,10 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DeviceData.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="FirmwareUpdate\FirmwareUpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FirmwareUpdate\FirmwareUpdater.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +71,7 @@
     <Compile Include="SettingsFile.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="WifiPacketBuffer.cs" />
+    <Compile Include="FirmwareUpdate\XModemUploader.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

@@ -390,7 +390,7 @@ namespace Command_Box
 
         private void Command_Box_Load(object sender, EventArgs e)
         {
-
+            UpdateCommunicationModeDisplay();
         }
 
         private void pictureBox_Firmware_Update_MouseLeave(object sender, EventArgs e)
