@@ -325,7 +325,17 @@ namespace CymaLAB_Ver_1._0
 
         private void Communication_ConnectionChanged()
         {
-            RunOnUiThread(UpdateConnectionControls);
+            RunOnUiThread(() =>
+            {
+                if (communication == null || !communication.IsConnected)
+                {
+                    System.Threading.Interlocked.Exchange(ref latestDeviceData, null);
+
+                    tof_Control.TOF_Stable = false;
+                }
+
+                UpdateConnectionControls();
+            });
         }
 
         private void UpdateConnectionControls()

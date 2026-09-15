@@ -28,9 +28,9 @@
             }
 
             // TOF
-            data.TimeOfFlightUs = ReadTofUs(packet, Constants.RAW_TOF_OFFSET_INDEX);
-            data.FilteredTimeOfFlightUs = ReadTofUs(packet, Constants.FILTERED_TOF_OFFSET_INDEX);
-            data.AutoTimeOfFlightUs = ReadTofUs(packet, Constants.AUTO_TOF_OFFSET_INDEX);
+            data.TimeOfFlightUs = Utils.GetUInt16LE(packet, Constants.RAW_TOF_OFFSET_INDEX);
+            data.FilteredTimeOfFlightUs = Utils.GetUInt16LE(packet, Constants.FILTERED_TOF_OFFSET_INDEX);
+            data.AutoTimeOfFlightUs = Utils.GetUInt16LE(packet, Constants.DIAGNOSTIC_FILTERED_TOF_OFFSET_INDEX);
             data.FilterTofMode = packet[Constants.TOF_FILTER_MODE_OFFSET_INDEX];
 
             // Piezo Freq and phase
@@ -48,15 +48,6 @@
             data.Peak5AdvanceUs = Utils.GetInt16LE(packet, Constants.PEAK_5_ADVANCE_OFFSET_INDEX);
 
             return data;
-        }
-
-
-
-        private static double ReadTofUs(byte[] packet, int offset)
-        {
-            short sampleCount = Utils.GetInt16LE(packet, offset);
-
-            return sampleCount * Constants.MICROSECONDS_PER_SECOND / Constants.ADC_SAMPLE_RATE_HZ - Constants.TOF_PREOFFSET_US;
         }
     }
 }

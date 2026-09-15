@@ -69,7 +69,9 @@ namespace CymaLAB_Ver_1._0
 
             try
             {
-                // First establish the TCP connection.
+                // Capture the socket before cancellation can close the client.
+                Socket connectSocket = client.Client;
+
                 using (CancellationTokenSource connectTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
                 {
                     connectTimeout.CancelAfter(Constants.WIFI_CONNECT_TIMEOUT_MS);
@@ -80,7 +82,9 @@ namespace CymaLAB_Ver_1._0
                         {
                             connectTimeout.Token.ThrowIfCancellationRequested();
 
-                            await client.ConnectAsync(Constants.WIFI_SERVER_IP, Constants.WIFI_SERVER_PORT).ConfigureAwait(false);
+                            await Task.Factory.FromAsync((AsyncCallback callback, object state) =>
+                                connectSocket.BeginConnect(Constants.WIFI_SERVER_IP, Constants.WIFI_SERVER_PORT, callback, state),
+                                connectSocket.EndConnect, null).ConfigureAwait(false);
 
                             connectTimeout.Token.ThrowIfCancellationRequested();
                         }
@@ -147,6 +151,28 @@ namespace CymaLAB_Ver_1._0
         }
 
         private async Task RunWifiAsync(CancellationToken token)
+        {
+            try
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    await RunWifiSessionAsync(token).ConfigureAwait(false);
+
+                    if (token.IsCancellationRequested)
+                        break;
+
+                    StatusChanged?.Invoke("Wi-Fi disconnected. Retrying in " + Constants.WIFI_RECONNECT_DELAY_MS / 1000.0 + " seconds...");
+
+                    await Task.Delay(Constants.WIFI_RECONNECT_DELAY_MS, token).ConfigureAwait(false);
+                }
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                // Switching transport or closing the application.
+            }
+        }
+
+        private async Task RunWifiSessionAsync(CancellationToken token)
         {
             TcpClient client = null;
 
