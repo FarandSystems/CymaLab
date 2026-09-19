@@ -154,6 +154,41 @@
             this.Name = "Command_Box";
             this.Size = new System.Drawing.Size(380, 72);
             this.Load += new System.EventHandler(this.Command_Box_Load);
+            // 
+            // responsiveCommandLayout
+            // 
+            this.responsiveCommandLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.responsiveCommandLayout.ColumnCount = 6;
+            this.responsiveCommandLayout.RowCount = 1;
+            this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66665F));
+            this.responsiveCommandLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.responsiveCommandLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.responsiveCommandLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.responsiveCommandLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.responsiveCommandLayout.Padding = new System.Windows.Forms.Padding(3);
+            this.responsiveCommandLayout.Name = "responsiveCommandLayout";
+
+            this.pictureBox_Connected.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Connection_Mode.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Firmware_Update.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Run.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Save.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_load.Anchor = System.Windows.Forms.AnchorStyles.None;
+
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Connected, 0, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Connection_Mode, 1, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Firmware_Update, 2, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Run, 3, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Save, 4, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_load, 5, 0);
+            this.Controls.Add(this.responsiveCommandLayout);
+            this.responsiveCommandLayout.BringToFront();
+
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Firmware_Update)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Run)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Save)).EndInit();
@@ -175,5 +210,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.PictureBox pictureBox_Firmware_Update;
         private System.Windows.Forms.PictureBox pictureBox_Connection_Mode;
+        private System.Windows.Forms.TableLayoutPanel responsiveCommandLayout;
     }
 }

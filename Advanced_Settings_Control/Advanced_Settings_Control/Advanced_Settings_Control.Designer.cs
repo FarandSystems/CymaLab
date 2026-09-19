@@ -123,6 +123,36 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Advanced_Settings_Control";
             this.Size = new System.Drawing.Size(380, 110);
+            // 
+            // responsiveAdvancedLayout
+            // 
+            this.responsiveAdvancedLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.responsiveAdvancedLayout.ColumnCount = 3;
+            this.responsiveAdvancedLayout.RowCount = 2;
+            this.responsiveAdvancedLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
+            this.responsiveAdvancedLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.responsiveAdvancedLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.responsiveAdvancedLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.responsiveAdvancedLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.responsiveAdvancedLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.responsiveAdvancedLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.responsiveAdvancedLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.responsiveAdvancedLayout.Padding = new System.Windows.Forms.Padding(6, 8, 6, 4);
+            this.label_Reference.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label_Discard.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.textBox_Reference.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_Discard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox_Set.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox_Set.Margin = new System.Windows.Forms.Padding(8);
+            this.responsiveAdvancedLayout.Controls.Add(this.label_Reference, 0, 0);
+            this.responsiveAdvancedLayout.Controls.Add(this.textBox_Reference, 1, 0);
+            this.responsiveAdvancedLayout.Controls.Add(this.label_Discard, 0, 1);
+            this.responsiveAdvancedLayout.Controls.Add(this.textBox_Discard, 1, 1);
+            this.responsiveAdvancedLayout.Controls.Add(this.pictureBox_Set, 2, 0);
+            this.responsiveAdvancedLayout.SetRowSpan(this.pictureBox_Set, 2);
+            this.groupBox_Advanced_Settings.Controls.Add(this.responsiveAdvancedLayout);
+            this.responsiveAdvancedLayout.BringToFront();
+
             this.groupBox_Advanced_Settings.ResumeLayout(false);
             this.groupBox_Advanced_Settings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Set)).EndInit();
@@ -138,5 +168,6 @@
         private System.Windows.Forms.TextBox textBox_Reference;
         private System.Windows.Forms.Label label_Discard;
         private System.Windows.Forms.Label label_Reference;
+        private System.Windows.Forms.TableLayoutPanel responsiveAdvancedLayout;
     }
 }

@@ -261,6 +261,82 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Signal_Strength_Control";
             this.Size = new System.Drawing.Size(380, 145);
+            // 
+            // responsive signal strength layouts
+            // 
+            this.receiverLevelLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.receiverLevelLayout.ColumnCount = 4;
+            this.receiverLevelLayout.RowCount = 1;
+            this.receiverLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.receiverLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.receiverLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.receiverLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.receiverLevelLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.receiverLevelLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.receiverLevelLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.receiverLevelLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBox_Receiver1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Receiver2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Receiver3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Receiver4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.receiverLevelLayout.Controls.Add(this.pictureBox_Receiver1, 0, 0);
+            this.receiverLevelLayout.Controls.Add(this.pictureBox_Receiver2, 1, 0);
+            this.receiverLevelLayout.Controls.Add(this.pictureBox_Receiver3, 2, 0);
+            this.receiverLevelLayout.Controls.Add(this.pictureBox_Receiver4, 3, 0);
+
+            this.transducerLevelLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.transducerLevelLayout.ColumnCount = 8;
+            this.transducerLevelLayout.RowCount = 1;
+            this.transducerLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.transducerLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.transducerLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.transducerLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.transducerLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.transducerLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.transducerLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.transducerLevelLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.transducerLevelLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.transducerLevelLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.transducerLevelLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.transducerLevelLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBox_Transducer1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Transducer2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Transducer3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Transducer4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Transducer5.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Transducer6.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Transducer7.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Transducer8.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.transducerLevelLayout.Controls.Add(this.pictureBox_Transducer1, 0, 0);
+            this.transducerLevelLayout.Controls.Add(this.pictureBox_Transducer2, 1, 0);
+            this.transducerLevelLayout.Controls.Add(this.pictureBox_Transducer3, 2, 0);
+            this.transducerLevelLayout.Controls.Add(this.pictureBox_Transducer4, 3, 0);
+            this.transducerLevelLayout.Controls.Add(this.pictureBox_Transducer5, 4, 0);
+            this.transducerLevelLayout.Controls.Add(this.pictureBox_Transducer6, 5, 0);
+            this.transducerLevelLayout.Controls.Add(this.pictureBox_Transducer7, 6, 0);
+            this.transducerLevelLayout.Controls.Add(this.pictureBox_Transducer8, 7, 0);
+
+            this.responsiveSignalLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.responsiveSignalLayout.ColumnCount = 1;
+            this.responsiveSignalLayout.RowCount = 4;
+            this.responsiveSignalLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.responsiveSignalLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
+            this.responsiveSignalLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 28F));
+            this.responsiveSignalLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
+            this.responsiveSignalLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 28F));
+            this.responsiveSignalLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.responsiveSignalLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.responsiveSignalLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.responsiveSignalLayout.Padding = new System.Windows.Forms.Padding(8, 8, 8, 4);
+            this.label_Velocity_receiver.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label_Transducer_Power.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.responsiveSignalLayout.Controls.Add(this.label_Velocity_receiver, 0, 0);
+            this.responsiveSignalLayout.Controls.Add(this.receiverLevelLayout, 0, 1);
+            this.responsiveSignalLayout.Controls.Add(this.label_Transducer_Power, 0, 2);
+            this.responsiveSignalLayout.Controls.Add(this.transducerLevelLayout, 0, 3);
+            this.groupBox_Signal_Intensity.Controls.Add(this.responsiveSignalLayout);
+            this.responsiveSignalLayout.BringToFront();
+
             this.groupBox_Signal_Intensity.ResumeLayout(false);
             this.groupBox_Signal_Intensity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Transducer8)).EndInit();
@@ -296,5 +372,8 @@
         private System.Windows.Forms.Label label_Velocity_receiver;
         private System.Windows.Forms.PictureBox pictureBox_Transducer8;
         private System.Windows.Forms.PictureBox pictureBox_Transducer7;
+        private System.Windows.Forms.TableLayoutPanel responsiveSignalLayout;
+        private System.Windows.Forms.TableLayoutPanel receiverLevelLayout;
+        private System.Windows.Forms.TableLayoutPanel transducerLevelLayout;
     }
 }

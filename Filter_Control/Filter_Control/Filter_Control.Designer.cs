@@ -113,6 +113,33 @@
             this.Name = "Filter_Control";
             this.Size = new System.Drawing.Size(380, 85);
             this.Load += new System.EventHandler(this.UserControl1_Load);
+            // 
+            // responsiveFilterLayout
+            // 
+            this.responsiveFilterLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.responsiveFilterLayout.ColumnCount = 2;
+            this.responsiveFilterLayout.RowCount = 2;
+            this.responsiveFilterLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 78F));
+            this.responsiveFilterLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22F));
+            this.responsiveFilterLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.responsiveFilterLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.responsiveFilterLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.responsiveFilterLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.responsiveFilterLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.responsiveFilterLayout.Padding = new System.Windows.Forms.Padding(8, 8, 5, 2);
+            this.responsiveFilterLayout.Name = "responsiveFilterLayout";
+
+            this.Band_Pass_Filter_label.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.Center_Frequency_label.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.pictureBox_Filter_Icon.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox_Filter_Icon.Margin = new System.Windows.Forms.Padding(4);
+            this.responsiveFilterLayout.Controls.Add(this.Band_Pass_Filter_label, 0, 0);
+            this.responsiveFilterLayout.Controls.Add(this.Center_Frequency_label, 0, 1);
+            this.responsiveFilterLayout.Controls.Add(this.pictureBox_Filter_Icon, 1, 0);
+            this.responsiveFilterLayout.SetRowSpan(this.pictureBox_Filter_Icon, 2);
+            this.groupBox1.Controls.Add(this.responsiveFilterLayout);
+            this.responsiveFilterLayout.BringToFront();
+
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Filter_Icon)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -126,5 +153,6 @@
         private Fancy_Lable.Fancy_Lable_Control Center_Frequency_label;
         private System.Windows.Forms.PictureBox pictureBox_Filter_Icon;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TableLayoutPanel responsiveFilterLayout;
     }
 }

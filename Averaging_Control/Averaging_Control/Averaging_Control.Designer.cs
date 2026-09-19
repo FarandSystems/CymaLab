@@ -156,6 +156,34 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Averaging_Control";
             this.Size = new System.Drawing.Size(380, 108);
+            // 
+            // responsiveAveragingLayout
+            // 
+            this.responsiveAveragingLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.responsiveAveragingLayout.ColumnCount = 3;
+            this.responsiveAveragingLayout.RowCount = 2;
+            this.responsiveAveragingLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.responsiveAveragingLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.responsiveAveragingLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.responsiveAveragingLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.responsiveAveragingLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.responsiveAveragingLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.responsiveAveragingLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.responsiveAveragingLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.responsiveAveragingLayout.Padding = new System.Windows.Forms.Padding(6, 8, 6, 4);
+            this.fancy_Lable_Control_None.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.fancy_Lable_Control4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.fancy_Lable_Control8.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.fancy_Lable_Control16.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.fancy_Lable_Control32.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.responsiveAveragingLayout.Controls.Add(this.fancy_Lable_Control_None, 0, 0);
+            this.responsiveAveragingLayout.Controls.Add(this.fancy_Lable_Control4, 1, 0);
+            this.responsiveAveragingLayout.Controls.Add(this.fancy_Lable_Control8, 2, 0);
+            this.responsiveAveragingLayout.Controls.Add(this.fancy_Lable_Control16, 1, 1);
+            this.responsiveAveragingLayout.Controls.Add(this.fancy_Lable_Control32, 2, 1);
+            this.groupBox_Averaging.Controls.Add(this.responsiveAveragingLayout);
+            this.responsiveAveragingLayout.BringToFront();
+
             this.groupBox_Averaging.ResumeLayout(false);
             this.groupBox_Averaging.PerformLayout();
             this.ResumeLayout(false);
@@ -170,5 +198,6 @@
         private Fancy_Lable.Fancy_Lable_Control fancy_Lable_Control16;
         private Fancy_Lable.Fancy_Lable_Control fancy_Lable_Control32;
         private System.Windows.Forms.GroupBox groupBox_Averaging;
+        private System.Windows.Forms.TableLayoutPanel responsiveAveragingLayout;
     }
 }

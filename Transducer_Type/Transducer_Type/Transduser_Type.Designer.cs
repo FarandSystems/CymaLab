@@ -94,6 +94,27 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Transducer_Type";
             this.Size = new System.Drawing.Size(380, 62);
+            // 
+            // responsiveTransducerLayout
+            // 
+            this.responsiveTransducerLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.responsiveTransducerLayout.ColumnCount = 2;
+            this.responsiveTransducerLayout.RowCount = 1;
+            this.responsiveTransducerLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.responsiveTransducerLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.responsiveTransducerLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.responsiveTransducerLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.responsiveTransducerLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.responsiveTransducerLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.responsiveTransducerLayout.Padding = new System.Windows.Forms.Padding(4, 8, 4, 2);
+            this.responsiveTransducerLayout.Name = "responsiveTransducerLayout";
+            this.fancy_Lable_Control_P_Type_55.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.fancy_Lable_Control_S_Type.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.responsiveTransducerLayout.Controls.Add(this.fancy_Lable_Control_P_Type_55, 0, 0);
+            this.responsiveTransducerLayout.Controls.Add(this.fancy_Lable_Control_S_Type, 1, 0);
+            this.groupBox_Transducer_Type.Controls.Add(this.responsiveTransducerLayout);
+            this.responsiveTransducerLayout.BringToFront();
+
             this.groupBox_Transducer_Type.ResumeLayout(false);
             this.groupBox_Transducer_Type.PerformLayout();
             this.ResumeLayout(false);
@@ -105,5 +126,6 @@
         private System.Windows.Forms.GroupBox groupBox_Transducer_Type;
         private Fancy_Lable.Fancy_Lable_Control fancy_Lable_Control_P_Type_55;
         private Fancy_Lable.Fancy_Lable_Control fancy_Lable_Control_S_Type;
+        private System.Windows.Forms.TableLayoutPanel responsiveTransducerLayout;
     }
 }
