@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
@@ -12,6 +13,7 @@ namespace Splash_Screen
         public int Width { get; set; } = 800;
         public Color StatusColor { get; set; } = Color.FromArgb(32, 32, 32);
         public string InitialStatus { get; set; } = "Preparing application";
+        public TimeSpan MinimumDisplayTime { get; set; } = TimeSpan.Zero;
         // Positions are relative to the artwork's height (0 to 1).
         public float StatusPosition { get; set; } = 0.87f;
         public float DotsPosition { get; set; } = 0.94f;
@@ -26,13 +28,17 @@ namespace Splash_Screen
         private readonly Thread thread;
         private SplashWindow window;
         private int disposed;
+        private readonly Stopwatch displayTime = new Stopwatch();
+        private readonly TimeSpan minimumDisplayTime;
 
         private SplashScreen(Image artwork, SplashOptions options)
         {
             if (artwork == null) throw new ArgumentNullException(nameof(artwork));
             if (options.Width <= 0 || options.StatusPosition < 0 || options.StatusPosition > 1
-                || options.DotsPosition < 0 || options.DotsPosition > 1)
+                || options.DotsPosition < 0 || options.DotsPosition > 1
+                || options.MinimumDisplayTime < TimeSpan.Zero)
                 throw new ArgumentOutOfRangeException(nameof(options));
+            minimumDisplayTime = options.MinimumDisplayTime;
 
             Image copy = new Bitmap(artwork);
             // Snapshot options so subsequent caller changes cannot race the UI.
@@ -57,6 +63,7 @@ namespace Splash_Screen
                             form.Shown += (sender, args) =>
                             {
                                 form.Update();
+                                displayTime.Start();
                                 form.Activate();
                                 shown = true;
                                 ready.Set();
@@ -96,6 +103,24 @@ namespace Splash_Screen
                 window.Invoke((Action)(() => window.SetStatus(status ?? string.Empty)));
             }
             catch (InvalidOperationException) when (Volatile.Read(ref disposed) != 0) { }
+        }
+
+        /// <summary>
+        /// Call after preparation, before showing the main window. Preparation
+        /// counts toward the minimum; the independent splash UI keeps animating.
+        /// Failed startup can still dispose immediately without waiting.
+        /// </summary>
+        public void WaitForMinimumDisplayTime()
+        {
+            if (Thread.CurrentThread == thread)
+                throw new InvalidOperationException("Wait on the application's startup thread, not the splash UI thread.");
+
+            while (Volatile.Read(ref disposed) == 0)
+            {
+                TimeSpan remaining = minimumDisplayTime - displayTime.Elapsed;
+                if (remaining <= TimeSpan.Zero) return;
+                Thread.Sleep((int)Math.Min(1000, Math.Ceiling(remaining.TotalMilliseconds)));
+            }
         }
 
         public void Dispose()

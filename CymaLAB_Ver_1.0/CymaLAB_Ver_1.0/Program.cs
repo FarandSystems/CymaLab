@@ -18,7 +18,10 @@ namespace CymaLAB_Ver_1._0
             Application.SetCompatibleTextRenderingDefault(false);
             using (var stream = typeof(Program).Assembly.GetManifestResourceStream("CymaLab.PreciTestSplash.png"))
             using (var artwork = Image.FromStream(stream))
-            using (var splash = SplashScreen.Show(artwork))
+            using (var splash = SplashScreen.Show(artwork, new SplashOptions
+            {
+                MinimumDisplayTime = TimeSpan.FromSeconds(10)
+            }))
             {
                 RunMainApplication(splash);
             }
@@ -36,7 +39,8 @@ namespace CymaLAB_Ver_1._0
                 // Create the UI handle before services can post callbacks to it.
                 var handle = mainWindow.Handle;
                 mainWindow.PrepareForStartup(splash);
-                splash.Report("Ready — opening CymaLab");
+                splash.Report("Opening CymaLab");
+                splash.WaitForMinimumDisplayTime();
             }
             catch (Exception ex)
             {
