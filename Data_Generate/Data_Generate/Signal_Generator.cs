@@ -42,9 +42,9 @@ namespace Data_Generate
 
         int filter_Counter = 0;
 
-        double a = 0.95;
+        double a = 0;
 
-        double tOF_Filtered_Sec = 0;
+        double tOF_Filtered_Sec = double.NaN;
 
         double total_Time = 0;
 
@@ -53,6 +53,9 @@ namespace Data_Generate
         double[,] Capture_History = new double[64, 14400];
 
         int Capture_No = 0;
+        int availableCaptureCount = 0;
+        double transmitterScale = 1;
+        double receiverGain = 1;
 
         public event EventHandler Mode_Is_Changed;
 
@@ -74,11 +77,53 @@ namespace Data_Generate
 
         private double beta = 1;
 
-        private double time_Of_Flight_Sec;
+        private double time_Of_Flight_Sec = double.NaN;
         private double Time_Of_Flight_Sec
         {
             get { return time_Of_Flight_Sec; }
             set { time_Of_Flight_Sec = value; }
+        }
+
+        [Browsable(false)]
+        public double TimeOfFlightUs { get { return tOF_Filtered_Sec * 1E6; } }
+
+        [Browsable(false)]
+        public bool IsTofStable
+        {
+            get { return !double.IsNaN(tOF_Filtered_Sec) && filter_State != Filter_State_Enum.Fast; }
+        }
+
+        [Browsable(false)]
+        public double MaximumSignalAmplitude
+        {
+            get { return (amplitude * transmitterScale + 0.1 * noise_Intensity + 0.1) * receiverGain; }
+        }
+
+        public void SetSignalIntensity(double transmitScale, double gain)
+        {
+            if (double.IsNaN(transmitScale) || double.IsInfinity(transmitScale) || transmitScale <= 0)
+                throw new ArgumentOutOfRangeException(nameof(transmitScale));
+            if (double.IsNaN(gain) || double.IsInfinity(gain) || gain <= 0)
+                throw new ArgumentOutOfRangeException(nameof(gain));
+
+            if (transmitterScale == transmitScale && receiverGain == gain)
+                return;
+
+            transmitterScale = transmitScale;
+            receiverGain = gain;
+            ResetProcessing();
+        }
+
+        private void ResetProcessing()
+        {
+            Array.Clear(Capture_History, 0, Capture_History.Length);
+            Capture_No = 0;
+            availableCaptureCount = 0;
+            time_Of_Flight_Sec = double.NaN;
+            tOF_Filtered_Sec = double.NaN;
+            filter_State = Filter_State_Enum.Fast;
+            filter_Counter = 0;
+            a = 0;
         }
 
         private int average_Count = 1;
@@ -94,10 +139,36 @@ namespace Data_Generate
             get { return _isSimulated_Data_Choosen; }
             set
             {
-                _isSimulated_Data_Choosen = value;
                 checkBox_use_Simulated.Checked = value;
-                Update_Info_Icon_Pic();
             }
+        }
+
+        // Simulation uses a 7.2 MHz source, independently of the hardware ADC.
+        [Browsable(false)]
+        public double StartTimeUs { get { return start_Index * Ts_Sec * 1E6; } }
+
+        [Browsable(false)]
+        public double SampleIntervalUs { get { return down_Sample_Raito * Ts_Sec * 1E6; } }
+
+        [Browsable(false)]
+        public double MaximumStartTimeUs { get { return (double)numericUpDown_Start_Index.Maximum * Ts_Sec * 1E6; } }
+
+        [Browsable(false)]
+        public double MinimumWindowUs { get { return data_Filtered.Length * (double)numericUpDown_Down_Sample_Ratio.Minimum * Ts_Sec * 1E6; } }
+
+        [Browsable(false)]
+        public double MaximumWindowUs { get { return data_Filtered.Length * (double)numericUpDown_Down_Sample_Ratio.Maximum * Ts_Sec * 1E6; } }
+
+        public void SetTimeWindow(double minimumUs, double maximumUs)
+        {
+            if (double.IsNaN(minimumUs) || double.IsInfinity(minimumUs) ||
+                double.IsNaN(maximumUs) || double.IsInfinity(maximumUs) || minimumUs < 0 || maximumUs <= minimumUs)
+                throw new ArgumentException("Invalid simulation time window.");
+
+            Start_Index = (int)Math.Min(minimumUs / (Ts_Sec * 1E6), (double)numericUpDown_Start_Index.Maximum);
+            double ratio = Math.Floor((maximumUs - minimumUs) / (data_Filtered.Length * Ts_Sec * 1E6) + 0.5);
+            Down_Sample_Raito = (int)Math.Max((double)numericUpDown_Down_Sample_Ratio.Minimum,
+                Math.Min((double)numericUpDown_Down_Sample_Ratio.Maximum, ratio));
         }
 
         private int start_Index = 0;
@@ -311,17 +382,17 @@ namespace Data_Generate
                 else if (t_Sec >= t_Delay_Sec && t_Sec < t_Delay_Sec + t_Rise_Sec)
                 {
                     double T_Shift = t_Delay_Sec;
-                    data_Raw[k] = amplitude * (1 - Math.Exp(-(t_Sec - T_Shift) / t1_Sec)) * Math.Sin(2 * Math.PI * f_kHz * 1E3 * (t_Sec - t_Delay_Sec));
+                    data_Raw[k] = amplitude * transmitterScale * (1 - Math.Exp(-(t_Sec - T_Shift) / t1_Sec)) * Math.Sin(2 * Math.PI * f_kHz * 1E3 * (t_Sec - t_Delay_Sec));
                 }
                 else if (t_Sec >= t_Delay_Sec + t_Rise_Sec)
                 {
                     double T_Shift = t_Delay_Sec + t_Rise_Sec;
-                    double amp_Max = amplitude * (1 - Math.Exp(-t_Rise_Sec / t1_Sec)) * Math.Sin(2 * Math.PI * f_kHz * 1E3 * (t_Sec - t_Delay_Sec));
+                    double amp_Max = amplitude * transmitterScale * (1 - Math.Exp(-t_Rise_Sec / t1_Sec)) * Math.Sin(2 * Math.PI * f_kHz * 1E3 * (t_Sec - t_Delay_Sec));
                     data_Raw[k] = amp_Max * Math.Exp(-(t_Sec - T_Shift) / t1_Sec);
                 }
 
                 double noise = 0.1 * noise_Intensity * (2 * rnd.NextDouble() - 1);
-                data_Raw[k] = data_Raw[k] + noise + 0.1 * Math.Sin(2 * Math.PI * 250 * (system_time_Sec + t_Sec));
+                data_Raw[k] = receiverGain * (data_Raw[k] + noise + 0.1 * Math.Sin(2 * Math.PI * 250 * (system_time_Sec + t_Sec)));
 
             }
             return data_Raw;
@@ -385,6 +456,18 @@ namespace Data_Generate
 
         private void Update_Filter_State_Machine()
         {
+            if (double.IsNaN(time_Of_Flight_Sec) || double.IsInfinity(time_Of_Flight_Sec) || time_Of_Flight_Sec <= 0)
+            {
+                tOF_Filtered_Sec = double.NaN;
+                filter_State = Filter_State_Enum.Fast;
+                filter_Counter = 0;
+                a = 0;
+                return;
+            }
+
+            if (double.IsNaN(tOF_Filtered_Sec))
+                tOF_Filtered_Sec = time_Of_Flight_Sec;
+
             switch (filter_State)
             {
                 case Filter_State_Enum.Fast:
@@ -526,7 +609,7 @@ namespace Data_Generate
 
             for (int k = 0; k <= 20; k++)
             {
-                double f = 19 + 0.1 * k;
+                double f = Math.Max(0.1, f_kHz - 1 + 0.1 * k);
                 double sineCorrelation = 0;
                 double cosineCorrelation = 0;
 
@@ -562,6 +645,7 @@ namespace Data_Generate
         {
             double[] y = new double[x.Length];
             double peak = 0;
+            peak_Time_Sec = 0;
             for (int k = 0; k < x.Length; k++)
             {
                 double t = Ts_Sec * k;
@@ -748,7 +832,7 @@ namespace Data_Generate
             //label2.Text = best_Frequency_kHz.ToString();
 
             double[] x4 = Creat_Sine_Product(x3, best_Frequency_kHz, signal_Phase);
-            time_Of_Flight_Sec = Find_TOF_Sec(x4);
+            time_Of_Flight_Sec = amplitude > 0 && x4.Max() > 0.02 ? Find_TOF_Sec(x4) : double.NaN;
 
             data_Filtered = Down_Sample_Data(x3);
             data_Sine_Product = Down_Sample_Data(x4);
@@ -795,6 +879,7 @@ namespace Data_Generate
             }
 
             Capture_No++;
+            availableCaptureCount = Math.Min(64, availableCaptureCount + 1);
             if (Capture_No == 64)
             {
                 Capture_No = 0;
@@ -804,6 +889,7 @@ namespace Data_Generate
         private double[] Apply_Capture_Averaging(int average_count)
         {
             double[] x = new double[14400];
+            average_count = Math.Min(average_count, availableCaptureCount);
 
             for (int i = 0; i < x.Length; i++)
             {
@@ -876,24 +962,22 @@ namespace Data_Generate
 
         public void checkBox_use_Simulated_Click(object sender, EventArgs e)
         {
-            _isSimulated_Data_Choosen = !_isSimulated_Data_Choosen;
+            // Kept for callers that toggle Test mode without clicking the checkbox.
+            if (sender == null)
+                _IsSimulated_Data_Choosen = !_IsSimulated_Data_Choosen;
+        }
+
+        private void checkBox_use_Simulated_CheckedChanged(object sender, EventArgs e)
+        {
+            _isSimulated_Data_Choosen = checkBox_use_Simulated.Checked;
+            ResetProcessing();
+            Update_Info_Icon_Pic();
+            Mode_Is_Changed?.Invoke(this, EventArgs.Empty);
 
             if (_isSimulated_Data_Choosen)
                 Start_Generating_Data();
             else
                 Stop_Generating_Data();
-
-            Update_Info_Icon_Pic();
-            if (Mode_Is_Changed != null)
-            {
-                Mode_Is_Changed(this, EventArgs.Empty);
-            }
-
-        }
-
-        private void checkBox_use_Simulated_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

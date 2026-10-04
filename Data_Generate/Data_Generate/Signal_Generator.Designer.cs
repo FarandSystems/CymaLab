@@ -112,7 +112,7 @@
             this.chart_Data.ChartAreas.Add(chartArea1);
             this.chart_Data.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart_Data.Location = new System.Drawing.Point(250, 210);
-            this.chart_Data.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chart_Data.Margin = new System.Windows.Forms.Padding(2);
             this.chart_Data.Name = "chart_Data";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -151,7 +151,7 @@
             0,
             0});
             this.numericUpDown_Amplitude.Location = new System.Drawing.Point(146, 38);
-            this.numericUpDown_Amplitude.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_Amplitude.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_Amplitude.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -171,7 +171,7 @@
             0,
             131072});
             this.numericUpDown_T_Delay.Location = new System.Drawing.Point(146, 63);
-            this.numericUpDown_T_Delay.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_T_Delay.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_T_Delay.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -191,7 +191,7 @@
             0,
             131072});
             this.numericUpDown_T_Rise.Location = new System.Drawing.Point(146, 114);
-            this.numericUpDown_T_Rise.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_T_Rise.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_T_Rise.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -211,7 +211,7 @@
             0,
             131072});
             this.numericUpDown_T1.Location = new System.Drawing.Point(146, 139);
-            this.numericUpDown_T1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_T1.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_T1.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -275,7 +275,7 @@
             0,
             65536});
             this.numericUpDown_F.Location = new System.Drawing.Point(146, 164);
-            this.numericUpDown_F.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_F.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_F.Name = "numericUpDown_F";
             this.numericUpDown_F.Size = new System.Drawing.Size(52, 20);
             this.numericUpDown_F.TabIndex = 9;
@@ -301,7 +301,7 @@
             0,
             65536});
             this.numericUpDown_Noise_Intensity.Location = new System.Drawing.Point(146, 189);
-            this.numericUpDown_Noise_Intensity.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_Noise_Intensity.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_Noise_Intensity.Maximum = new decimal(new int[] {
             10,
             0,
@@ -336,7 +336,7 @@
             // numericUpDown_Down_Sample_Ratio
             // 
             this.numericUpDown_Down_Sample_Ratio.Location = new System.Drawing.Point(146, 240);
-            this.numericUpDown_Down_Sample_Ratio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_Down_Sample_Ratio.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_Down_Sample_Ratio.Maximum = new decimal(new int[] {
             20,
             0,
@@ -371,7 +371,7 @@
             // numericUpDown_Start_Index
             // 
             this.numericUpDown_Start_Index.Location = new System.Drawing.Point(146, 214);
-            this.numericUpDown_Start_Index.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_Start_Index.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_Start_Index.Maximum = new decimal(new int[] {
             14399,
             0,
@@ -411,7 +411,7 @@
             this.pictureBox_Info.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pictureBox_Info.Image = global::Data_Generate.Properties.Resources.icons8_information_24__1_;
             this.pictureBox_Info.Location = new System.Drawing.Point(3, 0);
-            this.pictureBox_Info.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox_Info.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Info.Name = "pictureBox_Info";
             this.pictureBox_Info.Size = new System.Drawing.Size(18, 21);
             this.pictureBox_Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -446,7 +446,7 @@
             // 
             this.numericUpDown_Delay_Jitter.DecimalPlaces = 2;
             this.numericUpDown_Delay_Jitter.Location = new System.Drawing.Point(146, 89);
-            this.numericUpDown_Delay_Jitter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numericUpDown_Delay_Jitter.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown_Delay_Jitter.Name = "numericUpDown_Delay_Jitter";
             this.numericUpDown_Delay_Jitter.Size = new System.Drawing.Size(52, 20);
             this.numericUpDown_Delay_Jitter.TabIndex = 2;
@@ -473,7 +473,7 @@
             this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 208F));
@@ -507,7 +507,7 @@
             this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(250, 2);
-            this.chart1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
             series6.ChartArea = "ChartArea1";
             series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -549,7 +549,7 @@
             this.panel1.Controls.Add(this.numericUpDown_F);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(2, 210);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(244, 438);
             this.panel1.TabIndex = 16;
@@ -560,7 +560,7 @@
             this.checkBox_use_Simulated.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox_use_Simulated.ForeColor = System.Drawing.Color.White;
             this.checkBox_use_Simulated.Location = new System.Drawing.Point(7, 11);
-            this.checkBox_use_Simulated.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBox_use_Simulated.Margin = new System.Windows.Forms.Padding(2);
             this.checkBox_use_Simulated.Name = "checkBox_use_Simulated";
             this.checkBox_use_Simulated.Size = new System.Drawing.Size(150, 20);
             this.checkBox_use_Simulated.TabIndex = 13;
@@ -576,7 +576,7 @@
             this.panel2.Controls.Add(this.label1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(2, 2);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(244, 204);
             this.panel2.TabIndex = 17;
@@ -586,7 +586,7 @@
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.textBox1.Location = new System.Drawing.Point(4, 40);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(233, 87);
@@ -599,7 +599,7 @@
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Signal_Generator";
             this.Size = new System.Drawing.Size(812, 650);
             this.Load += new System.EventHandler(this.UserControl1_Load);

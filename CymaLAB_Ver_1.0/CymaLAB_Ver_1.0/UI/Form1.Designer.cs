@@ -31,14 +31,14 @@
             this.components = new System.ComponentModel.Container();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.advanced_Settings_Control = new Advanced_Settings_Control.Advanced_Settings_Control();
-            this.averaging_Control = new Averaging_Control.Averaging_Control();
-            this.signal_Strength_Control = new Signal_Strength_Control.Signal_Strength_Control();
-            this.filter_Control = new Filter_Control.Filter_Control();
             this.label1 = new System.Windows.Forms.Label();
-            this.transducer_Type = new Transducer_Type.Transducer_Type();
-            this.measurement_Mode_Control = new Measurement_Mode_Control.Measurement_Mode_Control();
             this.leftSettingsLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.transducer_Type = new Transducer_Type.Transducer_Type();
+            this.filter_Control = new Filter_Control.Filter_Control();
+            this.measurement_Mode_Control = new Measurement_Mode_Control.Measurement_Mode_Control();
+            this.signal_Strength_Control = new Signal_Strength_Control.Signal_Strength_Control();
+            this.averaging_Control = new Averaging_Control.Averaging_Control();
+            this.advanced_Settings_Control = new Advanced_Settings_Control.Advanced_Settings_Control();
             this.command_Box = new Command_Box.Command_Box();
             this.tof_Control = new TOF_Contorol.TOF_Control();
             this.farand_Tablet_Chart_Control1 = new Farand_Tablet_Chart.Farand_Tablet_Chart_Control();
@@ -80,54 +80,6 @@
             this.panel1.Size = new System.Drawing.Size(395, 698);
             this.panel1.TabIndex = 0;
             // 
-            // advanced_Settings_Control
-            // 
-            this.advanced_Settings_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.advanced_Settings_Control.Discard_Time_uSec = 0D;
-            this.advanced_Settings_Control.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.advanced_Settings_Control.Location = new System.Drawing.Point(4, 585);
-            this.advanced_Settings_Control.Margin = new System.Windows.Forms.Padding(2);
-            this.advanced_Settings_Control.Name = "advanced_Settings_Control";
-            this.advanced_Settings_Control.Reference_TOF_uSec = 0D;
-            this.advanced_Settings_Control.Size = new System.Drawing.Size(387, 109);
-            this.advanced_Settings_Control.TabIndex = 9;
-            // 
-            // averaging_Control
-            // 
-            this.averaging_Control.Averaging_Captures_Count = 1;
-            this.averaging_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.averaging_Control.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.averaging_Control.Location = new System.Drawing.Point(4, 481);
-            this.averaging_Control.Margin = new System.Windows.Forms.Padding(2);
-            this.averaging_Control.Name = "averaging_Control";
-            this.averaging_Control.Size = new System.Drawing.Size(387, 100);
-            this.averaging_Control.TabIndex = 8;
-            this.averaging_Control.AveragingChanged += new System.EventHandler(this.averaging_Control_AveragingChanged);
-            // 
-            // signal_Strength_Control
-            // 
-            this.signal_Strength_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.signal_Strength_Control.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.signal_Strength_Control.Location = new System.Drawing.Point(4, 336);
-            this.signal_Strength_Control.Margin = new System.Windows.Forms.Padding(2);
-            this.signal_Strength_Control.Name = "signal_Strength_Control";
-            this.signal_Strength_Control.Reciever_Sensitivity = 1;
-            this.signal_Strength_Control.Size = new System.Drawing.Size(387, 141);
-            this.signal_Strength_Control.TabIndex = 7;
-            this.signal_Strength_Control.Transmitter_Power = 1;
-            // 
-            // filter_Control
-            // 
-            this.filter_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.filter_Control.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.filter_Control.Filter_Mode = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
-            this.filter_Control.Location = new System.Drawing.Point(4, 66);
-            this.filter_Control.Margin = new System.Windows.Forms.Padding(2);
-            this.filter_Control.Name = "filter_Control";
-            this.filter_Control.Size = new System.Drawing.Size(387, 79);
-            this.filter_Control.TabIndex = 5;
-            this.filter_Control.Filter_Mode_Changed += new System.EventHandler(this.filter_Control_Filter_Mode_Changed);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -139,31 +91,6 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "label1";
             this.label1.Visible = false;
-            // 
-            // transducer_Type
-            // 
-            this.transducer_Type.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.transducer_Type.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.transducer_Type.Location = new System.Drawing.Point(4, 4);
-            this.transducer_Type.Margin = new System.Windows.Forms.Padding(2);
-            this.transducer_Type.Name = "transducer_Type";
-            this.transducer_Type.Piezo_frequency_kHz = 55D;
-            this.transducer_Type.Size = new System.Drawing.Size(387, 58);
-            this.transducer_Type.TabIndex = 10;
-            this.transducer_Type.piezo_frequency_Changed += new System.EventHandler(this.transducer_Type_piezo_frequency_Changed);
-            // 
-            // measurement_Mode_Control
-            // 
-            this.measurement_Mode_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.measurement_Mode_Control.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.measurement_Mode_Control.Length = 0D;
-            this.measurement_Mode_Control.Location = new System.Drawing.Point(4, 149);
-            this.measurement_Mode_Control.Margin = new System.Windows.Forms.Padding(2);
-            this.measurement_Mode_Control.Measurement_Mode = Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Length_Calculation;
-            this.measurement_Mode_Control.Name = "measurement_Mode_Control";
-            this.measurement_Mode_Control.Size = new System.Drawing.Size(387, 183);
-            this.measurement_Mode_Control.TabIndex = 6;
-            this.measurement_Mode_Control.Velocity = 0D;
             // 
             // leftSettingsLayoutPanel
             // 
@@ -191,6 +118,80 @@
             this.leftSettingsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16F));
             this.leftSettingsLayoutPanel.Size = new System.Drawing.Size(395, 698);
             this.leftSettingsLayoutPanel.TabIndex = 12;
+            // 
+            // transducer_Type
+            // 
+            this.transducer_Type.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.transducer_Type.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.transducer_Type.Location = new System.Drawing.Point(4, 4);
+            this.transducer_Type.Margin = new System.Windows.Forms.Padding(2);
+            this.transducer_Type.Name = "transducer_Type";
+            this.transducer_Type.Piezo_frequency_kHz = 55D;
+            this.transducer_Type.Size = new System.Drawing.Size(387, 58);
+            this.transducer_Type.TabIndex = 10;
+            this.transducer_Type.piezo_frequency_Changed += new System.EventHandler(this.transducer_Type_piezo_frequency_Changed);
+            // 
+            // filter_Control
+            // 
+            this.filter_Control.AutoSize = true;
+            this.filter_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.filter_Control.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filter_Control.Filter_Mode = Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter;
+            this.filter_Control.Location = new System.Drawing.Point(4, 66);
+            this.filter_Control.Margin = new System.Windows.Forms.Padding(2);
+            this.filter_Control.Name = "filter_Control";
+            this.filter_Control.Size = new System.Drawing.Size(387, 79);
+            this.filter_Control.TabIndex = 5;
+            this.filter_Control.Filter_Mode_Changed += new System.EventHandler(this.filter_Control_Filter_Mode_Changed);
+            // 
+            // measurement_Mode_Control
+            // 
+            this.measurement_Mode_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.measurement_Mode_Control.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.measurement_Mode_Control.Length = 0D;
+            this.measurement_Mode_Control.Location = new System.Drawing.Point(4, 149);
+            this.measurement_Mode_Control.Margin = new System.Windows.Forms.Padding(2);
+            this.measurement_Mode_Control.Measurement_Mode = Measurement_Mode_Control.Measurement_Mode_Control.Measurement_Mode_Enum.Length_Calculation;
+            this.measurement_Mode_Control.Name = "measurement_Mode_Control";
+            this.measurement_Mode_Control.Size = new System.Drawing.Size(387, 183);
+            this.measurement_Mode_Control.TabIndex = 6;
+            this.measurement_Mode_Control.Velocity = 0D;
+            // 
+            // signal_Strength_Control
+            // 
+            this.signal_Strength_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.signal_Strength_Control.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.signal_Strength_Control.Location = new System.Drawing.Point(4, 336);
+            this.signal_Strength_Control.Margin = new System.Windows.Forms.Padding(2);
+            this.signal_Strength_Control.Name = "signal_Strength_Control";
+            this.signal_Strength_Control.Reciever_Sensitivity = 1;
+            this.signal_Strength_Control.Size = new System.Drawing.Size(387, 141);
+            this.signal_Strength_Control.TabIndex = 7;
+            this.signal_Strength_Control.Transmitter_Power = 1;
+            // 
+            // averaging_Control
+            // 
+            this.averaging_Control.Averaging_Captures_Count = 1;
+            this.averaging_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.averaging_Control.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.averaging_Control.Location = new System.Drawing.Point(4, 481);
+            this.averaging_Control.Margin = new System.Windows.Forms.Padding(2);
+            this.averaging_Control.Name = "averaging_Control";
+            this.averaging_Control.Size = new System.Drawing.Size(387, 100);
+            this.averaging_Control.TabIndex = 8;
+            this.averaging_Control.AveragingChanged += new System.EventHandler(this.averaging_Control_AveragingChanged);
+            // 
+            // advanced_Settings_Control
+            // 
+            this.advanced_Settings_Control.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.advanced_Settings_Control.Discard_Time_uSec = 0D;
+            this.advanced_Settings_Control.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.advanced_Settings_Control.Location = new System.Drawing.Point(4, 585);
+            this.advanced_Settings_Control.Margin = new System.Windows.Forms.Padding(2);
+            this.advanced_Settings_Control.Name = "advanced_Settings_Control";
+            this.advanced_Settings_Control.Reference_TOF_uSec = 0D;
+            this.advanced_Settings_Control.Size = new System.Drawing.Size(387, 109);
+            this.advanced_Settings_Control.TabIndex = 9;
             // 
             // command_Box
             // 
@@ -256,6 +257,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.leftSettingsLayoutPanel.ResumeLayout(false);
+            this.leftSettingsLayoutPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }

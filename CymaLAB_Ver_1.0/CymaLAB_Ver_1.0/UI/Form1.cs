@@ -51,7 +51,7 @@ namespace CymaLAB_Ver_1._0
             Idle
         }
 
-        System_Mode_Enum system_mode = System_Mode_Enum.Normal_operation;
+        System_Mode_Enum system_mode = System_Mode_Enum.Test_Mode;
         public Form1()
         {
             InitializeComponent();
@@ -88,17 +88,7 @@ namespace CymaLAB_Ver_1._0
             command_Box.CommunicationModeChanged += Command_Box_CommunicationModeChanged;
 
 
-            farand_Tablet_Chart_Control1.InitChartBehavior(
-                        renderFps: 8,
-                        interactionHz: 8,
-                        visiblePointCount: Constants.CAPTURE_SAMPLE_COUNT,
-                        maxStoredPointCount: Constants.CAPTURE_SAMPLE_COUNT,
-                        autoStart: true,
-                        drainAllQueuedBatches: true,
-                        fixedYMin: -1100,
-                        fixedYMax: 1100,
-                        enableAutoScaleY: true
-                    );
+            ConfigureChartBehavior();
 
             ConfigureHardwareChart();
 
@@ -130,6 +120,23 @@ namespace CymaLAB_Ver_1._0
 
             //timer_Auto_Start_Simulation.Start();
 
+        }
+
+        private void ConfigureChartBehavior()
+        {
+            bool simulated = system_mode == System_Mode_Enum.Test_Mode;
+            double simulatedRange = Math.Max(1.2, farand_Tablet_Chart_Control1.signal_Generator1.MaximumSignalAmplitude);
+            farand_Tablet_Chart_Control1.InitChartBehavior(
+                        renderFps: 8,
+                        interactionHz: 8,
+                        visiblePointCount: Constants.CAPTURE_SAMPLE_COUNT,
+                        maxStoredPointCount: Constants.CAPTURE_SAMPLE_COUNT,
+                        autoStart: true,
+                        drainAllQueuedBatches: true,
+                        fixedYMin: simulated ? -simulatedRange : -1100,
+                        fixedYMax: simulated ? simulatedRange : 1100,
+                        enableAutoScaleY: !simulated
+                    );
         }
 
         private void Command_Box_Firmware_Update_Clicked(object sender, EventArgs e)
@@ -358,7 +365,7 @@ namespace CymaLAB_Ver_1._0
         {
             RunOnUiThread(() =>
             {
-                if (communication == null || !communication.IsConnected)
+                if (system_mode == System_Mode_Enum.Normal_operation && (communication == null || !communication.IsConnected))
                 {
                     ClearAutomaticMeasurement();
                 }
@@ -470,6 +477,13 @@ namespace CymaLAB_Ver_1._0
 
             settings.AmplifierGain = gainLevel;
 
+            if (system_mode == System_Mode_Enum.Test_Mode)
+            {
+                UpdateSimulationIntensity();
+                ClearAutomaticMeasurement();
+                return;
+            }
+
             ApplyHardwareSetting(() =>
             {
                 if (powerChanged)
@@ -480,6 +494,16 @@ namespace CymaLAB_Ver_1._0
             });
         }
 
+        private void UpdateSimulationIntensity()
+        {
+            var generator = farand_Tablet_Chart_Control1.signal_Generator1;
+            // Relative simulation model: power level 5 (10 us) and gain level 1 are unity.
+            // Hardware gain channels have no calibrated multipliers in this project.
+            generator.SetSignalIntensity(settings.PulseWidthUs / 10.0, Math.Pow(2, settings.AmplifierGain - 1));
+            double range = Math.Max(1.2, generator.MaximumSignalAmplitude);
+            farand_Tablet_Chart_Control1.SetFixedYRange(-range, range);
+        }
+
 
         private void Signal_Generator1_Data_Is_Ready(object sender, EventArgs e)
         {
@@ -487,11 +511,19 @@ namespace CymaLAB_Ver_1._0
             {
                 Capture_Data = farand_Tablet_Chart_Control1.signal_Generator1.Data_Filter;
 
-                Update_chart();
+                var generator = farand_Tablet_Chart_Control1.signal_Generator1;
+                farand_Tablet_Chart_Control1.ShowCapture(Capture_Data, generator.StartTimeUs, generator.SampleIntervalUs);
+                UpdateTofDisplay(generator.TimeOfFlightUs, generator.IsTofStable);
+                UpdateMeasurementResult();
             }
         }
 
         private void UpdateTofDisplay(DeviceData data)
+        {
+            UpdateTofDisplay(data.AutoTimeOfFlightUs, data.FilterTofMode == Constants.TOF_FILTER_STABLE_MODE);
+        }
+
+        private void UpdateTofDisplay(double measuredTofUs, bool stable)
         {
             if (!tof_Control.Auto_TOF)
             {
@@ -499,13 +531,13 @@ namespace CymaLAB_Ver_1._0
                 return;
             }
 
-            double correctedTofUs = data.AutoTimeOfFlightUs + settings.TofOffsetUs;
+            double correctedTofUs = measuredTofUs + settings.TofOffsetUs;
 
             bool valid = !double.IsNaN(correctedTofUs) && !double.IsInfinity(correctedTofUs) && correctedTofUs > 0;
 
             tof_Control.TOF_uSec = valid ? correctedTofUs : double.NaN;
 
-            tof_Control.TOF_Stable = valid && data.FilterTofMode == Constants.TOF_FILTER_STABLE_MODE;
+            tof_Control.TOF_Stable = valid && stable;
         }
 
         private void StartHardwareCapture()
@@ -555,18 +587,25 @@ namespace CymaLAB_Ver_1._0
             if (farand_Tablet_Chart_Control1.signal_Generator1._IsSimulated_Data_Choosen == true)
             {
                 system_mode = System_Mode_Enum.Test_Mode;
+                Update_Averaging();
+                Update_Filter_Parameters();
+                UpdateSimulationIntensity();
+
+                var generator = farand_Tablet_Chart_Control1.signal_Generator1;
+                ConfigureChartBehavior();
+                farand_Tablet_Chart_Control1.ConfigureCaptureView(
+                    generator.StartTimeUs, generator.StartTimeUs + generator.Data_Filter.Length * generator.SampleIntervalUs,
+                    generator.MaximumStartTimeUs, generator.MinimumWindowUs, generator.MaximumWindowUs);
             }
             else
             {
                 system_mode = System_Mode_Enum.Normal_operation;
+                ConfigureChartBehavior();
+                ConfigureHardwareChart();
             }
 
+            ClearAutomaticMeasurement();
             label1.Text = system_mode.ToString();
-        }
-
-        private void Update_chart()
-        {
-            farand_Tablet_Chart_Control1.PushSamples(Capture_Data, copyInputBuffer: false);
         }
 
         private void filter_Control_Filter_Mode_Changed(object sender, EventArgs e)
@@ -606,6 +645,7 @@ namespace CymaLAB_Ver_1._0
             switch (system_mode)
             {
                 case System_Mode_Enum.Test_Mode:
+                    farand_Tablet_Chart_Control1.signal_Generator1.F_kHz = f;
                     switch (filter_Control.Filter_Mode)
                     {
                         case Filter_Control.Filter_Control.Filter_Mode_Enum.No_Filter:
@@ -726,10 +766,19 @@ namespace CymaLAB_Ver_1._0
 
         private void Chart_XAxisViewChanged(object sender, Farand_Tablet_Chart.XAxisViewChangedEventArgs e)
         {
-            if (!settingsInitialized || system_mode != System_Mode_Enum.Normal_operation)
+            if (!settingsInitialized)
             {
                 return;
             }
+
+            if (system_mode == System_Mode_Enum.Test_Mode)
+            {
+                farand_Tablet_Chart_Control1.signal_Generator1.SetTimeWindow(e.XMin, e.XMax);
+                return;
+            }
+
+            if (system_mode != System_Mode_Enum.Normal_operation)
+                return;
 
             bool changed = sampling.SetTimeWindow(e.XMin, e.XMax);
 
