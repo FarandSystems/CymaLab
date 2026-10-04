@@ -95,9 +95,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Assets\PreciTestSplash.png">
+      <LogicalName>CymaLab.PreciTestSplash.png</LogicalName>
+    </EmbeddedResource>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Splash_Screen\Splash_Screen.csproj">
+      <Project>{CA92BEAB-9897-46E2-8C02-F9F887136227}</Project>
+      <Name>Splash_Screen</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Advanced_Settings_Control\Advanced_Settings_Control\Advanced_Settings_Control.csproj">
       <Project>{f049f677-cad6-43c7-bbad-f87b66552741}</Project>
       <Name>Advanced_Settings_Control</Name>

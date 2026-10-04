@@ -33,12 +33,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LAN_Tcp_Client_Communicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auto_Detect_VCP_Control", "..\Auto_Detect_VCP_Control_Command_Bytes_Property\Auto_Detect_VCP_Control\Auto_Detect_VCP_Control.csproj", "{59AB372E-E868-4E46-BC47-FC54A424D111}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splash_Screen", "..\Splash_Screen\Splash_Screen.csproj", "{CA92BEAB-9897-46E2-8C02-F9F887136227}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5A75557-16C2-4739-8CC7-D5F34D80A221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5A75557-16C2-4739-8CC7-D5F34D80A221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5A75557-16C2-4739-8CC7-D5F34D80A221}.Release|Any CPU.ActiveCfg = Release|Any CPU

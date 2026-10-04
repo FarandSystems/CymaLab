@@ -24,6 +24,8 @@ namespace CymaLAB_Ver_1._0
 
         private readonly string settingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PreciTest", "CymaLab", "Settings.txt");
         private bool settingsInitialized;
+        private bool startupPrepared;
+        private bool startupResourcesReleased;
 
         private Communication communication;
         private Commands commands;
@@ -59,12 +61,17 @@ namespace CymaLAB_Ver_1._0
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            PrepareForStartup(null);
+        }
 
-            if (IsInDesignMode)
+        internal void PrepareForStartup(IProgress<string> progress)
+        {
+            if (IsInDesignMode || startupPrepared)
                 return;
 
-
+            progress?.Report("Loading application settings");
             LoadSettings();
+            progress?.Report("Applying measurement settings");
             ApplySettingsToControls();
 
             tof_Control.Auto_TOF = true;
@@ -88,10 +95,12 @@ namespace CymaLAB_Ver_1._0
             command_Box.CommunicationModeChanged += Command_Box_CommunicationModeChanged;
 
 
+            progress?.Report("Preparing signal charts");
             ConfigureChartBehavior();
 
             ConfigureHardwareChart();
 
+            progress?.Report("Initializing communication services");
             communication = new Communication();
 
             commands = new Commands(communication);
@@ -116,7 +125,9 @@ namespace CymaLAB_Ver_1._0
             hardwareDisplayTimer.Tick += HardwareDisplayTimer_Tick;
             hardwareDisplayTimer.Start();
 
+            progress?.Report("Starting device discovery");
             communication.Start(GetSelectedTransport());
+            startupPrepared = true;
 
             //timer_Auto_Start_Simulation.Start();
 
@@ -856,6 +867,14 @@ namespace CymaLAB_Ver_1._0
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
+            ReleaseStartupResources();
+            base.OnFormClosed(e);
+        }
+
+        private void ReleaseStartupResources()
+        {
+            if (startupResourcesReleased) return;
+            startupResourcesReleased = true;
             hardwareDisplayTimer.Stop();
             hardwareDisplayTimer.Tick -= HardwareDisplayTimer_Tick;
             hardwareDisplayTimer.Dispose();
@@ -894,7 +913,6 @@ namespace CymaLAB_Ver_1._0
 
             farand_Tablet_Chart_Control1.XAxisViewChanged -= Chart_XAxisViewChanged;
 
-            base.OnFormClosed(e);
         }
     }
 }
