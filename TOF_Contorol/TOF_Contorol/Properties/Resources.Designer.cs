@@ -153,6 +153,16 @@ namespace TOF_Contorol.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Minimize_Button {
+            get {
+                object obj = ResourceManager.GetObject("Minimize_Button", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap TOF_Key_Auto {
             get {
                 object obj = ResourceManager.GetObject("TOF_Key_Auto", resourceCulture);

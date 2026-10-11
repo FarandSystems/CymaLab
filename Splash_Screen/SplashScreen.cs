@@ -186,6 +186,7 @@ namespace Splash_Screen
                 this.artwork = artwork;
                 this.options = options;
                 status = options.InitialStatus;
+                Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
                 FormBorderStyle = FormBorderStyle.None;
                 StartPosition = FormStartPosition.CenterScreen;
                 ShowInTaskbar = false;

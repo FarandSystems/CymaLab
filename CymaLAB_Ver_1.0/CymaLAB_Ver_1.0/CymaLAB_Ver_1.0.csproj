@@ -105,6 +105,9 @@
     <Compile Include="Protocol\Utils.cs" />
     <Compile Include="Communication\WifiPacketBuffer.cs" />
     <Compile Include="FirmwareUpdate\XModemUploader.cs" />
+    <EmbeddedResource Include="UI\FirmwareUpdateDialog.resx">
+      <DependentUpon>FirmwareUpdateDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

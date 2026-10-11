@@ -175,5 +175,19 @@ namespace CymaLAB_Ver_1._0
             communication.Connected -= Communication_Connected;
             base.OnFormClosed(e);
         }
+
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FirmwareUpdateDialog));
+            this.SuspendLayout();
+            // 
+            // FirmwareUpdateDialog
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "FirmwareUpdateDialog";
+            this.ResumeLayout(false);
+
+        }
     }
 }
