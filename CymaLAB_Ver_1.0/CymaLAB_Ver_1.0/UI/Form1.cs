@@ -53,7 +53,7 @@ namespace CymaLAB_Ver_1._0
             Idle
         }
 
-        System_Mode_Enum system_mode = System_Mode_Enum.Test_Mode;
+        System_Mode_Enum system_mode = System_Mode_Enum.Normal_operation;
         public Form1()
         {
             InitializeComponent();
