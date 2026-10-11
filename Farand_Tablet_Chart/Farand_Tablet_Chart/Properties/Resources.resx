@@ -121,13 +121,13 @@
   <data name="horizontal_zoom_in_icon_highlighted" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\horizontal-zoom-in-icon-highlighted.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="horizontal_zoom_in_icon_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="H_Z_IN_Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\horizontal-zoom-in-icon-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="horizontal_zoom_out_icon_highighted" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\horizontal-zoom-out-icon-highighted.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="horizontal_zoom_out_icon_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="H_Z_OUT_Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\horizontal-zoom-out-icon-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="H_Z_In" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -151,13 +151,13 @@
   <data name="vertical_zoom_in_icon_highlighted" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\vertical-zoom-in-icon-highlighted.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="vertical_zoom_in_icon_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="V_Z_IN_Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\vertical-zoom-in-icon-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="vertical_zoom_out_icon_highlighted" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\vertical-zoom-out-icon-highlighted.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="vertical_zoom_out_icon_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="V_Z_OUT_Normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\vertical-zoom-out-icon-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="V_Z_In" type="System.Resources.ResXFileRef, System.Windows.Forms">

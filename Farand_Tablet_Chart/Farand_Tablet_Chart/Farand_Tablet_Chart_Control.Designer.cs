@@ -65,7 +65,7 @@ namespace Farand_Tablet_Chart
             // pictureBox_ZoomYIn
             // 
             this.pictureBox_ZoomYIn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox_ZoomYIn.Image = global::Farand_Tablet_Chart.Properties.Resources.V_Z_In_200;
+            this.pictureBox_ZoomYIn.Image = global::Farand_Tablet_Chart.Properties.Resources.V_Z_IN_Normal;
             this.pictureBox_ZoomYIn.Location = new System.Drawing.Point(2, 139);
             this.pictureBox_ZoomYIn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox_ZoomYIn.Name = "pictureBox_ZoomYIn";
@@ -82,7 +82,7 @@ namespace Farand_Tablet_Chart
             // pictureBox_ZoomXOut
             // 
             this.pictureBox_ZoomXOut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox_ZoomXOut.Image = global::Farand_Tablet_Chart.Properties.Resources.H_Z_Out_200;
+            this.pictureBox_ZoomXOut.Image = global::Farand_Tablet_Chart.Properties.Resources.H_Z_OUT_Normal;
             this.pictureBox_ZoomXOut.Location = new System.Drawing.Point(372, 396);
             this.pictureBox_ZoomXOut.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox_ZoomXOut.Name = "pictureBox_ZoomXOut";
@@ -99,7 +99,7 @@ namespace Farand_Tablet_Chart
             // pictureBox_ZoomYOut
             // 
             this.pictureBox_ZoomYOut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox_ZoomYOut.Image = global::Farand_Tablet_Chart.Properties.Resources.V_Z_Out_200;
+            this.pictureBox_ZoomYOut.Image = global::Farand_Tablet_Chart.Properties.Resources.V_Z_OUT_Normal;
             this.pictureBox_ZoomYOut.Location = new System.Drawing.Point(2, 207);
             this.pictureBox_ZoomYOut.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox_ZoomYOut.Name = "pictureBox_ZoomYOut";
@@ -116,7 +116,7 @@ namespace Farand_Tablet_Chart
             // pictureBox_ZoomXin
             // 
             this.pictureBox_ZoomXin.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox_ZoomXin.Image = global::Farand_Tablet_Chart.Properties.Resources.H_Z_In_200;
+            this.pictureBox_ZoomXin.Image = global::Farand_Tablet_Chart.Properties.Resources.H_Z_IN_Normal;
             this.pictureBox_ZoomXin.Location = new System.Drawing.Point(435, 396);
             this.pictureBox_ZoomXin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox_ZoomXin.Name = "pictureBox_ZoomXin";
