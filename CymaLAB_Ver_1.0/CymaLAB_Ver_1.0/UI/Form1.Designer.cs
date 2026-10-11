@@ -42,10 +42,10 @@
             this.signal_Strength_Control = new Signal_Strength_Control.Signal_Strength_Control();
             this.averaging_Control = new Averaging_Control.Averaging_Control();
             this.advanced_Settings_Control = new Advanced_Settings_Control.Advanced_Settings_Control();
-            this.command_Box = new Command_Box.Command_Box();
             this.tof_Control = new TOF_Contorol.TOF_Control();
             this.farand_Tablet_Chart_Control1 = new Farand_Tablet_Chart.Farand_Tablet_Chart_Control();
             this.timer_Auto_Start_Simulation = new System.Windows.Forms.Timer(this.components);
+            this.command_Box = new Command_Box.Command_Box();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.leftSettingsLayoutPanel.SuspendLayout();
@@ -196,22 +196,6 @@
             this.advanced_Settings_Control.Size = new System.Drawing.Size(387, 109);
             this.advanced_Settings_Control.TabIndex = 9;
             // 
-            // command_Box
-            // 
-            this.command_Box._IsConnected = false;
-            this.command_Box._IsLive = true;
-            this.command_Box.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.command_Box.CommunicationMode = Command_Box.CommunicationModeEnum.Wifi;
-            this.command_Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.command_Box.IsTestMode = false;
-            this.command_Box.Load_Path = null;
-            this.command_Box.Location = new System.Drawing.Point(2, 2);
-            this.command_Box.Margin = new System.Windows.Forms.Padding(2);
-            this.command_Box.Name = "command_Box";
-            this.command_Box.Save_Path = null;
-            this.command_Box.Size = new System.Drawing.Size(395, 68);
-            this.command_Box.TabIndex = 1;
-            // 
             // tof_Control
             // 
             this.tof_Control.Auto_TOF = false;
@@ -241,6 +225,22 @@
             // 
             this.timer_Auto_Start_Simulation.Interval = 500;
             this.timer_Auto_Start_Simulation.Tick += new System.EventHandler(this.timer_Auto_Start_Simulation_Tick);
+            // 
+            // command_Box
+            // 
+            this.command_Box._IsConnected = false;
+            this.command_Box._IsLive = true;
+            this.command_Box.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.command_Box.CommunicationMode = Command_Box.CommunicationModeEnum.Wifi;
+            this.command_Box.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.command_Box.IsTestMode = false;
+            this.command_Box.Load_Path = null;
+            this.command_Box.Location = new System.Drawing.Point(2, 2);
+            this.command_Box.Margin = new System.Windows.Forms.Padding(2);
+            this.command_Box.Name = "command_Box";
+            this.command_Box.Save_Path = null;
+            this.command_Box.Size = new System.Drawing.Size(395, 68);
+            this.command_Box.TabIndex = 1;
             // 
             // Form1
             // 
