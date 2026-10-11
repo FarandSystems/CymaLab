@@ -75,6 +75,10 @@ namespace CymaLAB_Ver_1._0
         public Form1()
         {
             InitializeComponent();
+            if (!IsInDesignMode)
+                new ControlToolTips(this, control => control.Name == "pictureBox_Run"
+                    ? (CaptureIsRunning ? "Pause the current capture." : "Run the selected device or test source.")
+                    : null);
 
         }
 

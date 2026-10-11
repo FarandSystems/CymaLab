@@ -86,6 +86,10 @@
     <Compile Include="Protocol\Constants.cs" />
     <Compile Include="Measurements\DeviceData.cs" />
     <Compile Include="Protocol\Enums.cs" />
+    <Compile Include="UI\ControlToolTips.cs" />
+    <Compile Include="UI\TouchToolTip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\FirmwareUpdateDialog.cs">
       <SubType>Form</SubType>
     </Compile>

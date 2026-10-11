@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.3.11505.172 d18.3
+VisualStudioVersion = 18.3.11505.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CymaLAB_Ver_1.0", "CymaLAB_Ver_1.0\CymaLAB_Ver_1.0.csproj", "{D5A75557-16C2-4739-8CC7-D5F34D80A221}"
 EndProject
@@ -41,10 +41,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5A75557-16C2-4739-8CC7-D5F34D80A221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5A75557-16C2-4739-8CC7-D5F34D80A221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5A75557-16C2-4739-8CC7-D5F34D80A221}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -105,6 +101,10 @@ Global
 		{59AB372E-E868-4E46-BC47-FC54A424D111}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59AB372E-E868-4E46-BC47-FC54A424D111}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59AB372E-E868-4E46-BC47-FC54A424D111}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA92BEAB-9897-46E2-8C02-F9F887136227}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

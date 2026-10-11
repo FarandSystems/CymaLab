@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Command_Box));
-            this.timer1 = new System.Windows.Forms.Timer();
-            this.modeToolTip = new System.Windows.Forms.ToolTip();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pictureBox_TestMode = new System.Windows.Forms.PictureBox();
             this.pictureBox_Firmware_Update = new System.Windows.Forms.PictureBox();
             this.pictureBox_Run = new System.Windows.Forms.PictureBox();
@@ -213,7 +213,6 @@
 
         private System.Windows.Forms.PictureBox pictureBox_Connected;
         private System.Windows.Forms.PictureBox pictureBox_TestMode;
-        private System.Windows.Forms.ToolTip modeToolTip;
         private System.Windows.Forms.PictureBox pictureBox_Run;
         private System.Windows.Forms.PictureBox pictureBox_Save;
         private System.Windows.Forms.PictureBox pictureBox_load;

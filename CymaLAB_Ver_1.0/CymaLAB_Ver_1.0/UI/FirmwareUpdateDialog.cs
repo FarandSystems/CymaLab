@@ -55,6 +55,12 @@ namespace CymaLAB_Ver_1._0
             layout.Controls.Add(upload, 0, 6);
             layout.Controls.Add(close, 1, 6);
             Controls.Add(layout);
+            browse.Name = "firmwareBrowse";
+            recoveryPort.Name = "firmwareRecoveryPort";
+            refresh.Name = "firmwareRefresh";
+            upload.Name = "firmwareUpload";
+            close.Name = "firmwareClose";
+            new ControlToolTips(this);
 
             browse.Click += Browse_Click;
             refresh.Click += (sender, e) => RefreshPorts();

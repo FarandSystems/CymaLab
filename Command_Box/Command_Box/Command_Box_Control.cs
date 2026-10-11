@@ -122,9 +122,6 @@ namespace Command_Box
         private void Update_TestMode_Pic()
         {
             pictureBox_TestMode.Image = isTestMode ? Properties.Resources.Mode_Test : Properties.Resources.Mode_Normal;
-            //modeToolTip.SetToolTip(pictureBox_TestMode, isTestMode
-            //    ? "Test mode — Ctrl+click to switch to normal mode"
-            //    : "Normal mode — Ctrl+click to switch to test mode");
         }
 
         private void pictureBox_TestMode_MouseClick(object sender, MouseEventArgs e)

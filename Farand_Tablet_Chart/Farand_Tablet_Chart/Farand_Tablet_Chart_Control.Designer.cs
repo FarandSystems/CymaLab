@@ -1,4 +1,4 @@
-﻿namespace Farand_Tablet_Chart
+namespace Farand_Tablet_Chart
 {
     partial class Farand_Tablet_Chart_Control
     {
@@ -73,6 +73,8 @@
             this.pictureBox_ZoomYIn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_ZoomYIn.TabIndex = 8;
             this.pictureBox_ZoomYIn.TabStop = false;
+            this.pictureBox_ZoomYIn.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_Zoom_MouseClick);
+            this.pictureBox_ZoomYIn.MouseCaptureChanged += new System.EventHandler(this.pictureBox_ZoomXin_MouseLeave);
             this.pictureBox_ZoomYIn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_ZoomXin_MouseDown);
             this.pictureBox_ZoomYIn.MouseLeave += new System.EventHandler(this.pictureBox_ZoomXin_MouseLeave);
             this.pictureBox_ZoomYIn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_ZoomXin_MouseUp);
@@ -88,6 +90,8 @@
             this.pictureBox_ZoomXOut.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_ZoomXOut.TabIndex = 8;
             this.pictureBox_ZoomXOut.TabStop = false;
+            this.pictureBox_ZoomXOut.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_Zoom_MouseClick);
+            this.pictureBox_ZoomXOut.MouseCaptureChanged += new System.EventHandler(this.pictureBox_ZoomXin_MouseLeave);
             this.pictureBox_ZoomXOut.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_ZoomXin_MouseDown);
             this.pictureBox_ZoomXOut.MouseLeave += new System.EventHandler(this.pictureBox_ZoomXin_MouseLeave);
             this.pictureBox_ZoomXOut.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_ZoomXin_MouseUp);
@@ -103,7 +107,8 @@
             this.pictureBox_ZoomYOut.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_ZoomYOut.TabIndex = 8;
             this.pictureBox_ZoomYOut.TabStop = false;
-            this.pictureBox_ZoomYOut.Click += new System.EventHandler(this.pictureBox_ZoomYOut_Click);
+            this.pictureBox_ZoomYOut.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_Zoom_MouseClick);
+            this.pictureBox_ZoomYOut.MouseCaptureChanged += new System.EventHandler(this.pictureBox_ZoomXin_MouseLeave);
             this.pictureBox_ZoomYOut.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_ZoomXin_MouseDown);
             this.pictureBox_ZoomYOut.MouseLeave += new System.EventHandler(this.pictureBox_ZoomXin_MouseLeave);
             this.pictureBox_ZoomYOut.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_ZoomXin_MouseUp);
@@ -119,6 +124,8 @@
             this.pictureBox_ZoomXin.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_ZoomXin.TabIndex = 4;
             this.pictureBox_ZoomXin.TabStop = false;
+            this.pictureBox_ZoomXin.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_Zoom_MouseClick);
+            this.pictureBox_ZoomXin.MouseCaptureChanged += new System.EventHandler(this.pictureBox_ZoomXin_MouseLeave);
             this.pictureBox_ZoomXin.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_ZoomXin_MouseDown);
             this.pictureBox_ZoomXin.MouseLeave += new System.EventHandler(this.pictureBox_ZoomXin_MouseLeave);
             this.pictureBox_ZoomXin.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_ZoomXin_MouseUp);

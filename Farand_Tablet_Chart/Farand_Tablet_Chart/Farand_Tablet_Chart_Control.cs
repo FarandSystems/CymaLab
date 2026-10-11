@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -75,9 +76,9 @@ namespace Farand_Tablet_Chart
         private double panStartYMin;
         private double panStartYMax;
 
-        private ZoomButtonMode heldZoomButton = ZoomButtonMode.None;
-        private ZoomButtonMode pendingSingleZoom = ZoomButtonMode.None;
-        private bool zoomWasAppliedDuringHold = false;
+        private const int TooltipHoldDelayMs = 600;
+        private readonly Stopwatch zoomPressDuration = new Stopwatch();
+        private Control pressedZoomButton;
 
         private bool captureMode;
 
@@ -554,10 +555,6 @@ namespace Farand_Tablet_Chart
             // Fast double-click on chart area resets view
             chartMain.MouseDoubleClick += ChartMain_MouseDoubleClick;
 
-            //BindZoomButton(btnZoomXIn, ZoomButtonMode.XIn);
-            //BindZoomButton(btnZoomXOut, ZoomButtonMode.XOut);
-            //BindZoomButton(btnZoomYIn, ZoomButtonMode.YIn);
-            //BindZoomButton(btnZoomYOut, ZoomButtonMode.YOut);
 
         }
 
@@ -674,42 +671,6 @@ namespace Farand_Tablet_Chart
             autoScaleY = false;
 
             UpdateChartPoints();
-        }
-
-        private void BindZoomButton(Button button, ZoomButtonMode mode)
-        {
-            button.MouseDown += delegate (object sender, MouseEventArgs e)
-            {
-                if (e.Button == MouseButtons.Left)
-                    BeginZoomHold(mode);
-            };
-
-            button.MouseUp += delegate
-            {
-                EndZoomHold(mode);
-            };
-
-            button.MouseLeave += delegate
-            {
-                EndZoomHold(mode);
-            };
-        }
-
-        private void BeginZoomHold(ZoomButtonMode mode)
-        {
-            heldZoomButton = mode;
-            zoomWasAppliedDuringHold = false;
-        }
-
-        private void EndZoomHold(ZoomButtonMode mode)
-        {
-            if (heldZoomButton != mode)
-                return;
-
-            if (!zoomWasAppliedDuringHold)
-                pendingSingleZoom = mode;
-
-            heldZoomButton = ZoomButtonMode.None;
         }
 
         private void RenderTimer_Tick(object sender, EventArgs e)
@@ -1059,18 +1020,6 @@ namespace Farand_Tablet_Chart
                 UpdateChartPoints();
             }
 
-            if (heldZoomButton != ZoomButtonMode.None)
-            {
-                ApplyZoomButton(heldZoomButton);
-                zoomWasAppliedDuringHold = true;
-                UpdateChartPoints();
-            }
-            else if (pendingSingleZoom != ZoomButtonMode.None)
-            {
-                ApplyZoomButton(pendingSingleZoom);
-                pendingSingleZoom = ZoomButtonMode.None;
-                UpdateChartPoints();
-            }
         }
 
         private void ChartMain_MouseDown(object sender, MouseEventArgs e)
@@ -1383,79 +1332,46 @@ namespace Farand_Tablet_Chart
 
         private void pictureBox_ZoomXin_MouseDown(object sender, MouseEventArgs e)
         {
-            PictureBox p = (PictureBox)sender;
+            if (e.Button != MouseButtons.Left) return;
 
-            switch (p.Name)
+            pressedZoomButton = (Control)sender;
+            zoomPressDuration.Restart();
+        }
+
+        private void pictureBox_Zoom_MouseClick(object sender, MouseEventArgs e)
+        {
+            // A hold belongs to the tooltip, including the release after it appears.
+            if (e.Button != MouseButtons.Left || pressedZoomButton != sender
+                || zoomPressDuration.ElapsedMilliseconds >= TooltipHoldDelayMs)
+                return;
+
+            switch (((Control)sender).Name)
             {
-                case "pictureBox_ZoomXin":
-                    BeginZoomHold(ZoomButtonMode.XIn);
-                    break;
-
-                case "pictureBox_ZoomXOut":
-                    BeginZoomHold(ZoomButtonMode.XOut);
-                    break;
-
-                case "pictureBox_ZoomYIn":
-                    BeginZoomHold(ZoomButtonMode.YIn);
-                    break;
-
-                case "pictureBox_ZoomYOut":
-                    BeginZoomHold(ZoomButtonMode.YOut);
-                    break;
+                case "pictureBox_ZoomXin": ApplyZoomButton(ZoomButtonMode.XIn); break;
+                case "pictureBox_ZoomXOut": ApplyZoomButton(ZoomButtonMode.XOut); break;
+                case "pictureBox_ZoomYIn": ApplyZoomButton(ZoomButtonMode.YIn); break;
+                case "pictureBox_ZoomYOut": ApplyZoomButton(ZoomButtonMode.YOut); break;
             }
 
+            pressedZoomButton = null;
+            UpdateChartPoints();
         }
 
         private void pictureBox_ZoomXin_MouseUp(object sender, MouseEventArgs e)
         {
-            PictureBox p = (PictureBox)sender;
-
-            switch (p.Name)
-            {
-                case "pictureBox_ZoomXin":
-                    EndZoomHold(ZoomButtonMode.XIn);
-                    break;
-
-                case "pictureBox_ZoomXOut":
-                    EndZoomHold(ZoomButtonMode.XOut);
-                    break;
-
-                case "pictureBox_ZoomYIn":
-                    EndZoomHold(ZoomButtonMode.YIn);
-                    break;
-
-                case "pictureBox_ZoomYOut":
-                    EndZoomHold(ZoomButtonMode.YOut);
-                    break;
-            }
-
+            CancelZoomPress();
         }
 
         private void pictureBox_ZoomXin_MouseLeave(object sender, EventArgs e)
         {
-            PictureBox p = (PictureBox)sender;
-
-            switch (p.Name)
-            {
-                case "pictureBox_ZoomXin":
-                    EndZoomHold(ZoomButtonMode.XIn);
-                    break;
-
-                case "pictureBox_ZoomXOut":
-                    EndZoomHold(ZoomButtonMode.XOut);
-                    break;
-
-                case "pictureBox_ZoomYIn":
-                    EndZoomHold(ZoomButtonMode.YIn);
-                    break;
-
-                case "pictureBox_ZoomYOut":
-                    EndZoomHold(ZoomButtonMode.YOut);
-                    break;
-            }
-
+            CancelZoomPress();
         }
 
+        private void CancelZoomPress()
+        {
+            pressedZoomButton = null;
+            zoomPressDuration.Reset();
+        }
         private void Farand_Tablet_Chart_Control_Load(object sender, EventArgs e)
         {
 
@@ -1498,11 +1414,6 @@ namespace Farand_Tablet_Chart
             pictureBox_ZoomYIn.Left = (W0 - P0) / 2;
             pictureBox_ZoomYOut.Top = H0 + (h - W0 - H0) / 2 + D0 / 2;
             pictureBox_ZoomYOut.Left = (W0 - P0) / 2;
-        }
-
-        private void pictureBox_ZoomYOut_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void signal_Generator1_Simulated_Data_Choosen(object sender, EventArgs e)
