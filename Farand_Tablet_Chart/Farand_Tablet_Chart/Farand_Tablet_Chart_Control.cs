@@ -8,6 +8,16 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Farand_Tablet_Chart
 {
+    public sealed class CaptureSnapshot
+    {
+        public double[] Samples { get; set; }
+        public double StartTimeUs { get; set; }
+        public double SampleIntervalUs { get; set; }
+        public double XMinimum { get; set; }
+        public double XMaximum { get; set; }
+        public double YMinimum { get; set; }
+        public double YMaximum { get; set; }
+    }
 
 
     public partial class Farand_Tablet_Chart_Control : UserControl
@@ -457,6 +467,49 @@ namespace Farand_Tablet_Chart
             if (autoScaleY)
                 AutoScaleVisibleY();
 
+            UpdateChartPoints();
+        }
+
+        public CaptureSnapshot GetCaptureSnapshot()
+        {
+            if (!captureMode || sampleBuffer.Count == 0)
+                throw new InvalidOperationException("There is no captured chart data to save.");
+
+            return new CaptureSnapshot
+            {
+                Samples = sampleBuffer.ToArray(),
+                StartTimeUs = captureStartUs,
+                SampleIntervalUs = captureIntervalUs,
+                XMinimum = xMin, XMaximum = xMax,
+                YMinimum = yMin, YMaximum = yMax
+            };
+        }
+
+        public void ShowReviewCapture(CaptureSnapshot capture)
+        {
+            double end = capture.StartTimeUs + capture.Samples.Length * capture.SampleIntervalUs;
+            double maximum = Math.Max(end, capture.XMaximum);
+            ConfigureCaptureView(capture.XMinimum, capture.XMaximum, maximum,
+                Math.Min(capture.SampleIntervalUs, capture.XMaximum - capture.XMinimum), maximum);
+            double lower = capture.YMinimum;
+            double upper = capture.YMaximum;
+            foreach (double sample in capture.Samples)
+            {
+                lower = Math.Min(lower, sample);
+                upper = Math.Max(upper, sample);
+            }
+            SetFixedYRange(lower, upper);
+            autoScaleY = false;
+            ShowCapture(capture.Samples, capture.StartTimeUs, capture.SampleIntervalUs);
+            SetYView(capture.YMinimum, capture.YMaximum);
+        }
+
+        public void SetYView(double minimum, double maximum)
+        {
+            if (!IsFinite(minimum) || !IsFinite(maximum) || maximum <= minimum)
+                throw new ArgumentException("Invalid vertical chart range.");
+            yMin = minimum;
+            yMax = maximum;
             UpdateChartPoints();
         }
 

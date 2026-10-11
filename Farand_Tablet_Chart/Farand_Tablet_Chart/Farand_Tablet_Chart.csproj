@@ -43,9 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Farand_Tablet_Chart_Control.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Farand_Tablet_Chart_Control.cs" />
     <Compile Include="Farand_Tablet_Chart_Control.Designer.cs">
       <DependentUpon>Farand_Tablet_Chart_Control.cs</DependentUpon>
     </Compile>

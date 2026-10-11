@@ -765,6 +765,8 @@ namespace Data_Generate
                 pictureBox_Info.Image = Properties.Resources.icons8_information_24__1_;
             }
         }
+        public bool IsGeneratingData { get { return timer1.Enabled; } }
+
         public void Start_Generating_Data()
         {
             if (!IsInDesignMode)
@@ -972,12 +974,12 @@ namespace Data_Generate
             _isSimulated_Data_Choosen = checkBox_use_Simulated.Checked;
             ResetProcessing();
             Update_Info_Icon_Pic();
-            Mode_Is_Changed?.Invoke(this, EventArgs.Empty);
-
             if (_isSimulated_Data_Choosen)
                 Start_Generating_Data();
             else
                 Stop_Generating_Data();
+
+            Mode_Is_Changed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

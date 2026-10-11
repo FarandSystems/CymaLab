@@ -31,6 +31,24 @@ namespace CymaLAB_Ver_1._0
         private Commands commands;
 
         private DeviceData latestDeviceData;
+        private bool reviewingCapture;
+        private Farand_Tablet_Chart.CaptureSnapshot captureBeforeReview;
+        private double viewMinimumBeforeReview;
+        private double viewMaximumBeforeReview;
+        private string displayedCaptureSource = "Test";
+        private int displayedDownSampleRatio = 1;
+        private string sourceBeforeReview;
+        private int ratioBeforeReview;
+
+        private bool CaptureIsRunning
+        {
+            get
+            {
+                return system_mode == System_Mode_Enum.Test_Mode
+                    ? farand_Tablet_Chart_Control1.signal_Generator1.IsGeneratingData
+                    : commands != null && commands.CaptureInProgress;
+            }
+        }
 
         private FirmwareUpdater firmwareUpdater;
 
@@ -53,7 +71,7 @@ namespace CymaLAB_Ver_1._0
             Idle
         }
 
-        System_Mode_Enum system_mode = System_Mode_Enum.Normal_operation;
+        System_Mode_Enum system_mode = System_Mode_Enum.Test_Mode;
         public Form1()
         {
             InitializeComponent();
@@ -115,6 +133,8 @@ namespace CymaLAB_Ver_1._0
             communication.ConnectionLost += Communication_ConnectionChanged;
 
             command_Box.LiveKey_Clicked += Command_Box_LiveKey_Clicked;
+            command_Box.Save_Clicked += Command_Box_Save_Clicked;
+            command_Box.Load_Clicked += Command_Box_Load_Clicked;
 
 
             UpdateConnectionControls();
@@ -287,7 +307,7 @@ namespace CymaLAB_Ver_1._0
             if (data == null)
                 return;
 
-            if (communication == null || !communication.IsConnected || system_mode != System_Mode_Enum.Normal_operation)
+            if (reviewingCapture || !CaptureIsRunning || communication == null || !communication.IsConnected || system_mode != System_Mode_Enum.Normal_operation)
             {
                 return;
             }
@@ -300,13 +320,137 @@ namespace CymaLAB_Ver_1._0
             }
 
             farand_Tablet_Chart_Control1.ShowCapture(Capture_Data, data.StartTimeUs, data.SampleIntervalUs);
+            displayedCaptureSource = "Device";
+            displayedDownSampleRatio = Math.Max(1, (int)Math.Round(data.SampleIntervalUs
+                * Constants.ADC_SAMPLE_RATE_HZ / Constants.MICROSECONDS_PER_SECOND));
 
             UpdateTofDisplay(data);
             UpdateMeasurementResult();
         }
 
+        private void Command_Box_Save_Clicked(object sender, EventArgs e)
+        {
+            if (CaptureIsRunning) return;
+            try
+            {
+                var capture = new SavedCapture
+                {
+                    Chart = farand_Tablet_Chart_Control1.GetCaptureSnapshot(),
+                    SavedAt = DateTimeOffset.Now,
+                    Source = displayedCaptureSource,
+                    DownSampleRatio = displayedDownSampleRatio
+                };
+                using (var dialog = new SaveFileDialog
+                {
+                    Title = "Save chart capture",
+                    Filter = "CymaLab text capture (*.txt)|*.txt",
+                    DefaultExt = "txt", AddExtension = true, OverwritePrompt = true,
+                    FileName = "CymaLab_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt"
+                })
+                {
+                    if (dialog.ShowDialog(this) == DialogResult.OK)
+                        CaptureFile.Save(dialog.FileName, capture);
+                }
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException
+                || ex is FormatException || ex is InvalidOperationException || ex is ArgumentException)
+            {
+                MessageBox.Show(this, ex.Message, "Save capture", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Command_Box_Load_Clicked(object sender, EventArgs e)
+        {
+            if (CaptureIsRunning) return;
+            using (var dialog = new OpenFileDialog
+            {
+                Title = "Review chart capture",
+                Filter = "CymaLab text capture (*.txt)|*.txt",
+                DefaultExt = "txt", CheckFileExists = true, Multiselect = false
+            })
+            {
+                if (dialog.ShowDialog(this) != DialogResult.OK) return;
+                try
+                {
+                    // Parse and validate everything before changing the current chart.
+                    ShowLoadedCapture(CaptureFile.Load(dialog.FileName), Path.GetFileName(dialog.FileName));
+                }
+                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException
+                    || ex is FormatException || ex is ArgumentException)
+                {
+                    MessageBox.Show(this, ex.Message, "Load capture", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void ShowLoadedCapture(SavedCapture capture, string fileName)
+        {
+            if (CaptureIsRunning) return;
+            if (!reviewingCapture)
+            {
+                viewMinimumBeforeReview = farand_Tablet_Chart_Control1.XAxisMinimum;
+                viewMaximumBeforeReview = farand_Tablet_Chart_Control1.XAxisMaximum;
+                sourceBeforeReview = displayedCaptureSource;
+                ratioBeforeReview = displayedDownSampleRatio;
+                try { captureBeforeReview = farand_Tablet_Chart_Control1.GetCaptureSnapshot(); }
+                catch (InvalidOperationException) { captureBeforeReview = null; }
+            }
+            reviewingCapture = true;
+            ClearAutomaticMeasurement();
+            farand_Tablet_Chart_Control1.ShowReviewCapture(capture.Chart);
+            displayedCaptureSource = capture.Source;
+            displayedDownSampleRatio = capture.DownSampleRatio;
+            label1.Text = "Review: " + fileName + " (downsample " + capture.DownSampleRatio + ")";
+        }
+
+        private void ResumeLiveView()
+        {
+            if (!reviewingCapture) return;
+            // Keep review mode set while restoring axes, so these changes cannot
+            // alter the generator or send sampling commands to the device.
+            ConfigureChartBehavior();
+            if (system_mode == System_Mode_Enum.Test_Mode)
+            {
+                var generator = farand_Tablet_Chart_Control1.signal_Generator1;
+                farand_Tablet_Chart_Control1.ConfigureCaptureView(
+                    generator.StartTimeUs, generator.StartTimeUs + generator.Data_Filter.Length * generator.SampleIntervalUs,
+                    generator.MaximumStartTimeUs, generator.MinimumWindowUs, generator.MaximumWindowUs);
+            }
+            else
+                ConfigureHardwareChart();
+
+            farand_Tablet_Chart_Control1.SetXView(viewMinimumBeforeReview, viewMaximumBeforeReview);
+            if (captureBeforeReview != null)
+            {
+                farand_Tablet_Chart_Control1.ShowCapture(captureBeforeReview.Samples,
+                    captureBeforeReview.StartTimeUs, captureBeforeReview.SampleIntervalUs);
+                farand_Tablet_Chart_Control1.SetYView(captureBeforeReview.YMinimum, captureBeforeReview.YMaximum);
+            }
+            displayedCaptureSource = sourceBeforeReview;
+            displayedDownSampleRatio = ratioBeforeReview;
+            captureBeforeReview = null;
+            reviewingCapture = false;
+            label1.Text = system_mode.ToString();
+            ClearAutomaticMeasurement();
+        }
+
         private void Command_Box_LiveKey_Clicked(object sender, EventArgs e)
         {
+            if (system_mode == System_Mode_Enum.Test_Mode)
+            {
+                var generator = farand_Tablet_Chart_Control1.signal_Generator1;
+                if (generator.IsGeneratingData)
+                    generator.Stop_Generating_Data();
+                else
+                {
+                    ResumeLiveView();
+                    generator.Start_Generating_Data();
+                }
+
+                UpdateConnectionControls();
+                return;
+            }
+
             if (communication == null || commands == null || !communication.IsConnected)
             {
                 UpdateConnectionControls();
@@ -321,12 +465,14 @@ namespace CymaLAB_Ver_1._0
                 if (commands.CaptureInProgress)
                 {
                     commands.StopCapture();
+                    System.Threading.Interlocked.Exchange(ref latestDeviceData, null);
 
                     System.Diagnostics.Debug.WriteLine(
                         "Capture stop command sent.");
                 }
                 else
                 {
+                    ResumeLiveView();
                     StartHardwareCapture();
 
                     System.Diagnostics.Debug.WriteLine("Startup settings and capture start command sent.");
@@ -390,8 +536,12 @@ namespace CymaLAB_Ver_1._0
         {
             bool connected = communication != null && communication.IsConnected;
 
-            bool capturing = connected && commands != null && commands.CaptureInProgress;
+            bool simulated = system_mode == System_Mode_Enum.Test_Mode;
+            bool capturing = simulated
+                ? farand_Tablet_Chart_Control1.signal_Generator1.IsGeneratingData
+                : connected && commands != null && commands.CaptureInProgress;
 
+            command_Box.IsTestMode = simulated;
             command_Box._IsConnected = connected;
             command_Box._IsLive = capturing;
         }
@@ -513,18 +663,21 @@ namespace CymaLAB_Ver_1._0
             // Hardware gain channels have no calibrated multipliers in this project.
             generator.SetSignalIntensity(settings.PulseWidthUs / 10.0, Math.Pow(2, settings.AmplifierGain - 1));
             double range = Math.Max(1.2, generator.MaximumSignalAmplitude);
-            farand_Tablet_Chart_Control1.SetFixedYRange(-range, range);
+            if (!reviewingCapture)
+                farand_Tablet_Chart_Control1.SetFixedYRange(-range, range);
         }
 
 
         private void Signal_Generator1_Data_Is_Ready(object sender, EventArgs e)
         {
-            if (system_mode == System_Mode_Enum.Test_Mode)
+            if (!reviewingCapture && system_mode == System_Mode_Enum.Test_Mode && farand_Tablet_Chart_Control1.signal_Generator1.IsGeneratingData)
             {
                 Capture_Data = farand_Tablet_Chart_Control1.signal_Generator1.Data_Filter;
 
                 var generator = farand_Tablet_Chart_Control1.signal_Generator1;
                 farand_Tablet_Chart_Control1.ShowCapture(Capture_Data, generator.StartTimeUs, generator.SampleIntervalUs);
+                displayedCaptureSource = "Test";
+                displayedDownSampleRatio = generator.Down_Sample_Raito;
                 UpdateTofDisplay(generator.TimeOfFlightUs, generator.IsTofStable);
                 UpdateMeasurementResult();
             }
@@ -596,6 +749,8 @@ namespace CymaLAB_Ver_1._0
 
         private void Signal_Generator1_Mode_Is_Changed(object sender, EventArgs e)
         {
+            reviewingCapture = false;
+            captureBeforeReview = null;
             if (farand_Tablet_Chart_Control1.signal_Generator1._IsSimulated_Data_Choosen == true)
             {
                 system_mode = System_Mode_Enum.Test_Mode;
@@ -618,6 +773,7 @@ namespace CymaLAB_Ver_1._0
 
             ClearAutomaticMeasurement();
             label1.Text = system_mode.ToString();
+            UpdateConnectionControls();
         }
 
         private void filter_Control_Filter_Mode_Changed(object sender, EventArgs e)
@@ -778,7 +934,7 @@ namespace CymaLAB_Ver_1._0
 
         private void Chart_XAxisViewChanged(object sender, Farand_Tablet_Chart.XAxisViewChangedEventArgs e)
         {
-            if (!settingsInitialized)
+            if (!settingsInitialized || reviewingCapture)
             {
                 return;
             }

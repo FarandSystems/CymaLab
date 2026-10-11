@@ -31,20 +31,20 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Command_Box));
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox_Firmware_Update = new System.Windows.Forms.PictureBox();
             this.pictureBox_Run = new System.Windows.Forms.PictureBox();
             this.pictureBox_Save = new System.Windows.Forms.PictureBox();
             this.pictureBox_load = new System.Windows.Forms.PictureBox();
             this.pictureBox_Connected = new System.Windows.Forms.PictureBox();
             this.pictureBox_Connection_Mode = new System.Windows.Forms.PictureBox();
+            this.responsiveCommandLayout = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Firmware_Update)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Run)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Save)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_load)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Connected)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Connection_Mode)).BeginInit();
+            this.responsiveCommandLayout.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
@@ -52,18 +52,15 @@
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // pictureBox_Firmware_Update
             // 
+            this.pictureBox_Firmware_Update.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_Firmware_Update.Enabled = false;
             this.pictureBox_Firmware_Update.Image = global::Command_Box.Properties.Resources.Firmware_Update;
-            this.pictureBox_Firmware_Update.Location = new System.Drawing.Point(131, 11);
+            this.pictureBox_Firmware_Update.Location = new System.Drawing.Point(129, 5);
             this.pictureBox_Firmware_Update.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Firmware_Update.Name = "pictureBox_Firmware_Update";
-            this.pictureBox_Firmware_Update.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox_Firmware_Update.Size = new System.Drawing.Size(58, 62);
             this.pictureBox_Firmware_Update.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Firmware_Update.TabIndex = 4;
             this.pictureBox_Firmware_Update.TabStop = false;
@@ -73,11 +70,12 @@
             // 
             // pictureBox_Run
             // 
+            this.pictureBox_Run.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_Run.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_Run.Image")));
-            this.pictureBox_Run.Location = new System.Drawing.Point(194, 11);
+            this.pictureBox_Run.Location = new System.Drawing.Point(191, 5);
             this.pictureBox_Run.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Run.Name = "pictureBox_Run";
-            this.pictureBox_Run.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox_Run.Size = new System.Drawing.Size(58, 62);
             this.pictureBox_Run.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Run.TabIndex = 1;
             this.pictureBox_Run.TabStop = false;
@@ -87,11 +85,12 @@
             // 
             // pictureBox_Save
             // 
+            this.pictureBox_Save.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_Save.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_Save.Image")));
-            this.pictureBox_Save.Location = new System.Drawing.Point(257, 11);
+            this.pictureBox_Save.Location = new System.Drawing.Point(253, 5);
             this.pictureBox_Save.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Save.Name = "pictureBox_Save";
-            this.pictureBox_Save.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox_Save.Size = new System.Drawing.Size(58, 62);
             this.pictureBox_Save.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Save.TabIndex = 2;
             this.pictureBox_Save.TabStop = false;
@@ -103,14 +102,16 @@
             // 
             // pictureBox_load
             // 
+            this.pictureBox_load.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_load.Image = global::Command_Box.Properties.Resources.Load_File_Inactive;
-            this.pictureBox_load.Location = new System.Drawing.Point(320, 11);
+            this.pictureBox_load.Location = new System.Drawing.Point(315, 5);
             this.pictureBox_load.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_load.Name = "pictureBox_load";
-            this.pictureBox_load.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox_load.Size = new System.Drawing.Size(60, 62);
             this.pictureBox_load.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_load.TabIndex = 3;
             this.pictureBox_load.TabStop = false;
+            this.pictureBox_load.Click += new System.EventHandler(this.pictureBox_load_Click);
             this.pictureBox_load.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_load_MouseDown);
             this.pictureBox_load.MouseEnter += new System.EventHandler(this.pictureBox_load_MouseEnter);
             this.pictureBox_load.MouseLeave += new System.EventHandler(this.pictureBox_load_MouseLeave);
@@ -118,83 +119,72 @@
             // 
             // pictureBox_Connected
             // 
+            this.pictureBox_Connected.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_Connected.Image = global::Command_Box.Properties.Resources.NotConnected;
-            this.pictureBox_Connected.Location = new System.Drawing.Point(5, 11);
+            this.pictureBox_Connected.Location = new System.Drawing.Point(5, 5);
             this.pictureBox_Connected.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Connected.Name = "pictureBox_Connected";
-            this.pictureBox_Connected.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox_Connected.Size = new System.Drawing.Size(58, 62);
             this.pictureBox_Connected.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Connected.TabIndex = 0;
             this.pictureBox_Connected.TabStop = false;
             // 
             // pictureBox_Connection_Mode
             // 
+            this.pictureBox_Connection_Mode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_Connection_Mode.Image = global::Command_Box.Properties.Resources.Wifi;
-            this.pictureBox_Connection_Mode.Location = new System.Drawing.Point(68, 11);
+            this.pictureBox_Connection_Mode.Location = new System.Drawing.Point(67, 5);
             this.pictureBox_Connection_Mode.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Connection_Mode.Name = "pictureBox_Connection_Mode";
-            this.pictureBox_Connection_Mode.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox_Connection_Mode.Size = new System.Drawing.Size(58, 62);
             this.pictureBox_Connection_Mode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Connection_Mode.TabIndex = 5;
             this.pictureBox_Connection_Mode.TabStop = false;
             this.pictureBox_Connection_Mode.Click += new System.EventHandler(this.pictureBox_Connection_Mode_Click);
             // 
-            // Command_Box
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.Controls.Add(this.pictureBox_Connection_Mode);
-            this.Controls.Add(this.pictureBox_Firmware_Update);
-            this.Controls.Add(this.pictureBox_Run);
-            this.Controls.Add(this.pictureBox_Save);
-            this.Controls.Add(this.pictureBox_load);
-            this.Controls.Add(this.pictureBox_Connected);
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "Command_Box";
-            this.Size = new System.Drawing.Size(380, 72);
-            this.Load += new System.EventHandler(this.Command_Box_Load);
-            // 
             // responsiveCommandLayout
             // 
-            this.responsiveCommandLayout = new System.Windows.Forms.TableLayoutPanel();
             this.responsiveCommandLayout.ColumnCount = 6;
-            this.responsiveCommandLayout.RowCount = 1;
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66665F));
-            this.responsiveCommandLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.responsiveCommandLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.responsiveCommandLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-            this.responsiveCommandLayout.Margin = new System.Windows.Forms.Padding(0);
-            this.responsiveCommandLayout.Padding = new System.Windows.Forms.Padding(3);
-            this.responsiveCommandLayout.Name = "responsiveCommandLayout";
-
-            this.pictureBox_Connected.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox_Connection_Mode.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox_Firmware_Update.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox_Run.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox_Save.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox_load.Anchor = System.Windows.Forms.AnchorStyles.None;
-
             this.responsiveCommandLayout.Controls.Add(this.pictureBox_Connected, 0, 0);
             this.responsiveCommandLayout.Controls.Add(this.pictureBox_Connection_Mode, 1, 0);
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Firmware_Update, 2, 0);
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Run, 3, 0);
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Save, 4, 0);
             this.responsiveCommandLayout.Controls.Add(this.pictureBox_load, 5, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Firmware_Update, 2, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Save, 4, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Run, 3, 0);
+            this.responsiveCommandLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.responsiveCommandLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.responsiveCommandLayout.Location = new System.Drawing.Point(0, 0);
+            this.responsiveCommandLayout.Margin = new System.Windows.Forms.Padding(0);
+            this.responsiveCommandLayout.Name = "responsiveCommandLayout";
+            this.responsiveCommandLayout.Padding = new System.Windows.Forms.Padding(3);
+            this.responsiveCommandLayout.RowCount = 1;
+            this.responsiveCommandLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.responsiveCommandLayout.Size = new System.Drawing.Size(380, 72);
+            this.responsiveCommandLayout.TabIndex = 6;
+            // 
+            // Command_Box
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.responsiveCommandLayout);
-            this.responsiveCommandLayout.BringToFront();
-
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "Command_Box";
+            this.Size = new System.Drawing.Size(380, 72);
+            this.Load += new System.EventHandler(this.Command_Box_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Firmware_Update)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Run)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Save)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_load)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Connected)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Connection_Mode)).EndInit();
+            this.responsiveCommandLayout.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -206,8 +196,6 @@
         private System.Windows.Forms.PictureBox pictureBox_Save;
         private System.Windows.Forms.PictureBox pictureBox_load;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.PictureBox pictureBox_Firmware_Update;
         private System.Windows.Forms.PictureBox pictureBox_Connection_Mode;
         private System.Windows.Forms.TableLayoutPanel responsiveCommandLayout;

@@ -97,6 +97,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Measurements\MeasurementCalculator.cs" />
+    <Compile Include="Measurements\CaptureFile.cs" />
     <Compile Include="Protocol\PacketParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
