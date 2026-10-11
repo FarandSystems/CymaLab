@@ -25,6 +25,7 @@ namespace Command_Box
         private bool _isMouseEnter_Run = false;
 
         public event EventHandler LiveKey_Clicked;
+        public event EventHandler TestModeToggleRequested;
 
         public event EventHandler Save_Clicked;
 
@@ -41,6 +42,7 @@ namespace Command_Box
             set
             {
                 isTestMode = value;
+                Update_TestMode_Pic();
                 Update_Live_Pic();
             }
         }
@@ -112,13 +114,23 @@ namespace Command_Box
         public Command_Box()
         {
             InitializeComponent();
+            Update_TestMode_Pic();
             Update_Save_Pic();
             Update_Load_Pic();
         }
 
-        private void pictureBox4_Click(object sender, EventArgs e)
+        private void Update_TestMode_Pic()
         {
+            pictureBox_TestMode.Image = isTestMode ? Properties.Resources.Mode_Test : Properties.Resources.Mode_Normal;
+            //modeToolTip.SetToolTip(pictureBox_TestMode, isTestMode
+            //    ? "Test mode — Ctrl+click to switch to normal mode"
+            //    : "Normal mode — Ctrl+click to switch to test mode");
+        }
 
+        private void pictureBox_TestMode_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && (ModifierKeys & Keys.Control) == Keys.Control)
+                TestModeToggleRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void timer1_Tick(object sender, EventArgs e)

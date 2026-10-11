@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Command_Box));
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.modeToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.pictureBox_TestMode = new System.Windows.Forms.PictureBox();
             this.pictureBox_Firmware_Update = new System.Windows.Forms.PictureBox();
             this.pictureBox_Run = new System.Windows.Forms.PictureBox();
             this.pictureBox_Save = new System.Windows.Forms.PictureBox();
@@ -43,6 +45,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Save)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_load)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Connected)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TestMode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Connection_Mode)).BeginInit();
             this.responsiveCommandLayout.SuspendLayout();
             this.SuspendLayout();
@@ -51,6 +54,21 @@
             // 
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            //
+            // pictureBox_TestMode
+            //
+            this.pictureBox_TestMode.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.pictureBox_TestMode.AccessibleName = "Toggle test mode with Ctrl+click";
+            this.pictureBox_TestMode.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox_TestMode.Image = global::Command_Box.Properties.Resources.Mode_Normal;
+            this.pictureBox_TestMode.Location = new System.Drawing.Point(7, 5);
+            this.pictureBox_TestMode.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBox_TestMode.Name = "pictureBox_TestMode";
+            this.pictureBox_TestMode.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox_TestMode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox_TestMode.TabIndex = 7;
+            this.pictureBox_TestMode.TabStop = false;
+            this.pictureBox_TestMode.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_TestMode_MouseClick);
             // 
             // pictureBox_Firmware_Update
             // 
@@ -144,19 +162,21 @@
             // 
             // responsiveCommandLayout
             // 
-            this.responsiveCommandLayout.ColumnCount = 6;
+            this.responsiveCommandLayout.ColumnCount = 7;
+            this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.responsiveCommandLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66665F));
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Connected, 0, 0);
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Connection_Mode, 1, 0);
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_load, 5, 0);
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Firmware_Update, 2, 0);
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Save, 4, 0);
-            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Run, 3, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_TestMode, 0, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Connected, 1, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Connection_Mode, 2, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_load, 6, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Firmware_Update, 3, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Save, 5, 0);
+            this.responsiveCommandLayout.Controls.Add(this.pictureBox_Run, 4, 0);
             this.responsiveCommandLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.responsiveCommandLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
             this.responsiveCommandLayout.Location = new System.Drawing.Point(0, 0);
@@ -183,6 +203,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Save)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_load)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Connected)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TestMode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Connection_Mode)).EndInit();
             this.responsiveCommandLayout.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -192,6 +213,8 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox_Connected;
+        private System.Windows.Forms.PictureBox pictureBox_TestMode;
+        private System.Windows.Forms.ToolTip modeToolTip;
         private System.Windows.Forms.PictureBox pictureBox_Run;
         private System.Windows.Forms.PictureBox pictureBox_Save;
         private System.Windows.Forms.PictureBox pictureBox_load;

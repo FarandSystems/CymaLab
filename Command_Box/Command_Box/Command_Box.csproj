@@ -117,5 +117,9 @@
       <Name>Data_Generate</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Mode_Normal.png" />
+    <None Include="Resources\Mode_Test.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

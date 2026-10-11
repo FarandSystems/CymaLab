@@ -203,6 +203,7 @@
             this.command_Box.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.command_Box.CommunicationMode = Command_Box.CommunicationModeEnum.Wifi;
             this.command_Box.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.command_Box.IsTestMode = false;
             this.command_Box.Load_Path = null;
             this.command_Box.Location = new System.Drawing.Point(2, 2);
             this.command_Box.Margin = new System.Windows.Forms.Padding(2);

@@ -71,7 +71,7 @@ namespace CymaLAB_Ver_1._0
             Idle
         }
 
-        System_Mode_Enum system_mode = System_Mode_Enum.Test_Mode;
+        System_Mode_Enum system_mode = System_Mode_Enum.Normal_operation;
         public Form1()
         {
             InitializeComponent();
@@ -133,6 +133,7 @@ namespace CymaLAB_Ver_1._0
             communication.ConnectionLost += Communication_ConnectionChanged;
 
             command_Box.LiveKey_Clicked += Command_Box_LiveKey_Clicked;
+            command_Box.TestModeToggleRequested += Command_Box_TestModeToggleRequested;
             command_Box.Save_Clicked += Command_Box_Save_Clicked;
             command_Box.Load_Clicked += Command_Box_Load_Clicked;
 
@@ -432,6 +433,15 @@ namespace CymaLAB_Ver_1._0
             reviewingCapture = false;
             label1.Text = system_mode.ToString();
             ClearAutomaticMeasurement();
+        }
+
+        private void Command_Box_TestModeToggleRequested(object sender, EventArgs e)
+        {
+            if (firmwareUpdater != null && firmwareUpdater.IsBusy)
+                return;
+
+            var generator = farand_Tablet_Chart_Control1.signal_Generator1;
+            generator._IsSimulated_Data_Choosen = !generator._IsSimulated_Data_Choosen;
         }
 
         private void Command_Box_LiveKey_Clicked(object sender, EventArgs e)
