@@ -15,6 +15,10 @@ namespace CymaLAB_Ver_1._0
 
         private static readonly Dictionary<string, string> Descriptions = new Dictionary<string, string>
         {
+            { "button_PowerDecrease", "Decrease transmitter power by one level." },
+            { "button_PowerIncrease", "Increase transmitter power by one level." },
+            { "button_AmplifierDecrease", "Decrease amplifier gain by one level." },
+            { "button_AmplifierIncrease", "Increase amplifier gain by one level." },
             { "pictureBox_Run", "Run or pause the current capture." },
             { "pictureBox_Save", "Save the paused chart capture and its current view to a text file." },
             { "pictureBox_load", "Load a saved chart capture for review. Run returns to live data." },
