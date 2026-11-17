@@ -28,20 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TOF_Control));
             this.label_Time_Of_Flight = new System.Windows.Forms.Label();
             this.label_Measurement_Result = new System.Windows.Forms.Label();
             this.label_Range = new System.Windows.Forms.Label();
             this.pictureBox_Close = new System.Windows.Forms.PictureBox();
+            this.pictureBox_Minimize = new System.Windows.Forms.PictureBox();
+            this.panel_WindowButtons = new System.Windows.Forms.Panel();
             this.pictureBox_TOF_Light = new System.Windows.Forms.PictureBox();
             this.pictureBox_TOF_Increase = new System.Windows.Forms.PictureBox();
             this.pictureBox_TOF_Key = new System.Windows.Forms.PictureBox();
             this.pictureBox_TOF_Decrease = new System.Windows.Forms.PictureBox();
-            this.timer_Increase = new System.Windows.Forms.Timer();
-            this.timer_Decrease = new System.Windows.Forms.Timer();
+            this.timer_Increase = new System.Windows.Forms.Timer(this.components);
+            this.timer_Decrease = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Close)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Minimize)).BeginInit();
+            this.panel_WindowButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TOF_Light)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TOF_Increase)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TOF_Key)).BeginInit();
@@ -91,17 +96,45 @@
             // 
             // pictureBox_Close
             // 
-            this.pictureBox_Close.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox_Close.AccessibleName = "Close";
+            this.pictureBox_Close.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox_Close.Image = global::TOF_Contorol.Properties.Resources.Close;
-            this.pictureBox_Close.Location = new System.Drawing.Point(1033, 2);
-            this.pictureBox_Close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox_Close.Location = new System.Drawing.Point(55, 9);
+            this.pictureBox_Close.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_Close.Name = "pictureBox_Close";
-            this.tableLayoutPanel1.SetRowSpan(this.pictureBox_Close, 2);
-            this.pictureBox_Close.Size = new System.Drawing.Size(105, 68);
+            this.pictureBox_Close.Size = new System.Drawing.Size(50, 50);
             this.pictureBox_Close.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Close.TabIndex = 8;
             this.pictureBox_Close.TabStop = false;
             this.pictureBox_Close.Click += new System.EventHandler(this.pictureBox_Close_Click);
+            //
+            // pictureBox_Minimize
+            //
+            this.pictureBox_Minimize.AccessibleName = "Minimize";
+            this.pictureBox_Minimize.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox_Minimize.Image = global::TOF_Contorol.Properties.Resources.Minimize_Button;
+            this.pictureBox_Minimize.Location = new System.Drawing.Point(1, 9);
+            this.pictureBox_Minimize.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBox_Minimize.Name = "pictureBox_Minimize";
+            this.pictureBox_Minimize.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox_Minimize.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox_Minimize.TabIndex = 10;
+            this.pictureBox_Minimize.TabStop = false;
+            this.pictureBox_Minimize.Click += new System.EventHandler(this.pictureBox_Minimize_Click);
+            //
+            // panel_WindowButtons
+            //
+            this.panel_WindowButtons.Controls.Add(this.pictureBox_Minimize);
+            this.panel_WindowButtons.Controls.Add(this.pictureBox_Close);
+            this.panel_WindowButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_WindowButtons.Location = new System.Drawing.Point(1033, 2);
+            this.panel_WindowButtons.Margin = new System.Windows.Forms.Padding(2);
+            this.panel_WindowButtons.Name = "panel_WindowButtons";
+            this.panel_WindowButtons.Padding = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel1.SetRowSpan(this.panel_WindowButtons, 2);
+            this.panel_WindowButtons.Size = new System.Drawing.Size(105, 68);
+            this.panel_WindowButtons.TabIndex = 11;
+            this.panel_WindowButtons.Layout += new System.Windows.Forms.LayoutEventHandler(this.panel_WindowButtons_Layout);
             // 
             // pictureBox_TOF_Light
             // 
@@ -120,7 +153,7 @@
             this.pictureBox_TOF_Increase.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox_TOF_Increase.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox_TOF_Increase.Image")));
             this.pictureBox_TOF_Increase.Location = new System.Drawing.Point(108, 0);
-            this.pictureBox_TOF_Increase.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox_TOF_Increase.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_TOF_Increase.Name = "pictureBox_TOF_Increase";
             this.pictureBox_TOF_Increase.Size = new System.Drawing.Size(48, 68);
             this.pictureBox_TOF_Increase.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -137,7 +170,7 @@
             this.pictureBox_TOF_Key.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox_TOF_Key.Image = global::TOF_Contorol.Properties.Resources.TOF_Key_Manual;
             this.pictureBox_TOF_Key.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox_TOF_Key.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox_TOF_Key.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox_TOF_Key.Name = "pictureBox_TOF_Key";
             this.pictureBox_TOF_Key.Size = new System.Drawing.Size(156, 68);
             this.pictureBox_TOF_Key.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -180,7 +213,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 8F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.Controls.Add(this.pictureBox_Close, 6, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panel_WindowButtons, 6, 0);
             this.tableLayoutPanel1.Controls.Add(this.label_Measurement_Result, 5, 1);
             this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.pictureBox_TOF_Light, 3, 0);
@@ -188,7 +221,7 @@
             this.tableLayoutPanel1.Controls.Add(this.label_Time_Of_Flight, 5, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -203,7 +236,7 @@
             this.panel1.Controls.Add(this.pictureBox_TOF_Key);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(17, 2);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.tableLayoutPanel1.SetRowSpan(this.panel1, 2);
             this.panel1.Size = new System.Drawing.Size(156, 68);
@@ -215,12 +248,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(525, 72);
             this.Name = "TOF_Control";
             this.Size = new System.Drawing.Size(1140, 72);
             this.Load += new System.EventHandler(this.TOF_Control_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Close)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Minimize)).EndInit();
+            this.panel_WindowButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TOF_Light)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TOF_Increase)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TOF_Key)).EndInit();
@@ -242,6 +277,8 @@
         private System.Windows.Forms.Label label_Measurement_Result;
         private System.Windows.Forms.Label label_Range;
         private System.Windows.Forms.PictureBox pictureBox_Close;
+        private System.Windows.Forms.PictureBox pictureBox_Minimize;
+        private System.Windows.Forms.Panel panel_WindowButtons;
         private System.Windows.Forms.Timer timer_Increase;
         private System.Windows.Forms.Timer timer_Decrease;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;

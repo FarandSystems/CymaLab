@@ -98,5 +98,8 @@
   <ItemGroup>
     <None Include="Resources\Increase_TOF_Inactive.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Minimize_Button.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -19,7 +19,7 @@ namespace Farand_Tablet_Chart.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -93,6 +93,16 @@ namespace Farand_Tablet_Chart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap H_Z_IN_Normal {
+            get {
+                object obj = ResourceManager.GetObject("H_Z_IN_Normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap H_Z_Out {
             get {
                 object obj = ResourceManager.GetObject("H_Z_Out", resourceCulture);
@@ -123,6 +133,16 @@ namespace Farand_Tablet_Chart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap H_Z_OUT_Normal {
+            get {
+                object obj = ResourceManager.GetObject("H_Z_OUT_Normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap horizontal_zoom_in_icon_highlighted {
             get {
                 object obj = ResourceManager.GetObject("horizontal_zoom_in_icon_highlighted", resourceCulture);
@@ -133,29 +153,9 @@ namespace Farand_Tablet_Chart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap horizontal_zoom_in_icon_normal {
-            get {
-                object obj = ResourceManager.GetObject("horizontal_zoom_in_icon_normal", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap horizontal_zoom_out_icon_highighted {
             get {
                 object obj = ResourceManager.GetObject("horizontal_zoom_out_icon_highighted", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap horizontal_zoom_out_icon_normal {
-            get {
-                object obj = ResourceManager.GetObject("horizontal_zoom_out_icon_normal", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -193,6 +193,16 @@ namespace Farand_Tablet_Chart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap V_Z_IN_Normal {
+            get {
+                object obj = ResourceManager.GetObject("V_Z_IN_Normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap V_Z_Out {
             get {
                 object obj = ResourceManager.GetObject("V_Z_Out", resourceCulture);
@@ -223,6 +233,16 @@ namespace Farand_Tablet_Chart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap V_Z_OUT_Normal {
+            get {
+                object obj = ResourceManager.GetObject("V_Z_OUT_Normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap vertical_zoom_in_icon_highlighted {
             get {
                 object obj = ResourceManager.GetObject("vertical_zoom_in_icon_highlighted", resourceCulture);
@@ -233,29 +253,9 @@ namespace Farand_Tablet_Chart.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap vertical_zoom_in_icon_normal {
-            get {
-                object obj = ResourceManager.GetObject("vertical_zoom_in_icon_normal", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap vertical_zoom_out_icon_highlighted {
             get {
                 object obj = ResourceManager.GetObject("vertical_zoom_out_icon_highlighted", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap vertical_zoom_out_icon_normal {
-            get {
-                object obj = ResourceManager.GetObject("vertical_zoom_out_icon_normal", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

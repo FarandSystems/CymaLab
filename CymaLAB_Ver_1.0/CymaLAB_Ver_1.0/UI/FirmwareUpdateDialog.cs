@@ -55,6 +55,12 @@ namespace CymaLAB_Ver_1._0
             layout.Controls.Add(upload, 0, 6);
             layout.Controls.Add(close, 1, 6);
             Controls.Add(layout);
+            browse.Name = "firmwareBrowse";
+            recoveryPort.Name = "firmwareRecoveryPort";
+            refresh.Name = "firmwareRefresh";
+            upload.Name = "firmwareUpload";
+            close.Name = "firmwareClose";
+            new ControlToolTips(this);
 
             browse.Click += Browse_Click;
             refresh.Click += (sender, e) => RefreshPorts();
@@ -174,6 +180,20 @@ namespace CymaLAB_Ver_1._0
             updater.ProgressChanged -= Updater_ProgressChanged;
             communication.Connected -= Communication_Connected;
             base.OnFormClosed(e);
+        }
+
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FirmwareUpdateDialog));
+            this.SuspendLayout();
+            // 
+            // FirmwareUpdateDialog
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "FirmwareUpdateDialog";
+            this.ResumeLayout(false);
+
         }
     }
 }

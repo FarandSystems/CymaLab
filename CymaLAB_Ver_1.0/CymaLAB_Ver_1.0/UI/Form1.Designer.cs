@@ -31,6 +31,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -202,6 +203,7 @@
             this.command_Box.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.command_Box.CommunicationMode = Command_Box.CommunicationModeEnum.Wifi;
             this.command_Box.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.command_Box.IsTestMode = false;
             this.command_Box.Load_Path = null;
             this.command_Box.Location = new System.Drawing.Point(2, 2);
             this.command_Box.Margin = new System.Windows.Forms.Padding(2);
@@ -248,6 +250,7 @@
             this.ClientSize = new System.Drawing.Size(1426, 774);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(979, 381);
             this.Name = "Form1";

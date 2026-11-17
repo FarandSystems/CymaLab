@@ -233,6 +233,24 @@ namespace Command_Box.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Mode_Normal {
+            get {
+                return ((System.Drawing.Bitmap)(ResourceManager.GetObject("Mode_Normal", resourceCulture)));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Mode_Test {
+            get {
+                return ((System.Drawing.Bitmap)(ResourceManager.GetObject("Mode_Test", resourceCulture)));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Wifi {
             get {
                 object obj = ResourceManager.GetObject("Wifi", resourceCulture);

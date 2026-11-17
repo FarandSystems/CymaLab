@@ -404,6 +404,27 @@ namespace TOF_Contorol
             label_Measurement_Result.Text = "L (cm) = " + sample_Length_cm.ToString() + ",  V (m/Sec) = " + sample_Velocity_m_Sec.ToString();
         }
 
+        private void panel_WindowButtons_Layout(object sender, LayoutEventArgs e)
+        {
+            Rectangle area = panel_WindowButtons.DisplayRectangle;
+            int gap = panel_WindowButtons.Padding.Horizontal;
+            int side = Math.Max(0, Math.Min(area.Height, (area.Width - gap) / 2));
+            int left = area.Right - (side * 2 + gap);
+            int top = area.Top + (area.Height - side) / 2;
+
+            pictureBox_Minimize.SetBounds(left, top, side, side);
+            pictureBox_Close.SetBounds(left + side + gap, top, side, side);
+        }
+
+        private void pictureBox_Minimize_Click(object sender, EventArgs e)
+        {
+            Form form = FindForm();
+            if (form != null)
+            {
+                form.WindowState = FormWindowState.Minimized;
+            }
+        }
+
         private void pictureBox_Close_Click(object sender, EventArgs e)
         {
             if (Close_Button_Clicked != null)

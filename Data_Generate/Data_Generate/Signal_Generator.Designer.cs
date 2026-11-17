@@ -57,7 +57,6 @@
             this.numericUpDown_Start_Index = new System.Windows.Forms.NumericUpDown();
             this.label_time_Start = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox_Info = new System.Windows.Forms.PictureBox();
             this.label_Down_Sample_Ratio = new System.Windows.Forms.Label();
             this.label_Start_index = new System.Windows.Forms.Label();
@@ -417,7 +416,6 @@
             this.pictureBox_Info.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox_Info.TabIndex = 13;
             this.pictureBox_Info.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox_Info, "Receiver Signal Simulator");
             this.pictureBox_Info.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_Info_MouseClick);
             // 
             // label_Down_Sample_Ratio
@@ -646,7 +644,6 @@
         private System.Windows.Forms.Label label_time_Start;
         private System.Windows.Forms.PictureBox pictureBox_Info;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label_Down_Sample_Ratio;
         private System.Windows.Forms.Label label_Start_index;
         private System.Windows.Forms.NumericUpDown numericUpDown_Delay_Jitter;
