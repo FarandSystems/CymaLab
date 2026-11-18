@@ -176,7 +176,7 @@ namespace CymaLAB_Ver_1._0
         public const int FILTER_LPF_ENABLED_INDEX = 1;
         public const int FILTER_LPF_FREQUENCY_INDEX = 2;
 
-        public const int FILTER_HPF_ENABLED_INDEX = 4;
+        public const int FILTER_CENTER_FREQUENCY_INDEX = 4;
         public const int FILTER_HPF_FREQUENCY_INDEX = 5;
 
         public const int SAMPLING_DOWNSAMPLE_INDEX = 1;

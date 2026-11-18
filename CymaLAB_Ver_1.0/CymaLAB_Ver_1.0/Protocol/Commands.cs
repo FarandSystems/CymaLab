@@ -394,7 +394,7 @@ namespace CymaLAB_Ver_1._0
 
         public byte[] BuildFilterCommand(Filter_Control.Filter_Control.Filter_Mode_Enum mode, double centerFrequencyKhz)
         {
-            if (double.IsNaN(centerFrequencyKhz) || double.IsInfinity(centerFrequencyKhz) || centerFrequencyKhz <= 0)
+            if (double.IsNaN(centerFrequencyKhz) || double.IsInfinity(centerFrequencyKhz) || centerFrequencyKhz <= 0 || centerFrequencyKhz > byte.MaxValue)
             {
                 throw new ArgumentOutOfRangeException(nameof(centerFrequencyKhz));
             }
@@ -438,7 +438,7 @@ namespace CymaLAB_Ver_1._0
 
             Utils.SetInt16LE(frame, Constants.FILTER_LPF_FREQUENCY_INDEX, (int)lowPassValue);
 
-            frame[Constants.FILTER_HPF_ENABLED_INDEX] = enabled ? (byte)1 : (byte)0;
+            frame[Constants.FILTER_CENTER_FREQUENCY_INDEX] = (byte)centerFrequencyKhz;
 
             Utils.SetInt16LE(frame, Constants.FILTER_HPF_FREQUENCY_INDEX, (int)highPassValue);
 
